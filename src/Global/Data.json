@@ -1,0 +1,25 @@
+{
+  "Product": [
+    {
+      "id": 1,
+      "image": "https://i.postimg.cc/6pD2P2bT/bangles-1.webp",
+      "name": "Bangles",
+      "gender": "female",
+      "category": "bangles"
+    },
+    {
+      "id": 2,
+      "image": "https://i.postimg.cc/9fb27s9V/ring-4.webp",
+      "name": "Ring",
+      "gender": "female",
+      "category": "ring"
+    },
+    {
+      "id": 3,
+      "image": "https://i.postimg.cc/KzdMg0CG/GVHM-85198-15022019050234.jpg",
+      "name": "Ring",
+      "gender": "male",
+      "category": "ring"
+    }
+  ]
+}
