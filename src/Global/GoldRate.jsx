@@ -5,7 +5,7 @@ const GoldRate = () => {
   const [goldRate, setGoldRate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [date, setDate] = useState(""); // To store the date of the gold rate
+  const [date, setDate] = useState(""); 
 
   useEffect(() => {
     const fetchGoldRate = async () => {

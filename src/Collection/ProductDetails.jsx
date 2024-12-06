@@ -8,6 +8,7 @@ import {
   Grid,
   Container,
   Button,
+  Breadcrumbs,
 } from "@mui/material";
 import ReactImageMagnify from "react-image-magnify";
 import {
@@ -80,6 +81,20 @@ function ProductDetails() {
   return (
     <Box sx={{ py: 8 }}>
       <Container>
+        {/* Breadcrumbs */}
+        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
+          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            Home
+          </Link>
+          <Link
+            to={`/category/${product.categoryId}`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            {product.category}
+          </Link>
+          <Typography color="text.primary">{product.name}</Typography>
+        </Breadcrumbs>
+
         {/* Product Details */}
         <Typography variant="h4" gutterBottom>
           {product.name}

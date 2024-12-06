@@ -145,170 +145,190 @@ function Product() {
         </Box>
       </Drawer>
 
-      <Container>
-        <Box display="flex" justifyContent="space-between" marginBottom={2}>
-          <Box>
-            <IconButton
-              sx={{ display: { xs: "block", sm: "none" } }}
-              onClick={toggleDrawer}
-              color="primary"
-            >
-              <FilterListIcon />
-            </IconButton>
-          </Box>
-          <Box>
-            <IconButton onClick={() => setView("grid")}>
-              <GridViewIcon color={view === "grid" ? "primary" : "inherit"} />
-            </IconButton>
-            <IconButton onClick={() => setView("list")}>
-              <ListIcon color={view === "list" ? "primary" : "inherit"} />
-            </IconButton>
-          </Box>
-        </Box>
-
-        <Grid container spacing={3}>
-          <Grid
-            item
-            xs={12}
-            sm={3}
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            <Box padding={2}>
-              <Typography
-                variant="h6"
-                sx={{
-                  border: `1px solid ${theme.palette.lightgrey.main}`,
-                  borderRadius: "10",
-                  p: 1,
-                  my: 2,
-                }}
+      <Box sx={{
+        py:{
+          xs:2,
+          sm:4,
+          md:8
+        }
+      }}>
+        <Container>
+          <Box display="flex" justifyContent="space-between" marginBottom={2}>
+            <Box>
+              <IconButton
+                sx={{ display: { xs: "block", sm: "none" } }}
+                onClick={toggleDrawer}
+                color="primary"
               >
-                Categories
-              </Typography>
-              <div>
-                {categories.map((category) => (
-                  <div key={category}>
-                    <input
-                      type="checkbox"
-                      id={category}
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => handleCategoryChange(category)}
-                    />
-                    <label htmlFor={category}>{category}</label>
-                  </div>
-                ))}
-              </div>
-              <Typography
-                variant="h6"
-                sx={{
-                  border: `1px solid ${theme.palette.lightgrey.main}`,
-                  borderRadius: "4",
-                  p: 1,
-                  my: 2,
-                }}
-              >
-                Gender
-              </Typography>
-              <div>
-                {genders.map((gender) => (
-                  <div key={gender}>
-                    <input
-                      type="checkbox"
-                      id={gender}
-                      checked={selectedGenders.includes(gender)}
-                      onChange={() => handleGenderChange(gender)}
-                    />
-                    <label htmlFor={gender}>{gender}</label>
-                  </div>
-                ))}
-              </div>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleClearFilters}
-                fullWidth
-                sx={{ marginTop: 2 }}
-              >
-                Clear Filters
-              </Button>
+                <FilterListIcon />
+              </IconButton>
             </Box>
-          </Grid>
+            <Box>
+              <IconButton onClick={() => setView("grid")}>
+                <GridViewIcon color={view === "grid" ? "primary" : "inherit"} />
+              </IconButton>
+              <IconButton onClick={() => setView("list")}>
+                <ListIcon color={view === "list" ? "primary" : "inherit"} />
+              </IconButton>
+            </Box>
+          </Box>
 
-          <Grid item xs={12} sm={9}>
-            <Container>
-              <Grid container spacing={3}>
-                {view === "grid" ? (
-                  paginatedProducts.length > 0 ? (
-                    paginatedProducts.map((product) => (
-                      <Grid item xs={12} sm={6} md={4} lg={4} key={product.id}>
-                        <Box border={1} padding={2} borderRadius={2}>
-                          <Link to={`/product/${product._id}`}>
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              width="100px"
-                              height="100px"
-                            />
-                            <Typography variant="h6">{product.name}</Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              Category: {product.category}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              Gender: {product.gender}
-                            </Typography>
-                          </Link>
-                        </Box>
-                      </Grid>
-                    ))
-                  ) : (
-                    <Typography variant="body1">
-                      No products available for selected categories and genders
-                    </Typography>
-                  )
-                ) : (
-                  <List>
-                    {paginatedProducts.length > 0 ? (
+          <Grid container spacing={3}>
+            <Grid
+              item
+              xs={12}
+              sm={3}
+              sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              <Box padding={2}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    border: `1px solid ${theme.palette.lightgrey.main}`,
+                    borderRadius: "10",
+                    p: 1,
+                    my: 2,
+                  }}
+                >
+                  Categories
+                </Typography>
+                <div>
+                  {categories.map((category) => (
+                    <div key={category}>
+                      <input
+                        type="checkbox"
+                        id={category}
+                        checked={selectedCategories.includes(category)}
+                        onChange={() => handleCategoryChange(category)}
+                      />
+                      <label htmlFor={category}>{category}</label>
+                    </div>
+                  ))}
+                </div>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    border: `1px solid ${theme.palette.lightgrey.main}`,
+                    borderRadius: "4",
+                    p: 1,
+                    my: 2,
+                  }}
+                >
+                  Gender
+                </Typography>
+                <div>
+                  {genders.map((gender) => (
+                    <div key={gender}>
+                      <input
+                        type="checkbox"
+                        id={gender}
+                        checked={selectedGenders.includes(gender)}
+                        onChange={() => handleGenderChange(gender)}
+                      />
+                      <label htmlFor={gender}>{gender}</label>
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleClearFilters}
+                  fullWidth
+                  sx={{ marginTop: 2 }}
+                >
+                  Clear Filters
+                </Button>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={9}>
+              <Container>
+                <Grid container spacing={3}>
+                  {view === "grid" ? (
+                    paginatedProducts.length > 0 ? (
                       paginatedProducts.map((product) => (
-                        <ListItem key={product._id}>
-                          <Link to={`/product/${product._id}`}>
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              width="100px"
-                              height="100px"
-                            />
-                            <Typography variant="h6">{product.name}</Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              Category: {product.category}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              Gender: {product.gender}
-                            </Typography>
-                          </Link>
-                        </ListItem>
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          md={4}
+                          lg={4}
+                          key={product.id}
+                        >
+                          <Box border={1} padding={2} borderRadius={2}>
+                            <Link to={`/product/${product._id}`}>
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                width="100px"
+                                height="100px"
+                              />
+                              <Typography variant="h6">
+                                {product.name}
+                              </Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                Category: {product.category}
+                              </Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                Gender: {product.gender}
+                              </Typography>
+                            </Link>
+                          </Box>
+                        </Grid>
                       ))
                     ) : (
                       <Typography variant="body1">
                         No products available for selected categories and
                         genders
                       </Typography>
-                    )}
-                  </List>
-                )}
-              </Grid>
-            </Container>
+                    )
+                  ) : (
+                    <List>
+                      {paginatedProducts.length > 0 ? (
+                        paginatedProducts.map((product) => (
+                          <ListItem key={product._id}>
+                            <Link to={`/product/${product._id}`}>
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                width="100px"
+                                height="100px"
+                              />
+                              <Typography variant="h6">
+                                {product.name}
+                              </Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                Category: {product.category}
+                              </Typography>
+                              <Typography variant="body2" color="textSecondary">
+                                Gender: {product.gender}
+                              </Typography>
+                            </Link>
+                          </ListItem>
+                        ))
+                      ) : (
+                        <Typography variant="body1">
+                          No products available for selected categories and
+                          genders
+                        </Typography>
+                      )}
+                    </List>
+                  )}
+                </Grid>
+              </Container>
+            </Grid>
           </Grid>
-        </Grid>
 
-        <Box display="flex" justifyContent="center" marginTop={4}>
-          <Pagination
-            count={Math.ceil(filteredProducts.length / itemsPerPage)}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-          />
-        </Box>
-      </Container>
+          <Box display="flex" justifyContent="center" marginTop={4}>
+            <Pagination
+              count={Math.ceil(filteredProducts.length / itemsPerPage)}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Box>
+        </Container>
+      </Box>
     </div>
   );
 }
