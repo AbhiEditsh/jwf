@@ -73,6 +73,7 @@ const Footer = () => {
       sx={{
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.white.main,
+        mt:4
       }}
     >
       <Container>

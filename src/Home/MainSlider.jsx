@@ -9,7 +9,7 @@ const MainSlider = () => {
 
   const imgStyle = {
     width: "100%",
-    height: isSmallScreen ? "300px" : isMediumScreen ? "500px" : "700px",
+    height: isSmallScreen ? "300px" : isMediumScreen ? "500px" : "600px",
     objectFit: "cover",
   };
 
@@ -23,6 +23,7 @@ const MainSlider = () => {
       effect="fade"
       autoplaySpeed={5000}
       dotPosition="right"
+      dots={false}
       easing="ease-in-out"
       beforeChange={handleBeforeChange}
     >

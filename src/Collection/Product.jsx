@@ -294,7 +294,7 @@ function Product() {
                       </Typography>
                     )}
                   </List>
-                 )}
+                )}
               </Grid>
             </Container>
           </Grid>

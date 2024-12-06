@@ -5,13 +5,14 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Outfit", serif;
+  box-sizing: border-box;
 }
 
 li {
   list-style: none;
 }
 a {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 h1,
 h2,
@@ -27,7 +28,7 @@ p {
   margin: 0;
   padding: 0;
 }
-img{
+img {
   width: 100%;
 }
 
@@ -60,7 +61,7 @@ img{
 }
 
 .animate-active {
-  left: 10%; 
+  left: 10%;
   opacity: 1;
 }
 
@@ -76,15 +77,15 @@ img{
 
 @media (max-width: 600px) {
   .slider-text h1 {
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
   }
 
   .slider-text p {
-    font-size: 0.9rem; 
+    font-size: 0.9rem;
   }
 
   .animate-active {
-    left: 5%; 
+    left: 5%;
   }
 }
 
@@ -93,21 +94,21 @@ img{
   transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Custom easing */
 }
 .slider-item::after {
-	position: absolute;
-	content: "";
-	background: rgba(0,0,0,0.5);
-	width: 100%;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 100%;
-	display: block;
+  position: absolute;
+  content: "";
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  display: block;
 }
 .product-image {
-	width: 400px;
-	height: 400px;
+  width: 400px;
+  height: 400px;
 }
-.product-image img{
+.product-image img {
   width: 100%;
 }

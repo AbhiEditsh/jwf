@@ -7,8 +7,17 @@ import {
   CircularProgress,
   Grid,
   Container,
+  Button,
 } from "@mui/material";
 import ReactImageMagnify from "react-image-magnify";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon,
+} from "react-share";
 import {
   getProductDetails,
   getRelatedProducts,
@@ -25,6 +34,8 @@ function ProductDetails() {
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
+
+  const productUrl = `${window.location.origin}/product/${productId}`;
 
   // Fetch product details and related products
   useEffect(() => {
@@ -146,6 +157,30 @@ function ProductDetails() {
               <Typography variant="body1">
                 <strong>Description:</strong> {product.description}
               </Typography>
+
+              {/* Share Section */}
+              <Box sx={{ mt: 4 }}>
+                <Typography variant="body1" gutterBottom>
+                  Share this product:
+                </Typography>
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                  <FacebookShareButton url={productUrl} quote={product.name}>
+                    <FacebookIcon size={40} round />
+                  </FacebookShareButton>
+                  <TwitterShareButton
+                    url={productUrl}
+                    title={`Check out this product: ${product.name}`}
+                  >
+                    <TwitterIcon size={40} round />
+                  </TwitterShareButton>
+                  <WhatsappShareButton
+                    url={productUrl}
+                    title={`Check out this product: ${product.name}`}
+                  >
+                    <WhatsappIcon size={40} round />
+                  </WhatsappShareButton>
+                </Box>
+              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -178,7 +213,7 @@ function ProductDetails() {
                       style={{ textDecoration: "none" }}
                     >
                       <img
-                        src={related.image} // Adjust the property based on your API
+                        src={related.image}
                         alt={related.name}
                         style={{
                           width: "100%",

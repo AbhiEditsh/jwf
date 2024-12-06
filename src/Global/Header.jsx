@@ -7,28 +7,38 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { styled, useTheme } from "@mui/system";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
+import axios from "axios"; // Ensure axios is installed
+import TopHeader from '../../src/Global/TopHeader'
+
 
 const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
   backgroundColor: backgroundColor || theme.palette.background.paper,
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-  padding: "8px 24px",
-  margin: "0 auto",
+  // padding: "8px 24px",
+  // margin: "0 auto",
+  m: 0,
   transition: "background-color 0.3s ease-in-out",
-  position: "relative",
+  // position: "relative",
 }));
 
 const Header = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
   const [backgroundColor, setBackgroundColor] = useState(
     theme.palette.background.paper
   );
   const [drawerState, setDrawerState] = useState({ menu: false });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const menuItems = [
     { label: "Home", to: "/" },
@@ -40,135 +50,209 @@ const Header = () => {
     setDrawerState((prevState) => ({ ...prevState, [drawerName]: open }));
   };
 
-  const handleScroll = () => {
-    if (window.scrollY > 0) {
-      setBackgroundColor(theme.palette.background.default);
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+    if (query) {
+      try {
+        const response = await axios.get(
+          `https://jewellery01-back.onrender.com/api/products/search?query=${encodeURIComponent(
+            query
+          )}`
+        );
+        const { data } = response;
+        if (data.success) {
+          setSearchResults(data.products);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error.message);
+        setSearchResults([]);
+      }
     } else {
-      setBackgroundColor(theme.palette.background.paper);
+      setSearchResults([]);
     }
   };
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-    // eslint-disable-next-line
-  }, []);
+  const handleProductSelect = (event, value) => {
+    if (value) {
+      navigate(`/product/${value._id}`);
+      setSearchQuery("");
+    }
+  };
 
   const renderDrawerContent = () => (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 2,
-        gap: 2,
-        width: "300px",
-        position: "relative",
-      }}
-    >
-      {/* Close Button */}
+    <Box sx={{ padding: 2, width: "300px", position: "relative" }}>
       <IconButton
         onClick={toggleDrawer("menu", false)}
-        sx={{
-          position: "absolute",
-          top: "8px",
-          right: "8px",
-          color: theme.palette.text.primary,
-        }}
-        aria-label="close"
+        sx={{ position: "absolute", top: "8px", right: "8px" }}
       >
         <CloseIcon />
       </IconButton>
-
-      {/* Menu Items */}
       {menuItems.map((item, index) => (
         <NavLink
           key={index}
           to={item.to}
-          style={{ textDecoration: "none", color: "inherit" }}
+          style={{ textDecoration: "none" }}
           onClick={toggleDrawer("menu", false)}
         >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontWeight: "500",
-            }}
-          >
-            {item.label}
-          </Typography>
+          <Typography>{item.label}</Typography>
         </NavLink>
       ))}
     </Box>
   );
 
   return (
-    <StyledAppBar backgroundColor={backgroundColor}>
-      <Toolbar
+    <>
+      <TopHeader/>
+      <StyledAppBar
+        backgroundColor={backgroundColor}
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: { xs: "8px 16px", sm: "0px 24px", lg: "0px 32px" },
+          py: 1,
+          mx: {
+            xs: 0,
+            md: 0,
+          },
+          position:'relative'
         }}
       >
-        {/* Logo Section */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <Box
-              component="img"
-              sx={{
-                height: `100%`,
-                width: `100%`,
-                maxHeight: { xs: 100, md: 100 },
-                maxWidth: { xs: 100, md: 100 },
-              }}
-              alt="The Daimond Jewellery Logo."
-              src="https://i.postimg.cc/L6jhsnJc/pngtree-diamond-jewellery-logo-design-vector-template-png-image-5648768-1-removebg-preview.png"
-            />
-          </Link>
-        </Box>
-
-        {/* Menu Section */}
-        {isSmallScreen ? (
-          <IconButton
-            onClick={toggleDrawer("menu", true)}
-            sx={{ color: theme.palette.primary.dark }}
-            aria-label="menu"
+        <Toolbar
+          sx={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          {/* Logo and Search Box on the same line */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-        ) : (
-          <Box sx={{ display: "flex", gap: 3 ,
-          justifyContent:'center'}}>
-            {menuItems.map((item, index) => (
-              <NavLink
-                key={index}
-                to={item.to}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: { xs: "12px", sm: "14px" },
-                  }}
-                >
-                  {item.label}
-                </Typography>
-              </NavLink>
-            ))}
-          </Box>
-        )}
-      </Toolbar>
+            {/* Logo */}
+            <Box
+            sx={{ order: isSmallScreen ? "0" : "0" }}
+            >
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <Typography variant="h6">Logo</Typography>
+              </Link>
+            </Box>
 
-      {/* Drawer Section */}
-      <Drawer
-        anchor="left"
-        open={drawerState.menu}
-        onClose={toggleDrawer("menu", false)}
-      >
-        {renderDrawerContent()}
-      </Drawer>
-    </StyledAppBar>
+            {/* Search Box */}
+            <Box
+              sx={{
+                order: isSmallScreen ? "3" : "0",
+                position: "relative",
+                width: isSmallScreen ? "100%" : "50%",
+                marginTop: isSmallScreen ? 2 : 0,
+                marginLeft: isSmallScreen ? 0 : 2,
+                marginBottom: isSmallScreen ? 2 : 0,
+              }}
+            >
+              <Autocomplete
+                freeSolo
+                options={searchResults}
+                getOptionLabel={(option) => option.name || ""}
+                onInputChange={(event, newValue) => handleSearch(newValue)}
+                onChange={handleProductSelect}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Search products..."
+                    variant="outlined"
+                    size="small"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <SearchIcon sx={{ marginLeft: 1, marginRight: 1 }} />
+                      ),
+                    }}
+                  />
+                )}
+                renderOption={(props, option) => (
+                  <Box
+                    {...props}
+                    key={option._id}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img
+                      src={option.image || "/placeholder-image.png"}
+                      alt={option.name}
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        marginRight: "12px",
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                      }}
+                    />
+                    <Typography>{option.name}</Typography>
+                  </Box>
+                )}
+              />
+            </Box>
+
+            {/* Menu Icon for small screens */}
+            <Box
+              sx={
+                {
+                  // order: isSmallScreen ? "2" : "3",
+                }
+              }
+            >
+              {isSmallScreen && (
+                <IconButton onClick={toggleDrawer("menu", true)}>
+                  <MenuIcon />
+                </IconButton>
+              )}
+            </Box>
+
+            {/* Menu Items for Desktop */}
+            {!isSmallScreen && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  // order: isSmallScreen ? "2" : "3",
+                }}
+              >
+                {menuItems.map((item, index) => (
+                  <NavLink
+                    key={index}
+                    to={item.to}
+                    style={{
+                      textDecoration: "none",
+                      marginRight: "16px",
+                      color: theme.palette.primary.main,
+                    }}
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </Box>
+            )}
+          </Box>
+        </Toolbar>
+
+        {/* Drawer for small screens */}
+        <Drawer
+          anchor="left"
+          open={drawerState.menu}
+          onClose={toggleDrawer("menu", false)}
+        >
+          {renderDrawerContent()}
+        </Drawer>
+      </StyledAppBar>
+    </>
   );
 };
 
