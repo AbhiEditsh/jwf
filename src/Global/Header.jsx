@@ -111,7 +111,6 @@ const Header = () => {
           py: 1,
           mx: {
             xs: 0,
-            md: 0,
           },
           position:'relative'
         }}
@@ -132,6 +131,7 @@ const Header = () => {
               flexWrap: "wrap",
               justifyContent: "space-between",
               flexDirection: "row",
+              px:2
             }}
           >
             {/* Logo */}

@@ -26,10 +26,9 @@ const footerData = [
   {
     title: "INFORMATION",
     links: [
-      { label: "About Us", href: "/about-us" },
+      { label: "About Us", href: "/About" },
       { label: "Certification", href: "/certification" },
-      { label: "Privacy Policy", href: "/privacy-policy" },
-      { label: "Terms & Conditions", href: "/terms-and-conditions" },
+      { label: "Collection", href: "/Collection" },
       { label: "Contact Us", href: "/contact-us" },
     ],
   },
@@ -37,24 +36,24 @@ const footerData = [
     title: "MORE TO KNOW",
     links: [
       { label: "Customize Jewelry", href: "/customize-jewelry" },
-      { label: "Why Choose Us", href: "/why-choose-us" },
       { label: "Lab vs Natural", href: "/lab-vs-natural" },
-      { label: "The 4 C's of Diamonds", href: "/4-cs-of-diamonds" },
+      { label: "The 4 C's of Diamonds", href: "/the-4-cs-of-diamonds" },
+      { label: "FAQ", href: "/faq" },
     ],
   },
 ];
 
 const socialLinks = [
   {
-    href: "",
+    href: "#",
     Icon: FacebookOutlinedIcon,
   },
   {
-    href: "",
+    href: "#",
     Icon: TwitterIcon,
   },
   {
-    href: "",
+    href: "#",
     Icon: InstagramIcon,
   },
   {
@@ -62,7 +61,7 @@ const socialLinks = [
     Icon: LinkedInIcon,
   },
   {
-    href: "https://wa.me/9537605003",
+    href: "#",
     Icon: WhatsAppIcon,
   },
 ];

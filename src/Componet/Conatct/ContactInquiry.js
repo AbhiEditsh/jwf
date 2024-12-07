@@ -21,10 +21,10 @@ const ContactInquiry = () => {
   const iconStyle = {
     background: theme.palette.primary.main,
     color: theme.palette.white.main,
-    width:'30px',
-    height:'30px',
-    borderRadius:'10%',
-    padding:'5px',
+    width: "30px",
+    height: "30px",
+    borderRadius: "10%",
+    padding: "5px",
   };
 
   const contactDetails = [
@@ -71,7 +71,7 @@ const ContactInquiry = () => {
   });
 
   return (
-    <Box sx={{ mt: { sm: 8, xs: 10 } }}>
+    <Box sx={{ mt: { sm: 6, xs: 8 } }}>
       <Container>
         <Box sx={{ position: "relative" }}>
           <Typography
@@ -86,8 +86,8 @@ const ContactInquiry = () => {
             Let’s Grow Together
           </Typography>
 
-          <Box sx={{ mt: { xs: 5, sm: 14 } }}>
-            <Grid container spacing={2}>
+          <Box sx={{ mt: { xs: 5, sm: 8 } }}>
+            <Grid container spacing={2} alignItems={"center"}>
               <Grid item xs={12} sm={5}>
                 <Box sx={{ mb: { sm: 0, xs: 5 } }}>
                   {contactDetails.map((detail, index) => (
