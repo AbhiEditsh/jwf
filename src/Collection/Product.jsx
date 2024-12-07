@@ -7,8 +7,6 @@ import {
   Drawer,
   IconButton,
   Pagination,
-  List,
-  ListItem,
   Button,
 } from "@mui/material";
 import GridViewIcon from "@mui/icons-material/GridView";
@@ -145,13 +143,15 @@ function Product() {
         </Box>
       </Drawer>
 
-      <Box sx={{
-        py:{
-          xs:2,
-          sm:4,
-          md:8
-        }
-      }}>
+      <Box
+        sx={{
+          py: {
+            xs: 2,
+            sm: 4,
+            md: 8,
+          },
+        }}
+      >
         <Container>
           <Box display="flex" justifyContent="space-between" marginBottom={2}>
             <Box>
@@ -255,23 +255,55 @@ function Product() {
                           lg={4}
                           key={product.id}
                         >
-                          <Box border={1} padding={2} borderRadius={2}>
+                          <Box
+                            padding={2}
+                            borderRadius={2}
+                            sx={{
+                              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                            }}
+                          >
                             <Link to={`/product/${product._id}`}>
-                              <img
-                                src={product.image}
-                                alt={product.name}
-                                width="100px"
-                                height="100px"
-                              />
-                              <Typography variant="h6">
+                              <div className="box_image">
+                                <img
+                                  src={product.image}
+                                  alt={product.name}
+                                  width="100px"
+                                  height="200px"
+                                />
+                              </div>
+                              <Typography
+                                variant="h6"
+                                sx={{
+                                  color: theme.palette.primary.main,
+                                  textAlign: "center",
+                                }}
+                              >
                                 {product.name}
                               </Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Category: {product.category}
+                              <Typography
+                                sx={{
+                                  color: theme.palette.grey.main,
+                                  textAlign: "center",
+                                }}
+                              >
+                                RS.{product.price}
                               </Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Gender: {product.gender}
-                              </Typography>
+                              <Box
+                                display="flex"
+                                alignItems="center"
+                                gap={1}
+                                justifyContent={"space-between"}
+                              >
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                >
+                                  {product.category}
+                                </Typography>
+                                <Typography variant="h6" color="textSecondary">
+                                  {product.gender === "Male" ? "🧍🏻" : "🧍‍♀️"}
+                                </Typography>
+                              </Box>
                             </Link>
                           </Box>
                         </Grid>
@@ -283,28 +315,79 @@ function Product() {
                       </Typography>
                     )
                   ) : (
-                    <List>
+                    <Box>
                       {paginatedProducts.length > 0 ? (
                         paginatedProducts.map((product) => (
-                          <ListItem key={product._id}>
-                            <Link to={`/product/${product._id}`}>
-                              <img
-                                src={product.image}
-                                alt={product.name}
-                                width="100px"
-                                height="100px"
-                              />
-                              <Typography variant="h6">
-                                {product.name}
-                              </Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Category: {product.category}
-                              </Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                Gender: {product.gender}
-                              </Typography>
+                          <Box key={product._id}>
+                            <Link
+                              to={`/product/${product._id}`}
+                              style={{ width: "100%" }}
+                            >
+                              <Grid spacing={2} row container>
+                                <Grid item xs={12} md={6} lg={3}>
+                                  <Box
+                                    sx={{
+                                      boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                                      mb: 2,
+                                    }}
+                                  >
+                                    <div className="box_image">
+                                      <img
+                                        src={product.image}
+                                        alt={product.name}
+                                        width="100px"
+                                        height="200px"
+                                      />
+                                    </div>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={12} md={6} lg={9}>
+                                  <Typography
+                                    variant="h6"
+                                    sx={{
+                                      color: theme.palette.primary.main,
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    {product.name}
+                                  </Typography>
+                                  <Typography
+                                    sx={{ color: theme.palette.grey.main }}
+                                  >
+                                    {product.description}
+                                  </Typography>
+
+                                  <Box
+                                    display="flex"
+                                    alignItems="center"
+                                    gap={1}
+                                  >
+                                    <Typography
+                                      variant="body2"
+                                      color="textSecondary"
+                                    >
+                                      {product.category}
+                                    </Typography>
+                                    <Typography
+                                      variant="h6"
+                                      color="textSecondary"
+                                    >
+                                      {product.gender === "Male" ? "🧍🏻" : "🧍‍♀️"}
+                                    </Typography>
+                                  </Box>
+                                  <Typography
+                                    sx={{
+                                      color: theme.palette.grey.main,
+                                      textAlign: "left",
+                                      py: 1,
+                                    }}
+                                  >
+                                    RS.{product.price}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
                             </Link>
-                          </ListItem>
+                          </Box>
                         ))
                       ) : (
                         <Typography variant="body1">
@@ -312,7 +395,7 @@ function Product() {
                           genders
                         </Typography>
                       )}
-                    </List>
+                    </Box>
                   )}
                 </Grid>
               </Container>

@@ -9,7 +9,7 @@ function About() {
     <Box sx={{ mt: { sm: 6, xs: 8 } }}>
       <Container>
         {/* About Section */}
-        <Box sx={{ py: 2 }}>
+        <Box sx={{ py: { xs: 4, md: 6 } }}>
           <Typography
             sx={{
               display: "flex",
@@ -47,7 +47,7 @@ function About() {
         </Box>
 
         {/* Loyalty Section */}
-        <Box sx={{ py: 2 }}>
+        <Box sx={{ py: { xs: 4, md: 6 } }}>
           <Typography
             sx={{
               display: "flex",

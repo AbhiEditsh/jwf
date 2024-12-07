@@ -112,3 +112,12 @@ img {
 .product-image img {
   width: 100%;
 }
+
+.box_image {
+  overflow: hidden;
+  position: relative;
+}
+.box_image img:hover {
+  transform: scale(1.1);
+  transition: all 0.3s ease-in;
+}
