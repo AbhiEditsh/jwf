@@ -38,7 +38,7 @@ export const getProductDetails = (productId) => async (dispatch) => {
       dispatch({
         type: "RELATED_PRODUCTS_SUCCESS",
         payload: response.data.relatedProducts,
-      });
+      }); 
     } catch (error) {
       dispatch({
         type: "RELATED_PRODUCTS_FAIL",
@@ -48,3 +48,25 @@ export const getProductDetails = (productId) => async (dispatch) => {
   };
   
 
+
+// actions/productActions.js
+export const getProductsByCategory = (categoryId) => async (dispatch) => {
+  try {
+    dispatch({ type: "PRODUCTS_BY_CATEGORY_REQUEST" });
+    const { data } = await api.get(`/categories/${categoryId}/products`);
+    console.log(data);
+    
+    dispatch({
+      type: "PRODUCTS_BY_CATEGORY_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "PRODUCTS_BY_CATEGORY_FAIL",
+      payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};
+
+
+  

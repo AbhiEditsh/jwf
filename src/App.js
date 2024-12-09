@@ -11,6 +11,7 @@ import CustomizeJewellery from "./Pages/CustomizeJewellery";
 import LabVsNatural from "./Pages/LabVsNatural";
 import Thediamonds from "./Pages/Thediamonds";
 import About from "./Pages/About";
+import CategoryPage from "./Collection/CategoryPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/customize-jewelry" element={<CustomizeJewellery />} />
         <Route path="/certification" element={<Certification />} />
         <Route path="/product/:productId" element={<ProductDetails />} />
+        <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="lab-vs-natural" element={<LabVsNatural />} />
         <Route path="the-4-cs-of-diamonds" element={<Thediamonds/>} />
       </Routes>

@@ -183,13 +183,13 @@ const Footer = () => {
             variant="body2"
             sx={{ textAlign: "center", width: "100%" }}
           >
-            Copyright by Luxica Jewels
+            Copyright by Xyz Jewels
           </Typography>
           <Typography
             variant="body2"
             sx={{ textAlign: "center", width: "100%" }}
           >
-            Developed & Designed By Ikhodal Softech
+            Developed & Designed By Editsh
           </Typography>
         </Box>
       </Container>

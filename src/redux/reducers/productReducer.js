@@ -64,3 +64,22 @@ export const relatedProductsReducer = (state = relatedProductsInitialState, acti
 };
 
 
+// reducers/productReducer.js
+const productsByCategoryInitialState = {
+  loading: false,
+  products: [],
+  error: null,
+};
+
+export const productsByCategoryReducer = (state = productsByCategoryInitialState, action) => {
+  switch (action.type) {
+    case "PRODUCTS_BY_CATEGORY_REQUEST":
+      return { ...state, loading: true };
+    case "PRODUCTS_BY_CATEGORY_SUCCESS":
+      return { ...state, loading: false, products: action.payload };
+    case "PRODUCTS_BY_CATEGORY_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};

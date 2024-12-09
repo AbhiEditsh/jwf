@@ -7,7 +7,6 @@ import {
   CircularProgress,
   Grid,
   Container,
-  Button,
   Breadcrumbs,
 } from "@mui/material";
 import ReactImageMagnify from "react-image-magnify";
@@ -23,12 +22,12 @@ import {
   getProductDetails,
   getRelatedProducts,
 } from "../redux/actions/productActions";
+import theme from "../theme/theme";
 
 function ProductDetails() {
   const { productId } = useParams();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState("");
-
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
 
@@ -87,18 +86,15 @@ function ProductDetails() {
             Home
           </Link>
           <Link
-            to={`/category/${product.categoryId}`}
+            to={`/category/${product.category.id}`}
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            {product.category}
+            {product.category ? product.category.name : "Not available"}
           </Link>
           <Typography color="text.primary">{product.name}</Typography>
         </Breadcrumbs>
 
         {/* Product Details */}
-        <Typography variant="h4" gutterBottom>
-          {product.name}
-        </Typography>
         <Grid container spacing={3}>
           {/* Product Image Section */}
           <Grid item xs={12} md={6}>
@@ -164,7 +160,8 @@ function ProductDetails() {
           <Grid item xs={12} md={6}>
             <Box sx={{ marginTop: 4 }}>
               <Typography variant="body1" gutterBottom>
-                <strong>Category:</strong> {product.category}
+                <strong>Category:</strong>
+                {product.category ? product.category.name : "Not available"}
               </Typography>
               <Typography variant="body1" gutterBottom>
                 <strong>Price:</strong> ${product.price}
@@ -204,9 +201,23 @@ function ProductDetails() {
       {/* Related Products Section */}
       <Box sx={{ mt: 6 }}>
         <Container>
-          <Typography variant="h5" gutterBottom>
-            Related Products
-          </Typography>
+          <Box sx={{
+            borderBottom:'1px solid #e1e1e1',mb:2
+          }}>
+            <Typography variant="h5" gutterBottom>
+              Related Products
+            </Typography>
+            <Box
+              sx={{
+                width: "200px",
+                display:'block',
+                height: "3px",
+                textAlign: "center",
+                borderRadius: "50%",
+                backgroundColor: theme.palette.primary.main,
+              }}
+            ></Box>
+          </Box>
           {relatedLoading ? (
             <Box sx={{ textAlign: "center", py: 2 }}>
               <CircularProgress />
@@ -214,7 +225,7 @@ function ProductDetails() {
           ) : (
             <Grid container spacing={3}>
               {relatedProducts.map((related) => (
-                <Grid item xs={12} sm={6} md={3} key={related._id}>
+                <Grid item xs={6} sm={6} md={3} key={related._id}>
                   <Box
                     sx={{
                       border: "1px solid #ddd",
@@ -227,24 +238,34 @@ function ProductDetails() {
                       to={`/product/${related._id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <img
-                        src={related.image}
-                        alt={related.name}
-                        style={{
-                          width: "100%",
-                          height: "150px",
-                          objectFit: "cover",
-                          borderRadius: "8px",
-                        }}
-                      />
+                      <div className="box_image">
+                        <img
+                          src={related.image}
+                          alt={related.name}
+                          width="100px"
+                          height="200px"
+                        />
+                      </div>
                       <Typography
-                        variant="body1"
-                        sx={{ mt: 1, fontWeight: 600 }}
+                        variant="h6"
+                        sx={{
+                          color: theme.palette.primary.main,
+                          textAlign: "center",
+                        }}
                       >
                         {related.name}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: "gray" }}>
-                        ${related.price}
+                      <Typography
+                        sx={{
+                          color: theme.palette.grey.main,
+                          textAlign: "center",
+                        }}
+                      >
+                        RS.{related.price}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {related.category.name}{" "}
+                        {/* Use related.category.name */}
                       </Typography>
                     </Link>
                   </Box>

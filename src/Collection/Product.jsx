@@ -8,6 +8,8 @@ import {
   IconButton,
   Pagination,
   Button,
+  Dialog,
+  DialogContent,
 } from "@mui/material";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
@@ -16,7 +18,8 @@ import { Link } from "react-router-dom"; // Import Link for navigation
 import theme from "../theme/theme";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../redux/actions/productActions";
-
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import CloseIcon from "@mui/icons-material/Close"; // Import Close icon
 function Product() {
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
@@ -28,6 +31,8 @@ function Product() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [view, setView] = useState("grid");
   const [page, setPage] = useState(1);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     dispatch(getProducts());
@@ -62,7 +67,10 @@ function Product() {
   const filterProducts = (categories, genders) => {
     const filtered = products.filter((product) => {
       const matchesCategory =
-        categories.length === 0 || categories.includes(product.category);
+        categories.length === 0 ||
+        categories.includes(
+          product.category ? product.category.name : "Not available"
+        );
       const matchesGender =
         genders.length === 0 || genders.includes(product.gender);
       return matchesCategory && matchesGender;
@@ -70,7 +78,13 @@ function Product() {
     setFilteredProducts(filtered);
   };
 
-  const categories = [...new Set(products.map((product) => product.category))];
+  const categories = [
+    ...new Set(
+      products.map((product) =>
+        product.category ? product.category.name : "Not available"
+      )
+    ),
+  ];
   const genders = [...new Set(products.map((product) => product.gender))];
 
   const toggleDrawer = () => {
@@ -91,6 +105,16 @@ function Product() {
     setSelectedCategories([]);
     setSelectedGenders([]);
     setFilteredProducts(products);
+  };
+
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedProduct(null);
   };
 
   return (
@@ -247,14 +271,7 @@ function Product() {
                   {view === "grid" ? (
                     paginatedProducts.length > 0 ? (
                       paginatedProducts.map((product) => (
-                        <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          md={4}
-                          lg={4}
-                          key={product.id}
-                        >
+                        <Grid item xs={6} sm={6} md={4} lg={4} key={product.id}>
                           <Box
                             padding={2}
                             borderRadius={2}
@@ -262,15 +279,24 @@ function Product() {
                               boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
                             }}
                           >
-                            <Link to={`/product/${product._id}`}>
-                              <div className="box_image">
-                                <img
-                                  src={product.image}
-                                  alt={product.name}
-                                  width="100px"
-                                  height="200px"
+                            <div className="box_image">
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                width="100px"
+                                height="200px"
+                              />
+                              <div className="hover_image">
+                                <RemoveRedEyeIcon
+                                  sx={{
+                                    color: theme.palette.black.main,
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => handleOpenModal(product)}
                                 />
                               </div>
+                            </div>
+                            <Link to={`/product/${product._id}`}>
                               <Typography
                                 variant="h6"
                                 sx={{
@@ -288,22 +314,6 @@ function Product() {
                               >
                                 RS.{product.price}
                               </Typography>
-                              <Box
-                                display="flex"
-                                alignItems="center"
-                                gap={1}
-                                justifyContent={"space-between"}
-                              >
-                                <Typography
-                                  variant="body2"
-                                  color="textSecondary"
-                                >
-                                  {product.category}
-                                </Typography>
-                                <Typography variant="h6" color="textSecondary">
-                                  {product.gender === "Male" ? "🧍🏻" : "🧍‍♀️"}
-                                </Typography>
-                              </Box>
                             </Link>
                           </Box>
                         </Grid>
@@ -319,29 +329,38 @@ function Product() {
                       {paginatedProducts.length > 0 ? (
                         paginatedProducts.map((product) => (
                           <Box key={product._id}>
-                            <Link
-                              to={`/product/${product._id}`}
-                              style={{ width: "100%" }}
-                            >
-                              <Grid spacing={2} row container>
-                                <Grid item xs={12} md={6} lg={3}>
-                                  <Box
-                                    sx={{
-                                      boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                                      mb: 2,
-                                    }}
-                                  >
-                                    <div className="box_image">
-                                      <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        width="100px"
-                                        height="200px"
+                            <Grid spacing={2} row container>
+                              <Grid item xs={12} md={6} lg={3}>
+                                <Box
+                                  sx={{
+                                    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                                    mb: 2,
+                                  }}
+                                >
+                                  <div className="box_image">
+                                    <img
+                                      src={product.image}
+                                      alt={product.name}
+                                      width="100px"
+                                      height="200px"
+                                    />
+                                    <div className="hover_image">
+                                      <RemoveRedEyeIcon
+                                        sx={{
+                                          color: theme.palette.black.main,
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => handleOpenModal(product)}
                                       />
                                     </div>
-                                  </Box>
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={9}>
+                                  </div>
+                                </Box>
+                              </Grid>
+                              <Grid item xs={12} md={6} lg={9}>
+                                <Link
+                                  to={`/product/${product._id}`}
+                                  style={{ width: "100%" }}
+                                >
                                   <Typography
                                     variant="h6"
                                     sx={{
@@ -366,27 +385,20 @@ function Product() {
                                       variant="body2"
                                       color="textSecondary"
                                     >
-                                      {product.category}
+                                      {product.category
+                                        ? product.category.name
+                                        : "Not available"}
                                     </Typography>
                                     <Typography
-                                      variant="h6"
+                                      variant="body2"
                                       color="textSecondary"
                                     >
-                                      {product.gender === "Male" ? "🧍🏻" : "🧍‍♀️"}
+                                      {product.gender}
                                     </Typography>
                                   </Box>
-                                  <Typography
-                                    sx={{
-                                      color: theme.palette.grey.main,
-                                      textAlign: "left",
-                                      py: 1,
-                                    }}
-                                  >
-                                    RS.{product.price}
-                                  </Typography>
-                                </Grid>
+                                </Link>
                               </Grid>
-                            </Link>
+                            </Grid>
                           </Box>
                         ))
                       ) : (
@@ -399,19 +411,58 @@ function Product() {
                   )}
                 </Grid>
               </Container>
+              <Pagination
+                count={Math.ceil(filteredProducts.length / itemsPerPage)}
+                page={page}
+                onChange={handlePageChange}
+                sx={{ display: "flex", justifyContent: "center", marginTop: 3 }}
+              />
             </Grid>
           </Grid>
-
-          <Box display="flex" justifyContent="center" marginTop={4}>
-            <Pagination
-              count={Math.ceil(filteredProducts.length / itemsPerPage)}
-              page={page}
-              onChange={handlePageChange}
-              color="primary"
-            />
-          </Box>
         </Container>
       </Box>
+
+      {/* Modal */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogContent>
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              zIndex: 1,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          {selectedProduct && (
+            <Box>
+              <Box
+                sx={{
+                  width: "300px",
+                  height: "300px",
+                  margin: "auto",
+                }}
+              >
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.name}
+                  width="100%"
+                  height="100%"
+                />
+              </Box>
+              <Typography variant="h6">{selectedProduct.name}</Typography>
+              <Typography>Price: RS.{selectedProduct.price}</Typography>
+              <Typography>
+                Description: {selectedProduct.description}
+              </Typography>
+              <Typography>Category: {selectedProduct.category.name}</Typography>
+              <Typography>Gender: {selectedProduct.gender}</Typography>
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

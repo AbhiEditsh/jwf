@@ -121,3 +121,25 @@ img {
   transform: scale(1.1);
   transition: all 0.3s ease-in;
 }
+
+.box_image .hover_image {
+  position: absolute;
+  opacity: 0;
+  bottom: 5%;
+  text-align: center;
+  width: 100%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.box_image:hover .hover_image {
+  opacity: 1;
+  transition: all 0.1s ease-in;
+}
+
+.box_image .hover_image svg {
+  font-size: 40px;
+  background-color: #d2b955;
+  color: #fff;
+  padding: 10px;
+  border-radius: 50%;
+}
