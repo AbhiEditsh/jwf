@@ -9,18 +9,49 @@ import {
 import { Phone as PhoneIcon, Info as InfoIcon } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
-import GoldRate from "./GoldRate";
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 const TopHeader = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const socialLinks = [
+    {
+      href: "#",
+      Icon: FacebookOutlinedIcon,
+    },
+    {
+      href: "#",
+      Icon: TwitterIcon,
+    },
+    {
+      href: "#",
+      Icon: InstagramIcon,
+    },
+    {
+      href: "#",
+      Icon: LinkedInIcon,
+    },
+    {
+      href: "#",
+      Icon: WhatsAppIcon,
+    },
+  ];
 
   return (
     <Grid
       container
       row
       spacing={1}
-      sx={{ display: "flex-start", alignItems: "center", px: 4, pb: 1 }}
+      sx={{
+        display: "flex-start",
+        alignItems: "center",
+        background: theme.palette.lightgrey.main,
+      }}
     >
       <Grid item xs={12} sm={6}>
         <Box
@@ -74,7 +105,34 @@ const TopHeader = () => {
             },
           }}
         >
-          <GoldRate />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: {
+                xs:'center',
+                md:'end'
+              },
+              gap: "4px",
+              px: 2,
+            }}
+          >
+            {socialLinks.map((social, index) => (
+              <Link href={social.href} key={index} target="_blank">
+                <social.Icon
+                  sx={{
+                    fontSize: "20px",
+                    color: theme.palette.primary.main,
+                    mx: "2px",
+                    ml: 3,
+                    "&:hover": {
+                      transition: "transform 0.3s ease-in-out",
+                      color: theme.palette.black.main,
+                    },
+                  }}
+                />
+              </Link>
+            ))}
+          </Box>
         </Typography>
       </Grid>
     </Grid>

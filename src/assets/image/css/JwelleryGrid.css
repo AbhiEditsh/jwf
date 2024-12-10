@@ -1,16 +1,53 @@
-div.galleryblock{
-    width: 100%;
+.container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: 1fr 0.81fr 1fr 0.81fr 1fr;
-
-
+    grid-gap: 5px;
     grid-template-areas:
-        "img1  img2  img3 img4   img5"
-        "img1  img7  img3 img9   img5"
-        "img6  img7  img8 img9   img10"
-        "img6  img12 img8 img14  img10 "
-        "img11 img12 img13 img14 img15";
-
-    grid-gap: 0.5em;
-}
+      "A"
+      "B"
+      "C"
+      "D"
+      "E";
+  }
+  @media (min-width: 576px) {
+    .container {
+      grid-template-columns: 1.52fr 1fr 1fr 1.525fr;
+      grid-template-areas:
+        "A  B  C  E"
+        "A  D  D  E";
+    }
+  }
+  
+  .container img {
+    width: 100%;
+    height: 100%;
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(100%);
+    transition: all 0.5s ease-in-out;
+  }
+  
+  .container img:hover {
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(0%);
+  }
+  
+  
+  img:nth-child(1) {
+    grid-area: A;
+  }
+  
+  img:nth-child(2) {
+    grid-area: B;
+  }
+  
+  img:nth-child(3) {
+    grid-area: C;
+  }
+  
+  img:nth-child(4) {
+    grid-area: D;
+  }
+  
+  img:nth-child(5) {
+    grid-area: E;
+  }
+  

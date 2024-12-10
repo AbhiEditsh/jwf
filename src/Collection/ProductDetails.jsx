@@ -201,16 +201,22 @@ function ProductDetails() {
       {/* Related Products Section */}
       <Box sx={{ mt: 6 }}>
         <Container>
-          <Box sx={{
-            borderBottom:'1px solid #e1e1e1',mb:2
-          }}>
+          <Box
+            sx={{
+              borderBottom: "1px solid #e1e1e1",
+              mb: 2,
+            }}
+          >
             <Typography variant="h5" gutterBottom>
               Related Products
             </Typography>
             <Box
               sx={{
-                width: "200px",
-                display:'block',
+                width: {
+                  xs: "100px",
+                  md: "200px",
+                },
+                display: "block",
                 height: "3px",
                 textAlign: "center",
                 borderRadius: "50%",
@@ -225,7 +231,7 @@ function ProductDetails() {
           ) : (
             <Grid container spacing={3}>
               {relatedProducts.map((related) => (
-                <Grid item xs={6} sm={6} md={3} key={related._id}>
+                <Grid item xs={12} sm={6} md={3} key={related._id}>
                   <Box
                     sx={{
                       border: "1px solid #ddd",

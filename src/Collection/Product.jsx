@@ -271,7 +271,7 @@ function Product() {
                   {view === "grid" ? (
                     paginatedProducts.length > 0 ? (
                       paginatedProducts.map((product) => (
-                        <Grid item xs={6} sm={6} md={4} lg={4} key={product.id}>
+                        <Grid item xs={12} sm={6} md={4} lg={4} key={product.id}>
                           <Box
                             padding={2}
                             borderRadius={2}

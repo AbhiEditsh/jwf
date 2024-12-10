@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Box,
@@ -10,14 +10,13 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { styled, useTheme } from "@mui/system";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios"; // Ensure axios is installed
-import TopHeader from '../../src/Global/TopHeader'
-
+import TopHeader from "../../src/Global/TopHeader";
 
 const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
   backgroundColor: backgroundColor || theme.palette.background.paper,
@@ -33,10 +32,12 @@ const Header = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
+  // eslint-disable-next-line
   const [backgroundColor, setBackgroundColor] = useState(
     theme.palette.background.paper
   );
   const [drawerState, setDrawerState] = useState({ menu: false });
+  // eslint-disable-next-line
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -90,21 +91,32 @@ const Header = () => {
         <CloseIcon />
       </IconButton>
       {menuItems.map((item, index) => (
-        <NavLink
+        <Link
           key={index}
           to={item.to}
           style={{ textDecoration: "none" }}
           onClick={toggleDrawer("menu", false)}
         >
-          <Typography>{item.label}</Typography>
-        </NavLink>
+          <Typography
+            sx={{
+              py: 2,
+              color: theme.palette.black.main,
+              "&:hover": {
+                color: theme.palette.secondary.main,
+                transition: "all 0.5s ease-in",
+              },
+            }}
+          >
+            {item.label}
+          </Typography>
+        </Link>
       ))}
     </Box>
   );
 
   return (
     <>
-      <TopHeader/>
+      <TopHeader />
       <StyledAppBar
         backgroundColor={backgroundColor}
         sx={{
@@ -112,7 +124,7 @@ const Header = () => {
           mx: {
             xs: 0,
           },
-          position:'relative'
+          position: "relative",
         }}
       >
         <Toolbar
@@ -131,15 +143,22 @@ const Header = () => {
               flexWrap: "wrap",
               justifyContent: "space-between",
               flexDirection: "row",
-              px:2
+              px: 2,
             }}
           >
             {/* Logo */}
-            <Box
-            sx={{ order: isSmallScreen ? "0" : "0" }}
-            >
+            <Box sx={{ order: isSmallScreen ? "0" : "0" }}>
               <Link to="/" style={{ textDecoration: "none" }}>
-                <Typography variant="h6">Logo</Typography>
+                <Box
+                  sx={{
+                    width: "100px",
+                  }}
+                >
+                  <img
+                    src="https://i.postimg.cc/gcBKX5Zy/png-clipart-the-jewellery-channel-gemological-institute-of-america-jewelry-television-sapphire-jewel.png"
+                    alt="logo"
+                  />
+                </Box>
               </Link>
             </Box>
 
@@ -148,7 +167,7 @@ const Header = () => {
               sx={{
                 order: isSmallScreen ? "3" : "0",
                 position: "relative",
-                width: isSmallScreen ? "100%" : "50%",
+                width: isSmallScreen ? "100%" : "40%",
                 marginTop: isSmallScreen ? 2 : 0,
                 marginLeft: isSmallScreen ? 0 : 2,
                 marginBottom: isSmallScreen ? 2 : 0,
@@ -202,13 +221,7 @@ const Header = () => {
             </Box>
 
             {/* Menu Icon for small screens */}
-            <Box
-              sx={
-                {
-                  // order: isSmallScreen ? "2" : "3",
-                }
-              }
-            >
+            <Box>
               {isSmallScreen && (
                 <IconButton onClick={toggleDrawer("menu", true)}>
                   <MenuIcon />
@@ -222,11 +235,10 @@ const Header = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  // order: isSmallScreen ? "2" : "3",
                 }}
               >
                 {menuItems.map((item, index) => (
-                  <NavLink
+                  <Link
                     key={index}
                     to={item.to}
                     style={{
@@ -235,8 +247,23 @@ const Header = () => {
                       color: theme.palette.primary.main,
                     }}
                   >
-                    {item.label}
-                  </NavLink>
+                    <Typography
+                      key={index}
+                      sx={{
+                        color: theme.palette.black.main,
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        transition: "color 0.3s ease",
+                        "&:hover": {
+                          color: theme.palette.secondary.main,
+                          borderBottom: `1px solid ${theme.palette.primary.main} `,
+                          transition:'all 0.4s ease in'
+                        },
+                      }}
+                    >
+                      {item.label}
+                    </Typography>
+                  </Link>
                 ))}
               </Box>
             )}

@@ -2,7 +2,9 @@ import React from "react";
 import MainSlider from "../Home/MainSlider";
 import Categoryslider from "../Componet/Home/Categoryslider";
 import HomeAbout from "../Componet/Home/HomeAbout";
-// import JwelleryGrid from "../Componet/Home/JwelleryGrid";
+import JwelleryGrid from "../Componet/Home/JwelleryGrid";
+import ClientTestimonial from "../Componet/Home/ClientTestimonial";
+import FullSection from "../Componet/Home/FullSection";
 
 function Home() {
   return (
@@ -10,7 +12,9 @@ function Home() {
       <MainSlider />
       <Categoryslider />
       <HomeAbout />
-      {/* <JwelleryGrid /> */}
+      <FullSection/>
+      <JwelleryGrid />
+      <ClientTestimonial/>
     </div>
   );
 }

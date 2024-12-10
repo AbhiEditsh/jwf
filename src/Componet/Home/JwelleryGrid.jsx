@@ -1,57 +1,41 @@
 import React from "react";
-import '../../assets/image/css/JwelleryGrid.css';
+import "../../assets/image/css/JwelleryGrid.css";
+import { Box, Container } from "@mui/material";
 function JwelleryGrid() {
   return (
-    <div>
-      <div className="galleryblock">
-        <div className="image1">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
+    <Box 
+    sx={{
+      my: {
+        xs: 4,
+        md: 8,
+      },
+    }}
+    >
+      <Container>
+        <div className="container scale-image">
+          <img
+            src="https://i.postimg.cc/NfqLyjL6/pendal-7.webp"
+            alt="image1"
+          />
+          <img
+            src="https://i.postimg.cc/y8fVT16r/istockphoto-1277517088-612x612.jpg"
+            alt="image2"
+          />
+          <img
+            src="https://i.postimg.cc/YShtn5h2/Jewelry-Stones-Black-background-542427-600x400.jpg"
+            alt="image3"
+          />
+          <img
+            src="https://i.postimg.cc/hvbnQg3s/indian-golden-jewels-necklace-generate-ai-photo.jpg"
+            alt="image4"
+          />
+          <img
+            src="https://i.postimg.cc/3JXN2QDP/Ring-1.webp"
+            alt="imag5"
+          />
         </div>
-        <div className="image2">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image3">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image4">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image5">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image6">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image7">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image8">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image9">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image10">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image11">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image12">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image13">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image14">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-        <div className="image15">
-          <img src="https://i.postimg.cc/t48KSdmb/pendal-7.webp" alt="" />
-        </div>
-       
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 }
 

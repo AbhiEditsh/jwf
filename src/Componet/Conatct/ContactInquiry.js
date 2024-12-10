@@ -251,7 +251,7 @@ const ContactInquiry = () => {
                         >
                           {formik.isSubmitting
                             ? "Sending..."
-                            : "Submit Interest"}
+                            : "Submit"}
                         </Button>
                       </Box>
                     </Grid>

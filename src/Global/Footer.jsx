@@ -1,11 +1,6 @@
 import React from "react";
 import { Box, Typography, Grid, Link, Container } from "@mui/material";
 import theme from "../theme/theme";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 const footerData = [
   {
@@ -29,7 +24,7 @@ const footerData = [
       { label: "About Us", href: "/About" },
       { label: "Certification", href: "/certification" },
       { label: "Collection", href: "/Collection" },
-      { label: "Contact Us", href: "/contact-us" },
+      { label: "Contact Us", href: "/contact" },
     ],
   },
   {
@@ -43,43 +38,20 @@ const footerData = [
   },
 ];
 
-const socialLinks = [
-  {
-    href: "#",
-    Icon: FacebookOutlinedIcon,
-  },
-  {
-    href: "#",
-    Icon: TwitterIcon,
-  },
-  {
-    href: "#",
-    Icon: InstagramIcon,
-  },
-  {
-    href: "#",
-    Icon: LinkedInIcon,
-  },
-  {
-    href: "#",
-    Icon: WhatsAppIcon,
-  },
-];
-
 const Footer = () => {
   return (
     <Box
       sx={{
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.white.main,
-        mt:4
+        mt: 2,
       }}
     >
       <Container>
-        <Grid container spacing={4} sx={{ py: 2 }}>
+        <Grid container spacing={4} sx={{ py: 1 }}>
           {footerData.map((section, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
-              <Typography variant="h6" sx={{ pb: 2 }}>
+              <Typography variant="h6" sx={{ pb: 1 }}>
                 {section.title}
               </Typography>
               {section.content && (
@@ -121,6 +93,7 @@ const Footer = () => {
                           sx={{
                             color: theme.palette.white.main,
                             textDecoration: "none",
+                            fontSize: "14px",
                           }}
                         >
                           {link.label}
@@ -145,30 +118,6 @@ const Footer = () => {
             </Grid>
           ))}
         </Grid>
-
-        {/* Social Icons Section */}
-        <Grid container justifyContent="center" sx={{ p: 2 }}>
-          <Box sx={{ display: "flex", justifyContent: "center", gap: "4px" ,px:2}}>
-            {socialLinks.map((social, index) => (
-              <Link href={social.href} key={index} target="_blank">
-                <social.Icon
-                  sx={{
-                    fontSize: "30px",
-                    color: theme.palette.white.main,
-                    mx: "2px",
-                    mr: 3,
-                    transition: "transform 0.3s ease-in-out",
-                    "&:hover": {
-                      transform: "translateY(-10px)",
-                      color: theme.palette.black.main,
-                    },
-                  }}
-                />
-              </Link>
-            ))}
-          </Box>
-        </Grid>
-
         {/* Footer Bottom */}
         <Box
           sx={{

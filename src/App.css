@@ -78,6 +78,7 @@ img {
 @media (max-width: 600px) {
   .slider-text h1 {
     font-size: 1.5rem;
+    text-align: center;
   }
 
   .slider-text p {
@@ -142,4 +143,87 @@ img {
   color: #fff;
   padding: 10px;
   border-radius: 50%;
+}
+.full-section {
+  background-image: url("https://i.postimg.cc/QM4wPCvv/vogue-beautiful-woman-posing-black-dress.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 450px;
+  width: 100%;
+  position: relative;
+  background-attachment: fixed;
+}
+.client-image{
+  background-image: url("https://i.postimg.cc/VshkCxLP/06001d4a6d70355f3f5998f556ae5a54.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 450px;
+  width: 100%;
+  position: relative;
+  background-attachment: fixed;
+}
+
+.client-image::after{
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.);
+  width: 100%;
+}
+.full-section::after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+}
+.client-content{
+  z-index: 23;
+  position: relative;
+}
+.full-section .fullsection-content {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 22;
+}
+/* Client Testimonial */
+.testimonial-card {
+  padding: 20px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.testimonial-card h3 {
+  margin-top: 10px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.testimonial-card p {
+  color: #555;
+  margin: 15px 0;
+}
+
+.testimonial-card .MuiSvgIcon-root {
+  color: #f5b301;
+}
+
+.slick-arrow {
+  z-index: 1000;
+  color: #000 !important;
+}
+
+.slick-dots li button:before {
+  color: #000 !important;
 }

@@ -58,27 +58,27 @@ const CustomizeJewellery = () => {
   return (
     <Box sx={{ mt: { sm: 6, xs: 8 } }}>
       <Container>
-      <Typography
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: { lg: "40px", md: "34px", sm: "24px", xs: "28px" },
-              fontWeight: "600",
-              mb:1
-            }}
-          >
-            Jewelry customisation process
-          </Typography>
-          <Box
-                    sx={{
-                      borderBottom: `4px solid ${theme.palette.primary.main}`,
-                      borderRadius: "10px",
-                      width: "20%",
-                      mb: 3,
-                      margin:'auto'
-                    }}
-                  ></Box>
+        <Typography
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: { lg: "35px", md: "30px", sm: "24px", xs: "18px" },
+            fontWeight: "600",
+            mb: 1,
+          }}
+        >
+          Jewelry customisation process
+        </Typography>
+        <Box
+          sx={{
+            borderBottom: `4px solid ${theme.palette.primary.main}`,
+            borderRadius: "10px",
+            width: "20%",
+            mb: 3,
+            margin: "auto",
+          }}
+        ></Box>
         <Box sx={{ mt: { sm: 2, xs: 4 } }}>
           {processSteps.map((step, index) => (
             <Grid
@@ -87,7 +87,7 @@ const CustomizeJewellery = () => {
               key={index}
               alignItems={"center"}
               direction={index % 2 === 0 ? "row" : "row-reverse"}
-              sx={{ marginBottom: 2 }}
+              sx={{ py: 2 }}
             >
               {/* Image Section */}
               <Grid item xs={12} md={6}>
@@ -130,7 +130,9 @@ const CustomizeJewellery = () => {
                       mb: 3,
                     }}
                   ></Box>
-                  <Typography variant="body1">{step.content}</Typography>
+                  <Typography variant="body1" sx={{
+                    fontSize:'14px'
+                  }}>{step.content}</Typography>
                 </Box>
               </Grid>
             </Grid>
