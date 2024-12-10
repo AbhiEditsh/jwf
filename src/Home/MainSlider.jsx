@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import Slider from "react-slick";
 import { useMediaQuery } from "@mui/material";
 
@@ -21,7 +21,6 @@ const MainSlider = () => {
     autoplay: true,
     autoplaySpeed: 5000,
     fade: true,
-    beforeChange: (oldIndex, newIndex) => setCurrentSlide(newIndex),
   };
 
   return (
