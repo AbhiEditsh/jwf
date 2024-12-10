@@ -89,20 +89,7 @@
   animation-fill-mode: forwards;
 }
 
-.textCon {
-  width: 200px;
-  height: 50px;
-  position: absolute;
-  top: 0;
-  text-align: center;
-  line-height: 50px;
-  font-size: 30px;
-  font-family: Dancing Script;
-  color: #000;
-  opacity: 0;
-  animation: text 500ms 2.4s ease;
-  animation-fill-mode: forwards;
-}
+
 
 @keyframes traingle1 {
   0% {

@@ -79,7 +79,7 @@ const CustomizeJewellery = () => {
             margin: "auto",
           }}
         ></Box>
-        <Box sx={{ mt: { sm: 2, xs: 4 } }}>
+        <Box sx={{ my: { sm: 2, xs: 4 } }}>
           {processSteps.map((step, index) => (
             <Grid
               container
@@ -90,7 +90,10 @@ const CustomizeJewellery = () => {
               sx={{ py: 2 }}
             >
               {/* Image Section */}
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={6}
+              data-aos="zoom-in"
+              data-aos-duration="3000"
+              >
                 <Box
                   sx={{
                     width: "300px",
@@ -110,7 +113,10 @@ const CustomizeJewellery = () => {
                 </Box>
               </Grid>
               {/* Text Section */}
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={6}
+              data-aos="zoom-in"
+              data-aos-duration="3000"
+              >
                 <Box>
                   <Typography
                     variant="h5"

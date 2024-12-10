@@ -13,10 +13,10 @@ import {
 import React from "react";
 import theme from "../theme/theme";
 import carat from "../assets/image/carat.jpg";
-import clarity from "../assets/image/Clarity.png";
-import colors from "../assets/image/Color.png";
-import cut from "../assets/image/cut.png";
-import DaimondShape from "../assets/image/diamond-shape.png";
+import clarity from "../assets/image/Clarity.jpg";
+import colors from "../assets/image/color.jpg"; 
+import cut from "../assets/image/cut.jpg";
+import DaimondShape from "../assets/image/diamond-shape.jpg";
 function Thediamonds() {
   const clarityData = [
     {

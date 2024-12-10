@@ -8,6 +8,9 @@ import {
   Grid,
   Container,
   Breadcrumbs,
+  Dialog,
+  DialogContent,
+  IconButton,
 } from "@mui/material";
 import {
   FacebookShareButton,
@@ -17,11 +20,13 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from "react-share";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   getProductDetails,
   getRelatedProducts,
 } from "../redux/actions/productActions";
 import theme from "../theme/theme";
+import CloseIcon from "@mui/icons-material/Close"; // Import Close icon
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -29,6 +34,8 @@ function ProductDetails() {
   const [selectedImage, setSelectedImage] = useState("");
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
@@ -47,6 +54,15 @@ function ProductDetails() {
     }
   }, [product]);
 
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedProduct(null);
+  };
   if (loading) {
     return (
       <Box
@@ -126,7 +142,10 @@ function ProductDetails() {
                       cursor: "pointer",
                       objectFit: "cover",
                       borderRadius: "8px",
-                      border: img === selectedImage ? "2px solid blue" : "none",
+                      border:
+                        img === selectedImage
+                          ? `2px solid ${theme.palette.primary.main}`
+                          : "none",
                     }}
                     onClick={() => setSelectedImage(img)}
                   />
@@ -151,9 +170,6 @@ function ProductDetails() {
 
               {/* Share Section */}
               <Box sx={{ mt: 4 }}>
-                <Typography variant="body1" gutterBottom>
-                  Share this product:
-                </Typography>
                 <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                   <FacebookShareButton url={productUrl} quote={product.name}>
                     <FacebookIcon size={40} round />
@@ -228,8 +244,17 @@ function ProductDetails() {
                           src={related.image}
                           alt={related.name}
                           width="100px"
-                          height="200px"
+                          height="230px"
                         />
+                        <div className="hover_image">
+                          <RemoveRedEyeIcon
+                            sx={{
+                              color: theme.palette.black.main,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleOpenModal(product)}
+                          />
+                        </div>
                       </div>
                       <Typography
                         variant="h6"
@@ -259,6 +284,58 @@ function ProductDetails() {
           )}
         </Container>
       </Box>
+      {/* Modal */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogContent>
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              zIndex: 1,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          {selectedProduct && (
+            <Box>
+              <Box
+                sx={{
+                  height: "300px",
+                  margin: "auto",
+                }}
+              >
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.name}
+                  width="100%"
+                  height="100%"
+                  objectFit="cover"
+                />
+              </Box>
+              <Typography variant="h6" gutterBottom>
+                {selectedProduct.name}
+              </Typography>
+              <Typography gutterBottom>
+                Description: {selectedProduct.description}
+              </Typography>
+              <Typography gutterBottom>
+                Price:
+                <Typography
+                  component="span"
+                  sx={{
+                    color: theme.palette.primary.main,
+                    ml: 1,
+                  }}
+                >
+                  {selectedProduct.price}
+                </Typography>
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

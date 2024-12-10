@@ -41,8 +41,10 @@ const ClientTestimonial = () => {
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    arrows:false,
+    arrows: false,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
     responsive: [
       {
         breakpoint: 1024,
@@ -105,7 +107,7 @@ const ClientTestimonial = () => {
             ></Box>
           </Box>
           <Container>
-            <Slider {...settings} >
+            <Slider {...settings}>
               {testimonials.map((testimonial) => (
                 <Box>
                   <Box

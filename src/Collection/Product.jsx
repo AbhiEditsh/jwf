@@ -271,7 +271,14 @@ function Product() {
                   {view === "grid" ? (
                     paginatedProducts.length > 0 ? (
                       paginatedProducts.map((product) => (
-                        <Grid item xs={12} sm={6} md={4} lg={4} key={product.id}>
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          md={4}
+                          lg={4}
+                          key={product.id}
+                        >
                           <Box
                             padding={2}
                             borderRadius={2}
@@ -333,7 +340,6 @@ function Product() {
                               <Grid item xs={12} md={6} lg={3}>
                                 <Box
                                   sx={{
-                                    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
                                     mb: 2,
                                   }}
                                 >
@@ -341,8 +347,8 @@ function Product() {
                                     <img
                                       src={product.image}
                                       alt={product.name}
-                                      width="100px"
-                                      height="200px"
+                                      width="150px"
+                                      height="230px"
                                     />
                                     <div className="hover_image">
                                       <RemoveRedEyeIcon
@@ -384,16 +390,9 @@ function Product() {
                                     <Typography
                                       variant="body2"
                                       color="textSecondary"
+                                      sx={{ py: 2 }}
                                     >
-                                      {product.category
-                                        ? product.category.name
-                                        : "Not available"}
-                                    </Typography>
-                                    <Typography
-                                      variant="body2"
-                                      color="textSecondary"
-                                    >
-                                      {product.gender}
+                                      ${product.price}
                                     </Typography>
                                   </Box>
                                 </Link>
@@ -440,7 +439,6 @@ function Product() {
             <Box>
               <Box
                 sx={{
-                  width: "300px",
                   height: "300px",
                   margin: "auto",
                 }}
@@ -452,13 +450,23 @@ function Product() {
                   height="100%"
                 />
               </Box>
-              <Typography variant="h6">{selectedProduct.name}</Typography>
+              <Typography variant="h6" gutterBottom>{selectedProduct.name}</Typography>
               <Typography>Price: RS.{selectedProduct.price}</Typography>
-              <Typography>
+              <Typography gutterBottom>
                 Description: {selectedProduct.description}
               </Typography>
-              <Typography>Category: {selectedProduct.category.name}</Typography>
-              <Typography>Gender: {selectedProduct.gender}</Typography>
+              <Typography gutterBottom>
+                Price:
+                <Typography
+                  component="span"
+                  sx={{
+                    color: theme.palette.primary.main,
+                    ml: 1,
+                  }}
+                >
+                  {selectedProduct.price}
+                </Typography>
+              </Typography>
             </Box>
           )}
         </DialogContent>

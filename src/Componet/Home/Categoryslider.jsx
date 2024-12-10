@@ -30,7 +30,8 @@ function Categoryslider() {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 3,
+    arrows: false,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -38,7 +39,7 @@ function Categoryslider() {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         },
       },
     ],
@@ -48,7 +49,7 @@ function Categoryslider() {
     <Box
       sx={{
         my: {
-          xs: 2,
+          xs: 3,
           md: 4,
         },
       }}

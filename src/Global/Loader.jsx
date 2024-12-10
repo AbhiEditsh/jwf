@@ -13,7 +13,6 @@ function Loader() {
           <li />
           <li />
         </ul>
-        <div className="textCon">Pragti Jewellers</div>
       </div>
     </>
   )
