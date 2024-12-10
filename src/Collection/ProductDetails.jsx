@@ -9,7 +9,6 @@ import {
   Container,
   Breadcrumbs,
 } from "@mui/material";
-import ReactImageMagnify from "react-image-magnify";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -37,13 +36,11 @@ function ProductDetails() {
 
   const productUrl = `${window.location.origin}/product/${productId}`;
 
-  // Fetch product details and related products
   useEffect(() => {
     dispatch(getProductDetails(productId));
     dispatch(getRelatedProducts(productId));
   }, [dispatch, productId]);
 
-  // Set the initial selected image
   useEffect(() => {
     if (product?.imageList?.length > 0) {
       setSelectedImage(product.imageList[0]);
@@ -80,7 +77,6 @@ function ProductDetails() {
   return (
     <Box sx={{ py: 8 }}>
       <Container>
-        {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
           <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
             Home
@@ -94,36 +90,19 @@ function ProductDetails() {
           <Typography color="text.primary">{product.name}</Typography>
         </Breadcrumbs>
 
-        {/* Product Details */}
         <Grid container spacing={3}>
           {/* Product Image Section */}
           <Grid item xs={12} md={6}>
             <Box sx={{ textAlign: "center" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  margin: "auto",
+              <img
+                src={selectedImage}
+                alt="Selected product"
+                style={{
+                  width: "100%",
+                  maxHeight: "500px",
+                  objectFit: "contain",
                 }}
-              >
-                <ReactImageMagnify
-                  {...{
-                    smallImage: {
-                      alt: "Selected product",
-                      isFluidWidth: true,
-                      src: selectedImage,
-                    },
-                    largeImage: { src: selectedImage, width: 800, height: 800 },
-                    enlargedImageContainerDimensions: {
-                      width: "50%",
-                      height: "50%",
-                    },
-                    isHintEnabled: true,
-                    lensStyle: { backgroundColor: "rgba(0,0,0,.6)" },
-                  }}
-                />
-              </Box>
+              />
             </Box>
             {/* Thumbnail Slider */}
             <Box
@@ -270,8 +249,7 @@ function ProductDetails() {
                         RS.{related.price}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {related.category.name}{" "}
-                        {/* Use related.category.name */}
+                        {related.category.name}
                       </Typography>
                     </Link>
                   </Box>
