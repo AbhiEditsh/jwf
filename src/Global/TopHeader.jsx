@@ -51,6 +51,9 @@ const TopHeader = () => {
         display: "flex-start",
         alignItems: "center",
         background: theme.palette.lightgrey.main,
+        paddingBottom:{
+          xs:'4px'
+        }
       }}
     >
       <Grid item xs={12} sm={6}>

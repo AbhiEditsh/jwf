@@ -32,87 +32,9 @@ img {
   width: 100%;
 }
 
-.slider-item {
-  position: relative;
-}
 
-.slider-text {
-  position: absolute;
-  top: 50%;
-  z-index: 1;
-  left: -100%; /* Start outside the view */
-  color: #fff;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(-50%);
-  transition: all 0.6s ease-in-out; /* Smooth animation for left and opacity */
-}
 
-.slider-text h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin: 0;
-  text-align: left;
-}
 
-.slider-text p {
-  font-size: 1.2rem;
-  margin: 10px 0 0;
-}
-
-.animate-active {
-  left: 10%;
-  opacity: 1;
-}
-
-@media (max-width: 960px) {
-  .slider-text h1 {
-    font-size: 2rem;
-  }
-
-  .slider-text p {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .slider-text h1 {
-    font-size: 1.5rem;
-    text-align: center;
-  }
-
-  .slider-text p {
-    font-size: 0.9rem;
-  }
-
-  .animate-active {
-    left: 5%;
-  }
-}
-
-/* Add this to your CSS file */
-.ant-carousel .slick-slide {
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Custom easing */
-}
-.slider-item::after {
-  position: absolute;
-  content: "";
-  background: rgba(0, 0, 0, 0.5);
-  width: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100%;
-  display: block;
-}
-.product-image {
-  width: 400px;
-  height: 400px;
-}
-.product-image img {
-  width: 100%;
-}
 
 .box_image {
   overflow: hidden;
@@ -228,32 +150,3 @@ img {
   color: #000 !important;
 }
 
-.slider-item {
-  position: relative;
-  text-align: center;
-  color: white;
-}
-
-.slider-text {
-  position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.slider-text.animate-active {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-h1 {
-  font-size: 2rem;
-  margin: 0.5rem 0;
-}
-
-p {
-  font-size: 1.2rem;
-}

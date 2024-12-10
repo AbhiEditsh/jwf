@@ -41,6 +41,7 @@ const ClientTestimonial = () => {
     infinite: true,
     speed: 500,
     slidesToShow: 3,
+    arrows:false,
     slidesToScroll: 1,
     responsive: [
       {
