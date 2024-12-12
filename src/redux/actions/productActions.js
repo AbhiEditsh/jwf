@@ -54,7 +54,6 @@ export const getProductsByCategory = (categoryId) => async (dispatch) => {
   try {
     dispatch({ type: "PRODUCTS_BY_CATEGORY_REQUEST" });
     const { data } = await api.get(`/categories/${categoryId}/products`);
-    console.log(data);
     
     dispatch({
       type: "PRODUCTS_BY_CATEGORY_SUCCESS",
@@ -69,4 +68,16 @@ export const getProductsByCategory = (categoryId) => async (dispatch) => {
 };
 
 
-  
+
+export const createInquiry = (inquiryData) => async (dispatch) => {
+  try {
+    dispatch({ type: "INQUIRY_REQUEST" });
+    await api.post("/inquiries", inquiryData);
+    dispatch({ type: "INQUIRY_SUCCESS" });
+  } catch (error) {
+    dispatch({
+      type: "INQUIRY_FAIL",
+      payload: error.response ? error.response.data.error : error.message,
+    });
+  }
+};

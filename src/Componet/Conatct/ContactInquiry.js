@@ -1,16 +1,28 @@
 import React from "react";
-import { Box, Container, Grid, Typography, Button, IconButton } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Typography,
+  Button,
+  IconButton,
+} from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useFormik } from "formik";
-import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import theme from "../../theme/theme";
+import { createInquiry } from "../../redux/actions/productActions";
+import { ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 
 const ContactInquiry = () => {
+  const dispatch = useDispatch();
+  const inquiryState = useSelector((state) => state.inquiry);
+  const { loading, success, error } = inquiryState;
+
   const iconStyle = {
     background: theme.palette.primary.main,
     color: theme.palette.white.main,
@@ -21,10 +33,26 @@ const ContactInquiry = () => {
   };
 
   const contactDetails = [
-    { icon: <PhoneIcon sx={iconStyle} />, title: "Call to Us", description: "Phone: +91 76989 88190" },
-    { icon: <EmailIcon sx={iconStyle} />, title: "Write to Us", description: "Emails: export@lunexinternational.com" },
-    { icon: <LocationOnIcon sx={iconStyle} />, title: "Store Address", description: "SHOP NO.9, Surat, Gujarat" },
-    { icon: <QueryBuilderIcon sx={iconStyle} />, title: "Store Hours", description: "Mon-Sat: 11:00 am - 06:00 pm" },
+    {
+      icon: <PhoneIcon sx={iconStyle} />,
+      title: "Call to Us",
+      description: "Phone: +91 76989 88190",
+    },
+    {
+      icon: <EmailIcon sx={iconStyle} />,
+      title: "Write to Us",
+      description: "Emails: export@lunexinternational.com",
+    },
+    {
+      icon: <LocationOnIcon sx={iconStyle} />,
+      title: "Store Address",
+      description: "SHOP NO.9, Surat, Gujarat",
+    },
+    {
+      icon: <QueryBuilderIcon sx={iconStyle} />,
+      title: "Store Hours",
+      description: "Mon-Sat: 11:00 am - 06:00 pm",
+    },
   ];
 
   const formik = useFormik({
@@ -34,33 +62,21 @@ const ContactInquiry = () => {
       message: "",
     },
     onSubmit: async (values, { resetForm }) => {
-      try {
-        await axios.post("http://localhost:5000/api/inquiries", values);
-        resetForm();
-        toast.success("Inquiry submitted successfully!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      } catch (error) {
-        toast.error("Error submitting inquiry. Please try again later.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      }
+      dispatch(createInquiry({ values }));
+      resetForm();
     },
   });
 
   return (
     <Box sx={{ mt: { sm: 6, xs: 8 } }}>
-      <ToastContainer positionposition="top-center"/>
+      {loading && <p>Loading...</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && (
+        <>
+          <ToastContainer positionposition="top-center" />
+        </>
+      )}
+
       <Container>
         <Box sx={{ position: "relative" }}>
           <Typography
@@ -78,23 +94,53 @@ const ContactInquiry = () => {
               <Grid item xs={12} sm={5}>
                 <Box sx={{ mb: { sm: 0, xs: 5 } }}>
                   {contactDetails.map((detail, index) => (
-                    <Box key={index} sx={{ display: "flex", justifyContent: "flex-start", alignItems: "center", mb: 3 }}>
-                      <IconButton sx={{ background: "theme.palette.primary.main", mr: 2 }} size="small">
+                    <Box
+                      key={index}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        mb: 3,
+                      }}
+                    >
+                      <IconButton
+                        sx={{ background: "theme.palette.primary.main", mr: 2 }}
+                        size="small"
+                      >
                         {detail.icon}
                       </IconButton>
                       <Box>
-                        <Typography variant="h6" fontWeight="bold" sx={{ color: "theme.palette.primary.main" }}>
+                        <Typography
+                          variant="h6"
+                          fontWeight="bold"
+                          sx={{ color: "theme.palette.primary.main" }}
+                        >
                           {detail.title}
                         </Typography>
-                        <Typography variant="body1" sx={{ color: "#686868" }}>{detail.description}</Typography>
+                        <Typography variant="body1" sx={{ color: "#686868" }}>
+                          {detail.description}
+                        </Typography>
                       </Box>
                     </Box>
                   ))}
                 </Box>
               </Grid>
               <Grid item xs={12} sm={7}>
-                <Box sx={{ boxShadow: "0px 1px 10px rgba(153, 153, 153, 0.5)", p: 4, backgroundColor: theme.palette.lightgrey.main }}>
-                  <Typography sx={{ fontSize: { xs: "20px", sm: "18px", md: "22px" }, fontWeight: 600, mb: 6 }} align="center">
+                <Box
+                  sx={{
+                    boxShadow: "0px 1px 10px rgba(153, 153, 153, 0.5)",
+                    p: 4,
+                    backgroundColor: theme.palette.lightgrey.main,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: { xs: "20px", sm: "18px", md: "22px" },
+                      fontWeight: 600,
+                      mb: 6,
+                    }}
+                    align="center"
+                  >
                     Send Inquiry
                   </Typography>
                   <form onSubmit={formik.handleSubmit}>
@@ -151,8 +197,23 @@ const ContactInquiry = () => {
                         ></textarea>
                       </Grid>
 
-                      <Box sx={{ display: "flex", justifyContent: "center", width: "100%", mt: 4 }}>
-                        <Button type="submit" sx={{ backgroundColor: theme.palette.primary.main, color: "#FFF", borderRadius: 1, p: 1 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          width: "100%",
+                          mt: 4,
+                        }}
+                      >
+                        <Button
+                          type="submit"
+                          sx={{
+                            backgroundColor: theme.palette.primary.main,
+                            color: "#FFF",
+                            borderRadius: 1,
+                            p: 1,
+                          }}
+                        >
                           Submit
                         </Button>
                       </Box>

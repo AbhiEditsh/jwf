@@ -83,3 +83,23 @@ export const productsByCategoryReducer = (state = productsByCategoryInitialState
       return state;
   }
 };
+
+
+const inquiryInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+
+export const inquiryReducer = (state = inquiryInitialState, action) => {
+  switch (action.type) {
+    case "INQUIRY_REQUEST":
+      return { ...state, loading: true };
+    case "INQUIRY_SUCCESS":
+      return { ...state, loading: false, success: true };
+    case "INQUIRY_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
