@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 const ContactInquiry = () => {
   const dispatch = useDispatch();
   const inquiryState = useSelector((state) => state.inquiry);
-  const { loading, success, error } = inquiryState;
+  const { success, error } = inquiryState;
 
   const iconStyle = {
     background: theme.palette.primary.main,
@@ -78,14 +78,7 @@ const ContactInquiry = () => {
 
   return (
     <Box sx={{ mt: { sm: 6, xs: 8 } }}>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && (
-        <>
-          <ToastContainer positionposition="top-center" />
-        </>
-      )}
-
+      <ToastContainer positionposition="top-center" />
       <Container>
         <Box sx={{ position: "relative" }}>
           <Typography
