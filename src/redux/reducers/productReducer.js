@@ -2,55 +2,60 @@
 
 // Initial state for product list
 const productListInitialState = {
-    products: [],
-    loading: false,
-    error: null,
-  };
-  
-  // Reducer for product list
-  export const productListReducer = (state = productListInitialState, action) => {
-    switch (action.type) {
-      case "PRODUCT_LIST_REQUEST":
-        return { ...state, loading: true };
-      case "PRODUCT_LIST_SUCCESS":
-        return { ...state, loading: false, products: action.payload };
-      case "PRODUCT_LIST_FAIL":
-        return { ...state, loading: false, error: action.payload };
-      default:
-        return state;
-    }
-  };
-  
-  // Initial state for product details
-  const productDetailsInitialState = {
-    loading: false,
-    product: null,
-    error: null,
-  };
-  
-  // Reducer for single product details
-  export const productDetailsReducer = (state = productDetailsInitialState, action) => {
-    switch (action.type) {
-      case "PRODUCT_DETAILS_REQUEST":
-        return { ...state, loading: true };
-      case "PRODUCT_DETAILS_SUCCESS":
-        return { ...state, loading: false, product: action.payload };
-      case "PRODUCT_DETAILS_FAIL":
-        return { ...state, loading: false, error: action.payload };
-      default:
-        return state;
-    }
-  };
-  
+  products: [],
+  loading: false,
+  error: null,
+};
 
-  //Reducrer for Relelted Product
+// Reducer for product list
+export const productListReducer = (state = productListInitialState, action) => {
+  switch (action.type) {
+    case "PRODUCT_LIST_REQUEST":
+      return { ...state, loading: true };
+    case "PRODUCT_LIST_SUCCESS":
+      return { ...state, loading: false, products: action.payload };
+    case "PRODUCT_LIST_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+// Initial state for product details
+const productDetailsInitialState = {
+  loading: false,
+  product: null,
+  error: null,
+};
+
+// Reducer for single product details
+export const productDetailsReducer = (
+  state = productDetailsInitialState,
+  action
+) => {
+  switch (action.type) {
+    case "PRODUCT_DETAILS_REQUEST":
+      return { ...state, loading: true };
+    case "PRODUCT_DETAILS_SUCCESS":
+      return { ...state, loading: false, product: action.payload };
+    case "PRODUCT_DETAILS_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+//Reducrer for Relelted Product
 const relatedProductsInitialState = {
   loading: false,
   products: [],
   error: null,
 };
 
-export const relatedProductsReducer = (state = relatedProductsInitialState, action) => {
+export const relatedProductsReducer = (
+  state = relatedProductsInitialState,
+  action
+) => {
   switch (action.type) {
     case "RELATED_PRODUCTS_REQUEST":
       return { ...state, loading: true };
@@ -63,7 +68,6 @@ export const relatedProductsReducer = (state = relatedProductsInitialState, acti
   }
 };
 
-
 // reducers/productReducer.js
 const productsByCategoryInitialState = {
   loading: false,
@@ -71,7 +75,10 @@ const productsByCategoryInitialState = {
   error: null,
 };
 
-export const productsByCategoryReducer = (state = productsByCategoryInitialState, action) => {
+export const productsByCategoryReducer = (
+  state = productsByCategoryInitialState,
+  action
+) => {
   switch (action.type) {
     case "PRODUCTS_BY_CATEGORY_REQUEST":
       return { ...state, loading: true };
@@ -84,7 +91,6 @@ export const productsByCategoryReducer = (state = productsByCategoryInitialState
   }
 };
 
-
 const inquiryInitialState = {
   loading: false,
   success: false,
@@ -94,9 +100,9 @@ const inquiryInitialState = {
 export const inquiryReducer = (state = inquiryInitialState, action) => {
   switch (action.type) {
     case "INQUIRY_REQUEST":
-      return { ...state, loading: true };
+      return { ...state, loading: true, success: action.payload };
     case "INQUIRY_SUCCESS":
-      return { ...state, loading: false, success: true };
+      return { loading: false, success: true, data: action.payload };
     case "INQUIRY_FAIL":
       return { ...state, loading: false, error: action.payload };
     default:

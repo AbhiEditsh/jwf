@@ -72,8 +72,13 @@ export const getProductsByCategory = (categoryId) => async (dispatch) => {
 export const createInquiry = (inquiryData) => async (dispatch) => {
   try {
     dispatch({ type: "INQUIRY_REQUEST" });
-    await api.post("/inquiries", inquiryData);
-    dispatch({ type: "INQUIRY_SUCCESS" });
+    const { data } = await api.post("/inquiries", inquiryData);
+    console.log(data);
+    
+    dispatch({ 
+      type: "INQUIRY_SUCCESS", 
+      payload: data.message, 
+    });
   } catch (error) {
     dispatch({
       type: "INQUIRY_FAIL",

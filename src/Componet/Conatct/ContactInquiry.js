@@ -20,8 +20,29 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ContactInquiry = () => {
   const dispatch = useDispatch();
-  const inquiryState = useSelector((state) => state.inquiry);
-  const { success, error } = inquiryState;
+  const { success, error, data } = useSelector((state) => state.inquiry);
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+    onSubmit: (values, { resetForm }) => {
+      dispatch(createInquiry(values));
+      resetForm();
+    },
+  });
+
+  useEffect(() => {
+    if (success && data) {
+      toast.success(data);
+      formik.resetForm();
+    } else if (error) {
+      toast.error(error);
+    }
+     // eslint-disable-next-lin
+  }, [success, error, data]);
 
   const iconStyle = {
     background: theme.palette.primary.main,
@@ -54,27 +75,6 @@ const ContactInquiry = () => {
       description: "Mon-Sat: 11:00 am - 06:00 pm",
     },
   ];
-
-  useEffect(() => {
-    if (success) {
-      toast.success("Inquiry submitted successfully!");
-    }
-    if (error) {
-      toast.error(`Error: ${error}`);
-    }
-  }, [success, error]);
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      message: "",
-    },
-    onSubmit: async (values, { resetForm }) => {
-      dispatch(createInquiry(values));
-      resetForm();
-    },
-  });
 
   return (
     <Box sx={{ mt: { sm: 6, xs: 8 } }}>
