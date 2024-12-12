@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Container,
@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import "react-toastify/dist/ReactToastify.css";
 import theme from "../../theme/theme";
 import { createInquiry } from "../../redux/actions/productActions";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 
 const ContactInquiry = () => {
@@ -55,6 +55,15 @@ const ContactInquiry = () => {
     },
   ];
 
+  useEffect(() => {
+    if (success) {
+      toast.success("Inquiry submitted successfully!");
+    }
+    if (error) {
+      toast.error(`Error: ${error}`);
+    }
+  }, [success, error]);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -62,7 +71,7 @@ const ContactInquiry = () => {
       message: "",
     },
     onSubmit: async (values, { resetForm }) => {
-      dispatch(createInquiry({ values }));
+      dispatch(createInquiry(values));
       resetForm();
     },
   });
