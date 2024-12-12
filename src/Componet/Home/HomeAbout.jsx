@@ -16,7 +16,14 @@ function HomeAbout() {
       >
         <Container>
           <Grid container spacing={2} row>
-            <Grid item xs={12} md={6} lg={6}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={6}
+              data-aos="zoom-in-right"
+              data-aos-duration="2000"
+            >
               <Box>
                 <div className="box_image">
                   <img
@@ -30,7 +37,9 @@ function HomeAbout() {
                 </div>
               </Box>
             </Grid>
-            <Grid item xs={12} md={6} lg={6}>
+            <Grid item xs={12} md={6} lg={6}
+             data-aos="zoom-in-left"
+             data-aos-duration="2000">
               <Box>
                 <Typography
                   sx={{
@@ -47,7 +56,7 @@ function HomeAbout() {
                     width: "12%",
                     height: "3px",
                     backgroundColor: theme.palette.primary.main,
-                    borderRadius:'50%'
+                    borderRadius: "50%",
                   }}
                 ></Box>
                 <Typography

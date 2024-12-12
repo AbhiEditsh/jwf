@@ -19,67 +19,81 @@ function Certification() {
                 fontWeight: "600",
                 py: 3,
               }}
+              data-aos="zoom-in"
+              data-aos-duration="3000"
             >
               Certification
             </Typography>
-              <Grid container spacing={2} row alignItems="center">
-                <Grid item xs={12} md={6}>
+            <Grid container spacing={2} row alignItems="center">
+              <Grid
+                item
+                xs={12}
+                md={6}
+                data-aos="fade-right"
+                data-aos-duration="3000"
+              >
+                <Typography
+                  sx={{
+                    textAlign: "left",
+                    pb: 2,
+                    fontWeight: "700",
+                    fontSize: {
+                      xs: "18px",
+                      sm: "40px",
+                    },
+                  }}
+                >
+                  IGI
                   <Typography
+                    component="span"
                     sx={{
-                      textAlign: "left",
-                      pb: 2,
-                      fontWeight: "700",
-                      fontSize: {
-                        xs: "18px",
-                        sm: "40px",
-                      },
+                      fontSize: "20px",
+                      fontWeight: "600",
+                      ml: 2,
+                      color: theme.palette.primary.main,
                     }}
                   >
-                    IGI
-                    <Typography
-                      component="span"
-                      sx={{
-                        fontSize: "20px",
-                        fontWeight: "600",
-                        ml: 2,
-                        color: theme.palette.primary.main,
-                      }}
-                    >
-                      [International Gemological Institute]
-                    </Typography>
+                    [International Gemological Institute]
                   </Typography>
-                  <Typography
-                    sx={{
-                      textAlign: "left",
-                      pb: 4,
-                    }}
-                  >
-                    Lab Grown Diamond Certification (most Commonly From Labs
-                    IGI, SGL, Certificate) Is A Physical And Electronic Document
-                    You Receive From Authentic Labs That Describe A Diamond’s
-                    Characteristics.
-                  </Typography>
-                  <Typography
-                    sx={{
-                      textAlign: "left",
-                    }}
-                  >
-                    Lab Grown Diamonds Certification Is The Evidence That Your
-                    Purchased Diamond Passed All The Decided Standards By
-                    Authentic Laboratories Like IGI.
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <div className="certificate-image">
-                    <img
-                      src={certificate}
-                      alt="certificate_image"
-                      width={`100%`}
-                      height={`100%`}
-                    />
-                  </div>
-                </Grid>
+                </Typography>
+                <Typography
+                  sx={{
+                    textAlign: "left",
+                    pb: 4,
+                  }}
+                >
+                  Lab Grown Diamond Certification (most Commonly From Labs IGI,
+                  SGL, Certificate) Is A Physical And Electronic Document You
+                  Receive From Authentic Labs That Describe A Diamond’s
+                  Characteristics.
+                </Typography>
+                <Typography
+                  sx={{
+                    textAlign: "left",
+                  }}
+                >
+                  Lab Grown Diamonds Certification Is The Evidence That Your
+                  Purchased Diamond Passed All The Decided Standards By
+                  Authentic Laboratories Like IGI.
+                </Typography>
               </Grid>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                data-aos="fade-left"
+                data-aos-duration="3000"
+              >
+                <div className="certificate-image">
+                  <img
+                    src={certificate}
+                    alt="certificate_image"
+                    width={`100%`}
+                    height={`100%`}
+                  />
+                </div>
+              </Grid>
+            </Grid>
           </Box>
 
           {/* Why Choose Us */}
@@ -93,6 +107,8 @@ function Certification() {
                 fontWeight: "600",
                 py: 2,
               }}
+              data-aos="zoom-in"
+              data-aos-duration="2000"
             >
               What is certified diamonds?
             </Typography>
@@ -104,19 +120,31 @@ function Certification() {
                 },
               }}
             >
-              <Typography sx={{ textAlign: "center", pb: 2 }}>
+              <Typography
+                sx={{ textAlign: "center", pb: 2 }}
+                data-aos="zoom-in"
+                data-aos-duration="2000"
+              >
                 When You Purchase The Lab Grown Diamond You Make Sure That It Is
                 Real And You Don’t Get Cheated By The Seller, Right? But, Feel
                 Free To Purchase A Lab Diamond With Certification Because
                 Certified Diamond Is Approved By Trustworthy Labs.
               </Typography>
-              <Typography sx={{ textAlign: "center", pb: 2 }}>
+              <Typography
+                sx={{ textAlign: "center", pb: 2 }}
+                data-aos="zoom-in"
+                data-aos-duration="2000"
+              >
                 The Certification Report Carries All Information About Diamonds
                 4’Cs, Symmetry, Dimension, Fluorescence. So Always Purchased
                 Certified Diamonds For Your Engagement Rings And Wedding
                 Accessories.
               </Typography>
-              <Typography sx={{ textAlign: "center", pb: 2 }}>
+              <Typography
+                sx={{ textAlign: "center", pb: 2 }}
+                data-aos="zoom-in"
+                data-aos-duration="2000"
+              >
                 In SGL, Certified Diamonds You Can Easily Find The 4’Cs With
                 Exact Proportions. There Is No Need To Cross Check Because SGL
                 Lab Has An Experienced Quality Inspector Who Checks The Diamond
@@ -137,6 +165,8 @@ function Certification() {
                 fontWeight: "600",
                 py: 2,
               }}
+              data-aos="zoom-in"
+              data-aos-duration="2000"
             >
               Why You Can Purchase Lab Grown Diamonds From XYZ Jewels?💍
             </Typography>
@@ -148,7 +178,11 @@ function Certification() {
                 },
               }}
             >
-              <Typography sx={{ textAlign: "center", pb: 2 }}>
+              <Typography
+                sx={{ textAlign: "center", pb: 2 }}
+                data-aos="zoom-in"
+                data-aos-duration="2000"
+              >
                 XYZ Jewels Carries Only The Best Color, Clarity Graded Diamonds
                 Which You Can See In The Certification Report. Lab Grown
                 Diamonds Are Made From Artificial Methods..
@@ -158,9 +192,11 @@ function Certification() {
                 sx={{
                   textAlign: "center",
                   fontSize: "20px",
-                  py:2,
-                  fontWeight:'600'
+                  py: 2,
+                  fontWeight: "600",
                 }}
+                data-aos="zoom-in"
+                data-aos-duration="2000"
               >
                 Thank You🙏
               </Typography>

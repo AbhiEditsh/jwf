@@ -7,15 +7,11 @@ import {
   CircularProgress,
   Container,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import CloseIcon from "@mui/icons-material/Close";
 import { getProductsByCategory } from "../redux/actions/productActions";
 import { Link, useParams } from "react-router-dom";
+import ProductModel from "../Collection/ProductModel";
 import theme from "../theme/theme";
 
 function CategoryPage() {
@@ -103,7 +99,6 @@ function CategoryPage() {
     <Box sx={{ py: 8 }}>
       <Container>
         <Grid container spacing={3}>
-          {/* Left Section: Filters */}
           <Grid item xs={12} sm={4} md={3}>
             <Box
               sx={{
@@ -128,7 +123,6 @@ function CategoryPage() {
                   </div>
                 ))}
               </div>
-
               <Button
                 variant="contained"
                 color="secondary"
@@ -140,8 +134,6 @@ function CategoryPage() {
               </Button>
             </Box>
           </Grid>
-
-          {/* Right Section: Products */}
           <Grid item xs={12} sm={8} md={9}>
             <Container>
               <Grid container spacing={3}>
@@ -162,7 +154,6 @@ function CategoryPage() {
                           width="100px"
                           height="200px"
                         />
-
                         <div
                           className="hover_image"
                           onClick={() => handleOpenModal(product)}
@@ -175,15 +166,11 @@ function CategoryPage() {
                           />
                         </div>
                       </div>
-                      <Link
-                        to={`/product/${product._id}`}
-                        style={{ width: "100%" }}
-                      >
+                      <Link to={`/product/${product._id}`}>
                         <Typography
                           variant="h6"
                           sx={{
                             color: theme.palette.primary.main,
-                            textAlign: "center",
                           }}
                         >
                           {product.name}
@@ -191,7 +178,6 @@ function CategoryPage() {
                         <Typography
                           sx={{
                             color: theme.palette.grey.main,
-                            textAlign: "center",
                           }}
                         >
                           RS.{product.price}
@@ -206,52 +192,11 @@ function CategoryPage() {
         </Grid>
       </Container>
 
-      {/* Modal */}
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>
-          <IconButton
-            aria-label="close"
-            onClick={handleCloseModal}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          {selectedProduct && (
-            <Box>
-              <Box
-                sx={{
-                  width: "300px",
-                  height: "300px",
-                  margin: "auto",
-                }}
-              >
-                <img
-                  src={selectedProduct.image}
-                  alt={selectedProduct.name}
-                  width="100%"
-                  height="auto"
-                />
-              </Box>
-              <Typography variant="h6">{selectedProduct.name}</Typography>
-              <Typography>Price: RS.{selectedProduct.price}</Typography>
-              <Typography>
-                Description: {selectedProduct.description}
-              </Typography>
-              <Typography>
-                Category: {selectedProduct.category?.name}
-              </Typography>
-              <Typography>Gender: {selectedProduct.gender}</Typography>
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ProductModel
+        open={openModal}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
     </Box>
   );
 }

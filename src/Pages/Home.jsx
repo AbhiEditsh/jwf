@@ -1,5 +1,5 @@
 import React from "react";
-import MainSlider from "../Home/MainSlider";
+import MainSlider from "../Componet/Home/MainSlider";
 import Categoryslider from "../Componet/Home/Categoryslider";
 import HomeAbout from "../Componet/Home/HomeAbout";
 import JwelleryGrid from "../Componet/Home/JwelleryGrid";

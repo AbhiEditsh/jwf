@@ -42,20 +42,16 @@ img {
 
 .box_image .hover_image {
   position: absolute;
-  opacity: 0;
-  bottom: 5%;
-  text-align: center;
-  width: 100%;
-  left: 50%;
-  transform: translate(-50%, 0);
+  top: 2%;
+  right: 2%;
 }
-.box_image:hover .hover_image {
-  opacity: 1;
+.box_image:hover .hover_image svg {
+  background-color: #000;
   transition: all 0.1s ease-in;
 }
 
 .box_image .hover_image svg {
-  font-size: 40px;
+  font-size: 35px;
   background-color: #d2b955;
   color: #fff;
   padding: 10px;
@@ -70,7 +66,7 @@ img {
   position: relative;
   background-attachment: fixed;
 }
-.client-image{
+.client-image {
   background-image: url("https://i.postimg.cc/VshkCxLP/06001d4a6d70355f3f5998f556ae5a54.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -80,14 +76,14 @@ img {
   background-attachment: fixed;
 }
 
-.client-image::after{
+.client-image::after {
   position: absolute;
   content: "";
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.);
+  background: rgba(0, 0, 0, 0);
   width: 100%;
 }
 .full-section::after {
@@ -100,7 +96,7 @@ img {
   background: rgba(0, 0, 0, 0.6);
   width: 100%;
 }
-.client-content{
+.client-content {
   z-index: 23;
   position: relative;
 }
@@ -134,4 +130,16 @@ img {
 
 .testimonial-card .MuiSvgIcon-root {
   color: #f5b301;
+}
+.slick-prev,
+.slick-next {
+  z-index: 2;
+}
+.slick-prev::before,
+.slick-next::before {
+  content: "";
+}
+.slick-slider button {
+  width: 30px;
+  height: 30px;
 }

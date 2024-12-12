@@ -64,8 +64,10 @@ const FAQs = () => {
             alignItems: "center",
             fontSize: { lg: "40px", md: "34px", sm: "24px", xs: "28px" },
             fontWeight: "600",
-            py: 4,
+            py: 2,
           }}
+          data-aos="zoom-in"
+          data-aos-duration="2000"
         >
           Top Customer Questions
         </Typography>
@@ -87,8 +89,7 @@ const FAQs = () => {
               aria-controls={`${faq.id}-content`}
               id={`${faq.id}-header`}
               sx={{
-                my:2,
-              
+                my: 2,
               }}
             >
               <Typography

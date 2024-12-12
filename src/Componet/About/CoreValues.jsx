@@ -37,7 +37,9 @@ function CoreValues() {
       <Container>
         <Grid container spacing={4}>
           {sections.map((section, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4}>
+            <Grid key={index} item xs={12} sm={6} md={4}  
+            data-aos="zoom-in"
+            data-aos-duration="3000">
               <Box
                 sx={{
                   boxShadow: "0 4px 10px rgba(0,0,0,0.1)",

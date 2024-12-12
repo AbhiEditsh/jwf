@@ -9,7 +9,8 @@ function About() {
     <Box sx={{ mt: { sm: 6, xs: 8 } }}>
       <Container>
         {/* About Section */}
-        <Box sx={{ py: { xs: 4, md: 6 } }}>
+        <Box sx={{ py: { xs: 4, md: 6 } }} data-aos="zoom-in"
+              data-aos-duration="3000">
           <Typography
             sx={{
               display: "flex",
@@ -47,7 +48,8 @@ function About() {
         </Box>
 
         {/* Loyalty Section */}
-        <Box sx={{ py: { xs: 4, md: 6 } }}>
+        <Box sx={{ py: { xs: 4, md: 6 } }} data-aos="zoom-in"
+              data-aos-duration="3000">
           <Typography
             sx={{
               display: "flex",
@@ -79,7 +81,15 @@ function About() {
         <Box sx={{ py: { xs: 4, md: 6 } }}>
           <Grid container spacing={2}>
             {/* Left Column */}
-            <Grid item xs={12} sm={12} md={6} lg={6}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              lg={6}
+              data-aos="fade-in"
+              data-aos-duration="3000"
+            >
               <Typography
                 sx={{
                   fontSize: { lg: "30px", md: "26px", sm: "24px" },
@@ -113,7 +123,15 @@ function About() {
             </Grid>
 
             {/* Right Column */}
-            <Grid item xs={12} sm={12} md={6} lg={6}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              lg={6}
+              data-aos="fade-in"
+              data-aos-duration="3000"
+            >
               <Box
                 sx={{
                   height: "100%",
@@ -128,7 +146,7 @@ function About() {
         </Box>
 
         <Box sx={{ py: { xs: 4, md: 6 } }}>
-          <CoreValues/>
+          <CoreValues />
         </Box>
       </Container>
     </Box>

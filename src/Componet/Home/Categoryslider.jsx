@@ -17,7 +17,6 @@ function Categoryslider() {
     dispatch(getProducts());
   }, [dispatch]);
 
-  // Filter to get unique categories
   const uniqueCategoryProducts = products?.reduce((acc, product) => {
     if (!acc.find((item) => item.category.name === product.category.name)) {
       acc.push(product);
@@ -25,17 +24,22 @@ function Categoryslider() {
     return acc;
   }, []);
 
-  // Slick slider settings
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 5,
     arrows: false,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
       {
         breakpoint: 768,
         settings: {
@@ -43,6 +47,7 @@ function Categoryslider() {
         },
       },
     ],
+   
   };
 
   return (

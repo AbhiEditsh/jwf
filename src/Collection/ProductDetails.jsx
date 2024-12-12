@@ -8,9 +8,6 @@ import {
   Grid,
   Container,
   Breadcrumbs,
-  Dialog,
-  DialogContent,
-  IconButton,
 } from "@mui/material";
 import {
   FacebookShareButton,
@@ -26,7 +23,7 @@ import {
   getRelatedProducts,
 } from "../redux/actions/productActions";
 import theme from "../theme/theme";
-import CloseIcon from "@mui/icons-material/Close"; // Import Close icon
+import ProductModel from "./ProductModel";
 
 function ProductDetails() {
   const { productId } = useParams();
@@ -61,6 +58,7 @@ function ProductDetails() {
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    alert("hello");
     setSelectedProduct(null);
   };
   if (loading) {
@@ -285,57 +283,13 @@ function ProductDetails() {
         </Container>
       </Box>
       {/* Modal */}
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogContent>
-          <IconButton
-            onClick={handleCloseModal}
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              zIndex: 1,
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-          {selectedProduct && (
-            <Box>
-              <Box
-                sx={{
-                  height: "300px",
-                  margin: "auto",
-                }}
-              >
-                <img
-                  src={selectedProduct.image}
-                  alt={selectedProduct.name}
-                  width="100%"
-                  height="100%"
-                  objectFit="cover"
-                />
-              </Box>
-              <Typography variant="h6" gutterBottom>
-                {selectedProduct.name}
-              </Typography>
-              <Typography gutterBottom>
-                Description: {selectedProduct.description}
-              </Typography>
-              <Typography gutterBottom>
-                Price:
-                <Typography
-                  component="span"
-                  sx={{
-                    color: theme.palette.primary.main,
-                    ml: 1,
-                  }}
-                >
-                  {selectedProduct.price}
-                </Typography>
-              </Typography>
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
+      {openModal && selectedProduct && (
+        <ProductModel
+          product={selectedProduct}
+          open={openModal}
+          onClose={handleCloseModal}
+        />
+      )}
     </Box>
   );
 }

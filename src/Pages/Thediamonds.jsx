@@ -14,7 +14,7 @@ import React from "react";
 import theme from "../theme/theme";
 import carat from "../assets/image/carat.jpg";
 import clarity from "../assets/image/Clarity.jpg";
-import colors from "../assets/image/color.jpg"; 
+import colors from "../assets/image/color.jpg";
 import cut from "../assets/image/cut.jpg";
 import DaimondShape from "../assets/image/diamond-shape.jpg";
 function Thediamonds() {
@@ -112,8 +112,10 @@ function Thediamonds() {
                 alignItems: "center",
                 fontSize: { lg: "40px", md: "34px", sm: "24px", xs: "28px" },
                 fontWeight: "600",
-                mb: 1,
+                mb: 2,
               }}
+              data-aos="zoom-in"
+              data-aos-duration="2000"
             >
               The 4 C's of Diamonds
             </Typography>
@@ -164,7 +166,7 @@ function Thediamonds() {
                 weight, the more unique the diamond and, as a result, the
                 greater the price.
               </Typography>
-              <Box sx={{ py: 3 }}>
+              <Box sx={{ py: 3 }} data-aos="zoom-in" data-aos-duration="2000">
                 <img src={carat} alt="Carat=image" width={`100%`} />
               </Box>
             </Box>
@@ -191,7 +193,7 @@ function Thediamonds() {
                 qualities and magnifies the product to note the clarity linked
                 with the costly stone.
               </Typography>
-              <Box sx={{ py: 3 }}>
+              <Box sx={{ py: 3 }} data-aos="zoom-in" data-aos-duration="2000">
                 <img src={clarity} alt="Carat=image" width={`100%`} />
               </Box>
               <Box>
@@ -248,7 +250,7 @@ function Thediamonds() {
                 lighting, and color grading diamonds requires a skilled eye and
                 many years of practice.
               </Typography>
-              <Box sx={{ py: 3 }}>
+              <Box sx={{ py: 3 }} data-aos="zoom-in" data-aos-duration="2000">
                 <img src={colors} alt="color-image" width={`100%`} />
               </Box>
               <Box>
@@ -276,17 +278,20 @@ function Thediamonds() {
             </Box>
           </Box>
 
-
-          {/* Carat */}
+          {/* CUt */}
           <Box>
             <Box sx={{ py: 3 }}>
               <Typography sx={{ fontWeight: "700" }} variant="h5">
                 Cut
               </Typography>
               <Typography sx={{ color: theme.palette.grey.main, my: 2 }}>
-              The Diamond Cut Scale contains five grades ranging from Poor to Excellent. The cut grade of a diamond directly impacts its beauty; if a diamond is cut and polished correctly, it will have a much more desirable appearance, even when compared to diamonds of higher color and clarity grades.
+                The Diamond Cut Scale contains five grades ranging from Poor to
+                Excellent. The cut grade of a diamond directly impacts its
+                beauty; if a diamond is cut and polished correctly, it will have
+                a much more desirable appearance, even when compared to diamonds
+                of higher color and clarity grades.
               </Typography>
-              <Box sx={{ py: 3 }}>
+              <Box sx={{ py: 3 }} data-aos="zoom-in" data-aos-duration="2000">
                 <img src={cut} alt="Cut=image" width={`100%`} />
               </Box>
             </Box>
@@ -296,14 +301,13 @@ function Thediamonds() {
           <Box>
             <Box sx={{ py: 3 }}>
               <Typography sx={{ fontWeight: "700" }} variant="h5">
-              Diamond Shapes 
+                Diamond Shapes
               </Typography>
-              <Box sx={{ py: 3 }}>
+              <Box sx={{ py: 3 }} data-aos="zoom-in" data-aos-duration="2000">
                 <img src={DaimondShape} alt="Daimond_shape" width={`100%`} />
               </Box>
             </Box>
           </Box>
-
         </Container>
       </Box>
     </>

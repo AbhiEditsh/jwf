@@ -17,6 +17,8 @@ function FullSection() {
               },
               color: theme.palette.primary.main,
             }}
+            data-aos="zoom-out"
+            data-aos-duration="2000"
           >
             New Peal & Gold Jewellery
           </Typography>
@@ -30,6 +32,8 @@ function FullSection() {
               fontStyle: "italic",
               textAlign: "center",
             }}
+            data-aos="zoom-out"
+            data-aos-duration="2000"
           >
             World The Best Commercial selling Gold jewelleryStore.
           </Typography>
@@ -39,8 +43,10 @@ function FullSection() {
                 background: "transparent",
                 color: theme.palette.white.main,
                 borderBottom: `2px double ${theme.palette.primary.main} `,
-                my:2
+                my: 2,
               }}
+              data-aos="zoom-out"
+              data-aos-duration="2000"
             >
               More Collection
             </Button>
