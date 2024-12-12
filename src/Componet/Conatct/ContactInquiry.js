@@ -41,7 +41,7 @@ const ContactInquiry = () => {
     } else if (error) {
       toast.error(error);
     }
-     // eslint-disable-next-lin
+     // eslint-disable-next-line
   }, [success, error, data]);
 
   const iconStyle = {

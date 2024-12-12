@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import { getProducts } from "../../redux/actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Typography, Grid } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import theme from "../../theme/theme";
 import { Link } from "react-router-dom";
+import ProductLoader from "../../Global/ProductLoader";
 
 function Categoryslider() {
   const dispatch = useDispatch();
@@ -47,7 +48,6 @@ function Categoryslider() {
         },
       },
     ],
-   
   };
 
   return (
@@ -86,16 +86,11 @@ function Categoryslider() {
             }}
           ></Box>
         </Box>
-        <Slider {...settings}>
-          {uniqueCategoryProducts && uniqueCategoryProducts.length > 0 ? (
-            uniqueCategoryProducts.map((product, index) => (
-              <div key={index} className="">
-                <Box
-                  sx={{
-                    textAlign: "center",
-                    padding: "10px",
-                  }}
-                >
+        {uniqueCategoryProducts && uniqueCategoryProducts.length > 0 ? (
+          <Slider {...settings}>
+            {uniqueCategoryProducts.map((product, index) => (
+              <div key={index}>
+                <Box sx={{ textAlign: "center", padding: "10px" }}>
                   <Link
                     to={`/category/${product.category.id}`}
                     style={{ textDecoration: "none", color: "inherit" }}
@@ -125,11 +120,13 @@ function Categoryslider() {
                   </Link>
                 </Box>
               </div>
-            ))
-          ) : (
-            <p>Loading products...</p>
-          )}
-        </Slider>
+            ))}
+          </Slider>
+        ) : (
+          <Grid item xs={12}>
+            <ProductLoader sx={{ my: 2 }} />
+          </Grid>
+        )}
       </Container>
     </Box>
   );

@@ -1,41 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Slider from "react-slick";
+import { useDispatch, useSelector } from "react-redux";
 import { Avatar, Box, Container, Typography } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
+import StarHalfIcon from "@mui/icons-material/StarHalf";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import theme from "../../theme/theme";
-
-const testimonials = [
-  {
-    id: 1,
-    name: "Alex Ritchell",
-    image:
-      "https://i.postimg.cc/SKPVCvXz/3d-illustration-person-with-sunglasses-23-2149436188.avif",
-    review:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Leaaxa Maey",
-    image:
-      "https://i.postimg.cc/SKPVCvXz/3d-illustration-person-with-sunglasses-23-2149436188.avif",
-    review:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Alan Sears",
-    image:
-      "https://i.postimg.cc/SKPVCvXz/3d-illustration-person-with-sunglasses-23-2149436188.avif",
-    review:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ",
-    rating: 5,
-  },
-];
+import { getReview } from "../../redux/actions/productActions";
 
 const ClientTestimonial = () => {
+  const dispatch = useDispatch();
+  const { review } = useSelector((state) => state.reviewList);
+
+  useEffect(() => {
+    dispatch(getReview());
+  }, [dispatch]);
+
   const settings = {
     dots: false,
     infinite: true,
@@ -61,30 +42,69 @@ const ClientTestimonial = () => {
     ],
   };
 
+  // Function to render stars based on rating
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating); // Count of full stars
+    const hasHalfStar = rating % 1 >= 0.5; // Check for half star
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // Remaining empty stars
+
+    return (
+      <>
+        {/* Render full stars */}
+        {Array.from({ length: fullStars }).map((_, i) => (
+          <StarIcon
+            key={`full-${i}`}
+            sx={{
+              fontSize: "14px",
+              color: theme.palette.warning.main,
+            }}
+          />
+        ))}
+        {/* Render half star */}
+        {hasHalfStar && (
+          <StarHalfIcon
+            key="half-star"
+            sx={{
+              fontSize: "14px",
+              color: theme.palette.warning.main,
+            }}
+          />
+        )}
+        {/* Render empty stars */}
+        {Array.from({ length: emptyStars }).map((_, i) => (
+          <StarOutlineIcon
+            key={`empty-${i}`}
+            sx={{
+              fontSize: "14px",
+              color: theme.palette.grey.main,
+            }}
+          />
+        ))}
+      </>
+    );
+  };
+
   return (
     <>
-      <Box
-        sx={{
-          my: {
-            xs: 2,
-            md: 4,
-          },
-          pb: {
-            xs: 2,
-            md: 6,
-          },
-        }}
-      >
-        <div className="client-image">
+      <div className="client-image">
+        <Box
+          sx={{
+            my: {
+              xs: 3,
+              md: 4,
+            },
+            py: { xs: 2 },
+          }}
+        >
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               flexDirection: "column",
               width: "100%",
-              py: {
+              my: {
                 xs: 2,
-                md: 4,
+                md: 3,
               },
             }}
           >
@@ -93,7 +113,7 @@ const ClientTestimonial = () => {
               gutterBottom
               sx={{ fontWeight: "bold", color: theme.palette.white.main }}
             >
-              What our client say
+              What our clients say
             </Typography>
             <Box
               sx={{
@@ -108,24 +128,25 @@ const ClientTestimonial = () => {
           </Box>
           <Container>
             <Slider {...settings}>
-              {testimonials.map((testimonial) => (
-                <Box>
+              {review.map((testimonial) => (
+                <Box key={testimonial.id}>
                   <Box
-                    key={testimonial.id}
                     sx={{
                       mx: 2,
-                      borderBottom: `4px solid ${theme.palette.primary.main} `,
+                      p: 3,
+                      borderBottom: `4px solid ${theme.palette.primary.main}`,
+                      textAlign: "center",
                     }}
                     className="testimonial-card"
                   >
                     <Avatar
-                      src={testimonial.image}
+                      src={testimonial.clientImage}
                       alt={testimonial.name}
                       sx={{
                         width: 80,
                         height: 80,
                         margin: "0 auto",
-                        border: `3px double ${theme.palette.grey.main} `,
+                        border: `3px double ${theme.palette.grey.main}`,
                       }}
                     />
                     <Typography variant="h6" sx={{ mt: 2 }}>
@@ -138,26 +159,26 @@ const ClientTestimonial = () => {
                         gap: 0.5,
                       }}
                     >
-                      {Array.from({ length: testimonial.rating }).map(
-                        (_, i) => (
-                          <StarIcon key={i} sx={{ fontSize: "14px" }} />
-                        )
-                      )}
+                      {/* Render the stars based on rating */}
+                      {renderStars(testimonial.rating)}
                     </Box>
                     <Typography
                       variant="body2"
                       sx={{ my: 2, color: "text.secondary" }}
                     >
-                      {testimonial.review}
+                      {testimonial.description}
                     </Typography>
-                    <FormatQuoteIcon fontSize="large" />
+                    <FormatQuoteIcon
+                      fontSize="large"
+                      sx={{ color: theme.palette.primary.main }}
+                    />
                   </Box>
                 </Box>
               ))}
             </Slider>
           </Container>
-        </div>
-      </Box>
+        </Box>
+      </div>
     </>
   );
 };

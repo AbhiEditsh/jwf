@@ -109,3 +109,22 @@ export const inquiryReducer = (state = inquiryInitialState, action) => {
       return state;
   }
 };
+
+const reviewListInitialState = {
+  review: [],
+  loading: false,
+  error: null,
+};
+
+export const ReviewListReducer = (state = reviewListInitialState, action) => {
+  switch (action.type) {
+    case "REVIEW_LIST_REQUEST":
+      return { ...state, loading: true };
+    case "REVIEW_LIST_SUCCESS":
+      return { ...state, loading: false, review: action.payload };
+    case "REVIEW_LIST_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};

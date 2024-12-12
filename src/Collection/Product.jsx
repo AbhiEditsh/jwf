@@ -327,7 +327,7 @@ function Product() {
                   fullWidth
                   sx={{ marginTop: 2 }}
                 >
-                  Clear Filters
+                  Clear FiltersProduct
                 </Button>
               </Box>
             </Grid>
