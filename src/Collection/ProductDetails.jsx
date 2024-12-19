@@ -41,16 +41,6 @@ function ProductDetails() {
     (state) => state.relatedProducts
   );
   const productUrl = `${window.location.origin}/product/${productId}`;
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-    `Check out this product:
-${product.name}
-
-Price: ₹${product.price}
-Description: ${product.description}
-
-View more details here: ${productUrl}`
-  )}`;
-
   useEffect(() => {
     dispatch(getProductDetails(productId));
     dispatch(getRelatedProducts(productId));
@@ -194,14 +184,12 @@ View more details here: ${productUrl}`
                   >
                     <TwitterIcon size={20} round />
                   </TwitterShareButton>
-                  <WhatsappShareButton>
-                    <a
-                      href={whatsappUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <WhatsappIcon size={20} round />
-                    </a>
+                  <WhatsappShareButton
+                    url={productUrl}
+                    title={`Check out this product: ${product.name}`}
+                    media={product?.images?.[0]?.url}
+                  >
+                    <WhatsappIcon size={20} round />
                   </WhatsappShareButton>
                 </Box>
               </Box>
