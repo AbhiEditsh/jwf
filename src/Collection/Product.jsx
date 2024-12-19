@@ -56,6 +56,14 @@ function Product() {
     setFilteredProducts(products);
   }, [products]);
 
+  useEffect(
+    () => {
+      filterProducts(selectedCategories, selectedGenders);
+    },
+    // eslint-disable-next-line
+    [products, selectedCategories, selectedGenders, sortKey]
+  );
+
   const handleCategoryChange = (category) => {
     let updatedCategories = [...selectedCategories];
     if (updatedCategories.includes(category)) {
@@ -79,7 +87,7 @@ function Product() {
   };
 
   const filterProducts = (categories, genders) => {
-    const filtered = products.filter((product) => {
+    let filtered = products.filter((product) => {
       const matchesCategory =
         categories.length === 0 ||
         categories.includes(product.category?.name || "Not available");
@@ -88,9 +96,18 @@ function Product() {
 
       return matchesCategory && matchesGender;
     });
+    if (sortKey) {
+      filtered = filtered.sort((a, b) => {
+        if (sortKey === "priceLowToHigh") return a.price - b.price;
+        if (sortKey === "priceHighToLow") return b.price - a.price;
+        if (sortKey === "nameAZ") return a.name.localeCompare(b.name);
+        if (sortKey === "nameZA") return b.name.localeCompare(a.name);
+        return 0;
+      });
+    }
     setFilteredProducts(filtered);
+    setPage(1);
   };
-
   const categories = [
     ...new Set(
       products.map((product) =>
@@ -104,22 +121,22 @@ function Product() {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
-
   const itemsPerPage = 9;
   const paginatedProducts = filteredProducts.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
   const handleClearFilters = () => {
     setSelectedCategories([]);
     setSelectedGenders([]);
     setFilteredProducts(products);
+    setPage(1);
   };
-
   const handleOpenModal = (product) => {
     setSelectedProduct(product);
     setOpenModal(true);
@@ -576,7 +593,8 @@ function Product() {
                 count={Math.ceil(filteredProducts.length / itemsPerPage)}
                 page={page}
                 onChange={handlePageChange}
-                sx={{ display: "flex", justifyContent: "center", marginTop: 3 }}
+                color="primary"
+                sx={{ marginTop: 4 }}
               />
             </Grid>
           </Grid>
