@@ -275,6 +275,12 @@ function ProductDetails() {
                         sx={{
                           color: theme.palette.primary.main,
                           textAlign: "center",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          mb: 1,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                         }}
                       >
                         {related.name}
@@ -309,7 +315,7 @@ function ProductDetails() {
                         >
                           &#x20B9;
                         </span>
-                        {product.price}
+                        {related.price}
                       </Typography>
                     </Link>
                   </Box>
