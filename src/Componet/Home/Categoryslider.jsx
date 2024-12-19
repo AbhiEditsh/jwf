@@ -1,37 +1,38 @@
 import React, { useEffect } from "react";
-import { getProducts } from "../../redux/actions/productActions";
 import { useDispatch, useSelector } from "react-redux";
 import Slider from "react-slick";
-import { Box, Container, Typography, Grid } from "@mui/material";
+import { Box, Container, Typography, CircularProgress } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import theme from "../../theme/theme";
+import { getProducts } from "../../redux/actions/productActions";
 import { Link } from "react-router-dom";
-import ProductLoader from "../../Global/ProductLoader";
 
-function Categoryslider() {
+function CategorySlider() {
   const dispatch = useDispatch();
+
+  // Fetch products from Redux state
   const productList = useSelector((state) => state.productList);
-  const { products } = productList;
+  const { products, loading, error } = productList;
 
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
 
+  // Extract unique categories
   const uniqueCategoryProducts = products?.reduce((acc, product) => {
-    if (!acc.find((item) => item.category.name === product.category.name)) {
+    if (!acc.some((item) => item.category?.name === product.category?.name)) {
       acc.push(product);
     }
     return acc;
   }, []);
 
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
-    arrows: false,
+    slidesToShow: 3,
     slidesToScroll: 1,
+    arrows: true,
     autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
@@ -44,32 +45,19 @@ function Categoryslider() {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
         },
       },
     ],
   };
 
   return (
-    <Box
-      sx={{
-        my: {
-          xs: 3,
-          md: 4,
-        },
-      }}
-    >
+    <Box sx={{ my: 4 }}>
       <Container>
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-            width: "100%",
-            py: {
-              xs: 2,
-              md: 4,
-            },
+            textAlign: "center",
+            mb: 4,
           }}
         >
           <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
@@ -77,59 +65,85 @@ function Categoryslider() {
           </Typography>
           <Box
             sx={{
-              width: "200px",
-              display: "block",
-              height: "3px",
-              textAlign: "center",
-              borderRadius: "50%",
-              backgroundColor: theme.palette.primary.main,
+              width: "100px",
+              height: "4px",
+              backgroundColor: "primary.main",
+              margin: "0.5rem auto",
+              borderRadius: "5px",
             }}
           ></Box>
         </Box>
-        {uniqueCategoryProducts && uniqueCategoryProducts.length > 0 ? (
+        {loading ? (
+          <Box sx={{ display: "flex", justifyContent: "center", my: 3 }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Typography
+            variant="body1"
+            color="error"
+            sx={{ textAlign: "center", my: 2 }}
+          >
+            Failed to load categories. Please try again later.
+          </Typography>
+        ) : uniqueCategoryProducts && uniqueCategoryProducts.length > 0 ? (
           <Slider {...settings}>
-            {uniqueCategoryProducts.map((product, index) => (
-              <div key={index}>
-                <Box sx={{ textAlign: "center", padding: "10px" }}>
-                  <Link
-                    to={`/category/${product.category.id}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
+            {uniqueCategoryProducts.map((product) => (
+              <Box key={product.id} sx={{ textAlign: "center", p: 2 }}>
+                <Box
+                  sx={{
+                    width: "150px",
+                    height: "150px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    margin: "0 auto",
+                  }}
+                >
+                  {product.images?.[0]?.url ? (
+                    <Link
+                      to={`/category/${product.category?.id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <img
+                        src={product.images[0].url}
+                        alt={product.category?.name || "Category"}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Link>
+                  ) : (
                     <Box
                       sx={{
-                        width: "150px",
-                        height: "150px",
-                        borderRadius: "50%",
-                        overflow: "hidden",
-                        margin: "0 auto",
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#f0f0f0",
+                        color: "#888",
+                        fontSize: "12px",
                       }}
                     >
-                      <div className="box_image">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
+                      No Image
                     </Box>
-                    <p>{product.category.name}</p>
-                  </Link>
+                  )}
                 </Box>
-              </div>
+                <Typography variant="body2" sx={{ mt: 1, fontWeight: "bold" }}>
+                  {product.category?.name || "Unknown Category"}
+                </Typography>
+              </Box>
             ))}
           </Slider>
         ) : (
-          <Grid item xs={12}>
-            <ProductLoader sx={{ my: 2 }} />
-          </Grid>
+          <Typography variant="body1" sx={{ textAlign: "center", my: 2 }}>
+            No categories available.
+          </Typography>
         )}
       </Container>
     </Box>
   );
 }
 
-export default Categoryslider;
+export default CategorySlider;

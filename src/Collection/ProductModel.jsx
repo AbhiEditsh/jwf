@@ -1,130 +1,54 @@
-import React, { useRef } from "react";
-import {
-  Box,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
-} from "@mui/material";
+import React from "react";
+import { Box, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import theme from "../theme/theme";
-import { Link } from "react-router-dom";
+import ProductSlider from "./ProductSlider";
 
 const ProductModel = ({ open, onClose, product }) => {
-  const sliderRef = useRef(null);
-
-  const sliderSettings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false, 
-  };
-
+  if (!open) return null; 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
+    <Box
       sx={{
-        "& .MuiPaper-root": {
-          width: { xs: "100%", md: "30%" },
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          maxHeight: "90%",
-        },
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: theme.palette.white.main,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1300, 
       }}
     >
-      <DialogTitle>
+      <Box
+        sx={{
+          position: "relative",
+          width: { xs: "90%", md: "30%" },
+          backgroundColor: "white",
+          borderRadius: "8px",
+          boxShadow: 24,
+          padding: "16px",
+          overflowY: "auto",
+          maxHeight: "90%",
+        }}
+      >
         <IconButton
           aria-label="close"
           onClick={onClose}
           sx={{
             position: "absolute",
-            right: 8,
-            top: 8,
+            top: "8px",
+            right: "8px",
             color: theme.palette.grey[500],
+            zIndex: '22',
           }}
         >
           <CloseIcon />
         </IconButton>
-      </DialogTitle>
-      <DialogContent
-        sx={{
-          overflowY: "auto", // Enable vertical scrolling
-          padding: "16px",
-        }}
-      >
         {product && (
           <Box>
-            <Box sx={{ width: "100%", marginBottom: 2, position: "relative" }}>
-              <IconButton
-                onClick={() => sliderRef.current.slickPrev()}
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "10px",
-                  width: "30px",
-                  height: "30px",
-                  transform: "translateY(-50%)",
-                  backgroundColor: theme.palette.primary.main,
-                  color: "#fff",
-                  zIndex: 2,
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
-                  },
-                }}
-              >
-                ‹
-              </IconButton>
-
-              <Link to={`/product/${product._id}`}>
-                <Slider ref={sliderRef} {...sliderSettings}>
-                  {product.imageList?.map((image, index) => (
-                    <Box key={index}>
-                      <img
-                        src={image}
-                        alt={`Product ${index + 1}`}
-                        style={{
-                          width: "200px",
-                          height: "200px",
-                          borderRadius: "8px",
-                          margin: "auto",
-                        }}
-                      />
-                    </Box>
-                  ))}
-                </Slider>
-              </Link>
-
-              <IconButton
-                onClick={() => sliderRef.current.slickNext()}
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
-                  backgroundColor: theme.palette.primary.main,
-                  color: "#fff",
-                  zIndex: 2,
-                  width: "30px",
-                  height: "30px",
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
-                  },
-                }}
-              >
-                ›
-              </IconButton>
-            </Box>
+            <ProductSlider product={product} />
             <Typography variant="h6" sx={{ mt: 2, textAlign: "center" }}>
               {product.name}
             </Typography>
@@ -147,8 +71,8 @@ const ProductModel = ({ open, onClose, product }) => {
             </Typography>
           </Box>
         )}
-      </DialogContent>
-    </Dialog>
+      </Box>
+    </Box>
   );
 };
 

@@ -1,26 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import GridViewIcon from "@mui/icons-material/GridView";
+import ListIcon from "@mui/icons-material/List";
 import {
   Box,
   Typography,
   Grid,
   CircularProgress,
+  Pagination,
   Container,
   Button,
+  IconButton,
+  MenuItem,
+  FormControl,
+  Alert,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { getProductsByCategory } from "../redux/actions/productActions";
 import { Link, useParams } from "react-router-dom";
 import ProductModel from "../Collection/ProductModel";
 import theme from "../theme/theme";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon,
+} from "react-share";
 
 function CategoryPage() {
-  const { categoryId } = useParams();
+  const { productId, categoryId } = useParams();
   const dispatch = useDispatch();
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [openModal, setOpenModal] = useState(false); // Modal state
-  const [selectedProduct, setSelectedProduct] = useState(null); // Selected product
+  const productUrl = `${window.location.origin}/product/${productId}`;
+  const [sortKey, setSortKey] = useState("");
+  const [view, setView] = useState("grid");
+  const [page, setPage] = useState(1);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const productsByCategory = useSelector((state) => state.productsByCategory);
   const { loading, products, error } = productsByCategory;
 
@@ -33,6 +54,10 @@ function CategoryPage() {
       setFilteredProducts(products);
     }
   }, [products]);
+
+  const categories = [
+    ...new Set(products.map((product) => product.category.name)),
+  ];
 
   const handleGenderChange = (gender) => {
     let updatedGenders = [...selectedGenders];
@@ -47,7 +72,6 @@ function CategoryPage() {
 
   const filterProducts = (genders) => {
     let filtered = products;
-
     if (genders.length > 0) {
       filtered = filtered.filter((product) => genders.includes(product.gender));
     }
@@ -71,6 +95,29 @@ function CategoryPage() {
     setSelectedGenders([]);
     setFilteredProducts(products);
   };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const handleSort = (key) => {
+    const sorted = [...filteredProducts].sort((a, b) => {
+      if (key === "priceLowToHigh") return a.price - b.price;
+      if (key === "priceHighToLow") return b.price - a.price;
+      if (key === "nameAZ") return a.name.localeCompare(b.name);
+      if (key === "nameZA") return b.name.localeCompare(a.name);
+      return 0;
+    });
+    setSortKey(key);
+    setFilteredProducts(sorted);
+  };
+
+  // Pagination
+  const itemsPerPage = 9;
+  const paginatedProducts = filteredProducts.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   if (loading) {
     return (
@@ -98,6 +145,13 @@ function CategoryPage() {
   return (
     <Box sx={{ py: 8 }}>
       <Container>
+        <Typography
+          variant="h6"
+          color={theme.palette.primary.main}
+          sx={{ py: 1 }}
+        >
+          {categories}
+        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={4} md={3}>
             <Box
@@ -130,67 +184,328 @@ function CategoryPage() {
                 fullWidth
                 sx={{ marginTop: 2 }}
               >
-                Clear Filters
+                Clear 
               </Button>
             </Box>
           </Grid>
           <Grid item xs={12} sm={8} md={9}>
             <Container>
-              <Grid container spacing={3}>
-                {filteredProducts.map((product) => (
-                  <Grid item xs={12} sm={6} md={4} key={product._id}>
-                    <Box
-                      sx={{
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                        padding: "16px",
-                        textAlign: "center",
-                      }}
+              <Box
+                display="flex"
+                justifyContent="end"
+                alignItems="center"
+                flexWrap="wrap"
+                gap={2}
+                marginBottom={2}
+              >
+                {/* View Icons */}
+                <Box display="flex" gap={1}>
+                  {/* Sort Dropdown */}
+                  <FormControl
+                    size="small"
+                    variant="standard"
+                    sx={{ minWidth: 150 }}
+                  >
+                    <InputLabel id="sort-select-label">Sort By</InputLabel>
+                    <Select
+                      labelId="sort-select-label"
+                      label="Sort By"
+                      id="sort-simple-select"
+                      value={sortKey}
+                      onChange={(e) => handleSort(e.target.value)}
+                      displayEmpty
                     >
-                      <div className="box_image">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          width="100px"
-                          height="200px"
-                        />
-                        <div
-                          className="hover_image"
-                          onClick={() => handleOpenModal(product)}
-                        >
-                          <RemoveRedEyeIcon
-                            sx={{
-                              color: theme.palette.black.main,
-                              cursor: "pointer",
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <Link to={`/product/${product._id}`}>
-                        <Typography
-                          variant="h6"
-                          sx={{
-                            color: theme.palette.primary.main,
-                          }}
-                        >
-                          {product.name}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            color: theme.palette.grey.main,
-                          }}
-                        >
-                          RS.{product.price}
-                        </Typography>
-                      </Link>
-                    </Box>
+                      <MenuItem value="defauksorting" selected disabled>
+                        Default Sorting
+                      </MenuItem>
+                      <MenuItem value="priceLowToHigh">
+                        Price: Low to High
+                      </MenuItem>
+                      <MenuItem value="priceHighToLow">
+                        Price: High to Low
+                      </MenuItem>
+                      <MenuItem value="nameAZ">Name: A to Z</MenuItem>
+                      <MenuItem value="nameZA">Name: Z to A</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <IconButton onClick={() => setView("grid")}>
+                    <GridViewIcon
+                      color={view === "grid" ? "primary" : "inherit"}
+                    />
+                  </IconButton>
+                  <IconButton onClick={() => setView("list")}>
+                    <ListIcon color={view === "list" ? "primary" : "inherit"} />
+                  </IconButton>
+                </Box>
+              </Box>
+              <Grid container spacing={3}>
+                <Container>
+                  <Grid container spacing={3}>
+                    {view === "grid" ? (
+                      paginatedProducts.length > 0 ? (
+                        paginatedProducts.map((product) => (
+                          <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={4}
+                            key={product.id}
+                          >
+                            <Box
+                              padding={2}
+                              borderRadius={2}
+                              sx={{
+                                boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                              }}
+                            >
+                              <div className="box_image">
+                                <div>
+                                  {product.images?.[0] ? (
+                                    <img
+                                      src={product.images[0].url}
+                                      alt={`Product 1`}
+                                      style={{
+                                        borderRadius: "8px",
+                                        margin: "auto",
+                                      }}
+                                    />
+                                  ) : (
+                                    <p>No image available</p>
+                                  )}
+                                </div>
+                                <div className="hover_image">
+                                  <RemoveRedEyeIcon
+                                    sx={{
+                                      color: theme.palette.black.main,
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => handleOpenModal(product)}
+                                  />
+                                </div>
+                              </div>
+                              <Link to={`/product/${product._id}`}>
+                                <Typography
+                                  variant="h6"
+                                  sx={{
+                                    color: theme.palette.primary.main,
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  {product.name}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    color: theme.palette.grey.main,
+                                    textAlign: "center",
+                                    fontSize: "14px",
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    mb: 1,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {product.description}
+                                </Typography>
+                              </Link>
+                              <Typography
+                                sx={{
+                                  color: theme.palette.grey.main,
+                                  textAlign: "center",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    color: theme.palette.primary.main,
+                                    marginRight: "5px",
+                                  }}
+                                >
+                                  &#x20B9;
+                                </span>
+                                {product.price}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        ))
+                      ) : (
+                        <Grid item xs={12}>
+                          <Alert severity="error" fullWidth>
+                            No products available !
+                          </Alert>
+                        </Grid>
+                      )
+                    ) : (
+                      <Box>
+                        {paginatedProducts.length > 0 ? (
+                          paginatedProducts.map((product) => (
+                            <Box key={product._id}>
+                              <Grid spacing={2} row container>
+                                <Grid
+                                  item
+                                  xs={12}
+                                  sm={6}
+                                  md={6}
+                                  lg={3}
+                                  data-aos="fade-right"
+                                  data-aos-duration="2000"
+                                >
+                                  <Box
+                                    sx={{
+                                      mb: 2,
+                                    }}
+                                  >
+                                    <div className="box_image">
+                                      <div>
+                                        {product.images?.[0] ? (
+                                          <img
+                                            src={product.images[0].url}
+                                            alt={`Product 1`}
+                                            style={{
+                                              width: "200px",
+                                              height: "200px",
+                                              borderRadius: "8px",
+                                              margin: "auto",
+                                            }}
+                                          />
+                                        ) : (
+                                          <p>No image available</p>
+                                        )}
+                                      </div>
+                                      <div className="hover_image">
+                                        <RemoveRedEyeIcon
+                                          sx={{
+                                            color: theme.palette.black.main,
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() =>
+                                            handleOpenModal(product)
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  </Box>
+                                </Grid>
+                                <Grid
+                                  item
+                                  xs={12}
+                                  sm={6}
+                                  md={6}
+                                  lg={9}
+                                  data-aos="fade-left"
+                                  data-aos-duration="2000"
+                                >
+                                  <Link
+                                    to={`/product/${product._id}`}
+                                    style={{ width: "100%" }}
+                                  >
+                                    <Typography
+                                      variant="h6"
+                                      sx={{
+                                        color: theme.palette.primary.main,
+                                        textAlign: {
+                                          xs: "center",
+                                          md: "left",
+                                        },
+                                      }}
+                                    >
+                                      {product.name}
+                                    </Typography>
+                                    <Typography
+                                      sx={{
+                                        color: theme.palette.grey.main,
+                                        fontSize: "14px",
+                                        py: 1,
+                                        textAlign: {
+                                          xs: "center",
+                                          md: "left",
+                                        },
+                                      }}
+                                    >
+                                      {product.description}
+                                    </Typography>
+
+                                    <Typography
+                                      sx={{
+                                        color: theme.palette.grey.main,
+                                        fontSize: "14px",
+                                        textAlign: {
+                                          xs: "center",
+                                          md: "left",
+                                        },
+                                      }}
+                                    >
+                                      <span
+                                        style={{
+                                          color: theme.palette.primary.main,
+                                          marginRight: "5px",
+                                        }}
+                                      >
+                                        &#x20B9;
+                                      </span>
+                                      {product.price}
+                                    </Typography>
+                                  </Link>
+                                  <Box sx={{ my: 2 }}>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        gap: 2,
+                                        alignItems: "center",
+                                        justifyContent: {
+                                          xs: "center",
+                                          md: "flex-start",
+                                        },
+                                      }}
+                                    >
+                                      <FacebookShareButton
+                                        url={productUrl}
+                                        quote={product.name}
+                                      >
+                                        <FacebookIcon size={25} round />
+                                      </FacebookShareButton>
+                                      <TwitterShareButton
+                                        url={productUrl}
+                                        title={`Check out this product: ${product.name}`}
+                                      >
+                                        <TwitterIcon size={25} round />
+                                      </TwitterShareButton>
+                                      <WhatsappShareButton
+                                        url={productUrl}
+                                        title={`Check out this product: ${product.name}`}
+                                        media={product?.images?.[0]?.url} 
+                                      >
+                                        <WhatsappIcon size={20} round />
+                                      </WhatsappShareButton>
+                                    </Box>
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            </Box>
+                          ))
+                        ) : (
+                          <Alert severity="error" fullwidth>
+                            No products available !
+                          </Alert>
+                        )}
+                      </Box>
+                    )}
                   </Grid>
-                ))}
+                </Container>
               </Grid>
             </Container>
           </Grid>
         </Grid>
       </Container>
+
+      <Pagination
+        count={Math.ceil(filteredProducts.length / itemsPerPage)}
+        page={page}
+        onChange={handlePageChange}
+        sx={{ display: "flex", justifyContent: "center", marginTop: 3 }}
+      />
 
       <ProductModel
         open={openModal}

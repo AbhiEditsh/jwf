@@ -8,6 +8,8 @@ import {
   Grid,
   Container,
   Breadcrumbs,
+  Divider,
+  Button,
 } from "@mui/material";
 import {
   FacebookShareButton,
@@ -24,42 +26,38 @@ import {
 } from "../redux/actions/productActions";
 import theme from "../theme/theme";
 import ProductModel from "./ProductModel";
+import InquiryModel from "./InquiryModel";
+import ProductSlider from "./ProductSlider";
 
 function ProductDetails() {
   const { productId } = useParams();
   const dispatch = useDispatch();
-  const [selectedImage, setSelectedImage] = useState("");
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const [openInquiryModal, setOpenInquiryModal] = useState(false);
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
-
   const productUrl = `${window.location.origin}/product/${productId}`;
-
   useEffect(() => {
     dispatch(getProductDetails(productId));
     dispatch(getRelatedProducts(productId));
   }, [dispatch, productId]);
-
-  useEffect(() => {
-    if (product?.imageList?.length > 0) {
-      setSelectedImage(product.imageList[0]);
-    }
-  }, [product]);
-
   const handleOpenModal = (product) => {
     setSelectedProduct(product);
     setOpenModal(true);
   };
-
   const handleCloseModal = () => {
     setOpenModal(false);
-    alert("hello");
     setSelectedProduct(null);
+  };
+  const handleInquiryOpen = () => {
+    setOpenInquiryModal(true);
+  };
+  const handleInquiryClose = () => {
+    setOpenInquiryModal(false);
   };
   if (loading) {
     return (
@@ -89,8 +87,16 @@ function ProductDetails() {
   }
 
   return (
-    <Box sx={{ py: 8 }}>
+    <Box
+      sx={{
+        py: {
+          xs: 4,
+          py: 8,
+        },
+      }}
+    >
       <Container>
+        {/*========Product Breecrumbs ========= */}
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 4 }}>
           <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
             Home
@@ -105,95 +111,95 @@ function ProductDetails() {
         </Breadcrumbs>
 
         <Grid container spacing={3}>
-          {/* Product Image Section */}
           <Grid item xs={12} md={6}>
             <Box sx={{ textAlign: "center" }}>
-              <img
-                src={selectedImage}
-                alt="Selected product"
-                style={{
-                  width: "100%",
-                  maxHeight: "500px",
-                  objectFit: "contain",
-                }}
-              />
-            </Box>
-            {/* Thumbnail Slider */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                gap: 1,
-                overflowX: "auto",
-                mt: 2,
-                padding: "8px",
-              }}
-            >
-              {product.imageList.map((img, index) => (
-                <Box key={index} sx={{ padding: 1 }}>
-                  <img
-                    src={img}
-                    alt={`Thumbnail ${index}`}
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      cursor: "pointer",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                      border:
-                        img === selectedImage
-                          ? `2px solid ${theme.palette.primary.main}`
-                          : "none",
-                    }}
-                    onClick={() => setSelectedImage(img)}
-                  />
-                </Box>
-              ))}
+              <ProductSlider product={product} />
             </Box>
           </Grid>
-
-          {/* Product Info Section */}
           <Grid item xs={12} md={6}>
             <Box sx={{ marginTop: 4 }}>
-              <Typography variant="body1" gutterBottom>
-                <strong>Category:</strong>
+              <Typography variant="body1" gutterBottom fontWeight={"bold"}>
                 {product.category ? product.category.name : "Not available"}
               </Typography>
               <Typography variant="body1" gutterBottom>
-                <strong>Price:</strong> ${product.price}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Description:</strong> {product.description}
+                <strong>SKU:</strong>
+                {product.number}
               </Typography>
 
+              <Divider sx={{ my: 1 }} />
+              <Box>
+                <Typography variant="body1" gutterBottom>
+                  <strong style={{ marginRight: "5px" }}>Category</strong>
+                  <Link
+                    to={`/category/${product.category.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: theme.palette.grey.main,
+                      display: "inline-block",
+                    }}
+                  >
+                    {product.category ? product.category.name : "Not available"}
+                  </Link>
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  {product.description}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  <span
+                    style={{
+                      marginRight: "10pox",
+                      color: theme.palette.black.main,
+                      fontWeighgt: "bold",
+                    }}
+                  >
+                    &#8377;
+                  </span>
+                  {product.price}
+                </Typography>
+              </Box>
+              <Divider sx={{ my: 1 }} />
+              <Box>
+                <Button
+                  sx={{
+                    mt: 1,
+                    border: `1px solid ${theme.palette.primary.main}`,
+                    borderRadius: "5%",
+                  }}
+                  size="small"
+                  onClick={handleInquiryOpen}
+                >
+                  Inquiry Now
+                </Button>
+              </Box>
               {/* Share Section */}
-              <Box sx={{ mt: 4 }}>
-                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+              <Box sx={{ my: 2 }}>
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                  <span style={{ marginRight: "5px" }}>Share:</span>
                   <FacebookShareButton url={productUrl} quote={product.name}>
-                    <FacebookIcon size={40} round />
+                    <FacebookIcon size={20} round />
                   </FacebookShareButton>
                   <TwitterShareButton
                     url={productUrl}
                     title={`Check out this product: ${product.name}`}
                   >
-                    <TwitterIcon size={40} round />
+                    <TwitterIcon size={20} round />
                   </TwitterShareButton>
                   <WhatsappShareButton
                     url={productUrl}
                     title={`Check out this product: ${product.name}`}
+                    media={product?.images?.[0]?.url}
                   >
-                    <WhatsappIcon size={40} round />
+                    <WhatsappIcon size={20} round />
                   </WhatsappShareButton>
                 </Box>
               </Box>
             </Box>
           </Grid>
         </Grid>
-      </Container>
 
-      {/* Related Products Section */}
-      <Box sx={{ mt: 6 }}>
-        <Container>
+        {/* Related Products Section */}
+        <Box sx={{ mt: 2 }}>
+          {/* title */}
           <Box
             sx={{
               borderBottom: "1px solid #e1e1e1",
@@ -238,12 +244,22 @@ function ProductDetails() {
                       style={{ textDecoration: "none" }}
                     >
                       <div className="box_image">
-                        <img
-                          src={related.image}
-                          alt={related.name}
-                          width="100px"
-                          height="230px"
-                        />
+                        <div>
+                          {related.images?.[0] ? (
+                            <img
+                              src={related.images[0].url}
+                              alt={`Product 1`}
+                              style={{
+                                width: "200px",
+                                height: "200px",
+                                borderRadius: "8px",
+                                margin: "auto",
+                              }}
+                            />
+                          ) : (
+                            <p>No image available</p>
+                          )}
+                        </div>
                         <div className="hover_image">
                           <RemoveRedEyeIcon
                             sx={{
@@ -267,12 +283,33 @@ function ProductDetails() {
                         sx={{
                           color: theme.palette.grey.main,
                           textAlign: "center",
+                          fontSize: "14px",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          mb: 1,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
                         }}
                       >
-                        RS.{related.price}
+                        {related.description}
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {related.category.name}
+                      <Typography
+                        sx={{
+                          color: theme.palette.grey.main,
+                          textAlign: "center",
+                          fontSize: "14px",
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: theme.palette.primary.main,
+                            marginRight: "5px",
+                          }}
+                        >
+                          &#x20B9;
+                        </span>
+                        {product.price}
                       </Typography>
                     </Link>
                   </Box>
@@ -280,9 +317,10 @@ function ProductDetails() {
               ))}
             </Grid>
           )}
-        </Container>
-      </Box>
-      {/* Modal */}
+        </Box>
+      </Container>
+
+      {/*Product Details Modal */}
       {openModal && selectedProduct && (
         <ProductModel
           product={selectedProduct}
@@ -290,6 +328,12 @@ function ProductDetails() {
           onClose={handleCloseModal}
         />
       )}
+
+      <InquiryModel
+        open={openInquiryModal}
+        onClose={handleInquiryClose}
+        category={product.category.name}
+      />
     </Box>
   );
 }

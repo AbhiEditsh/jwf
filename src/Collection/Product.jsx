@@ -193,7 +193,7 @@ function Product() {
                 onClick={handleClearFilters}
                 fullWidth
               >
-                Clear Filters
+                Clear
               </Button>
             </Box>
           </Box>
@@ -325,9 +325,9 @@ function Product() {
                   color="secondary"
                   onClick={handleClearFilters}
                   fullWidth
-                  sx={{ marginTop: 2 }}
+                  sx={{ marginTop: 2, color: theme.palette.white.main }}
                 >
-                  Clear FiltersProduct
+                  Clear
                 </Button>
               </Box>
             </Grid>
@@ -345,8 +345,6 @@ function Product() {
                           md={4}
                           lg={4}
                           key={product.id}
-                          data-aos="fade-in"
-                          data-aos-duration="3000"
                         >
                           <Box
                             padding={2}
@@ -356,12 +354,48 @@ function Product() {
                             }}
                           >
                             <div className="box_image">
-                              <img
-                                src={product.image}
-                                alt={product.name}
-                                width="80px"
-                                height="200px"
-                              />
+                              <Link to={`/product/${product._id}`}>
+                                <div>
+                                  {product.images?.[0] ? (
+                                    <img
+                                      src={product.images[0].url}
+                                      alt={`Product 1`}
+                                      style={{
+                                        width: "200px",
+                                        height: "200px",
+                                        borderRadius: "8px",
+                                        margin: "auto",
+                                      }}
+                                    />
+                                  ) : (
+                                    <p>No image available</p>
+                                  )}
+                                </div>
+                                <Typography
+                                  variant="h6"
+                                  sx={{
+                                    color: theme.palette.primary.main,
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  {product.name}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    color: theme.palette.grey.main,
+                                    textAlign: "center",
+                                    fontSize: "14px",
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    mb: 1,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {product.description}
+                                </Typography>
+                              </Link>
                               <div className="hover_image">
                                 <RemoveRedEyeIcon
                                   sx={{
@@ -372,32 +406,7 @@ function Product() {
                                 />
                               </div>
                             </div>
-                            <Link to={`/product/${product._id}`}>
-                              <Typography
-                                variant="h6"
-                                sx={{
-                                  color: theme.palette.primary.main,
-                                  textAlign: "center",
-                                }}
-                              >
-                                {product.name}
-                              </Typography>
-                              <Typography
-                                sx={{
-                                  color: theme.palette.grey.main,
-                                  textAlign: "center",
-                                  fontSize: "14px",
-                                  display: "-webkit-box",
-                                  WebkitLineClamp: 2,
-                                  mb: 1,
-                                  WebkitBoxOrient: "vertical",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                }}
-                              >
-                                {product.description}
-                              </Typography>
-                            </Link>
+
                             <Typography
                               sx={{
                                 color: theme.palette.grey.main,
@@ -431,27 +440,29 @@ function Product() {
                         paginatedProducts.map((product) => (
                           <Box key={product._id}>
                             <Grid spacing={2} row container>
-                              <Grid
-                                item
-                                xs={12}
-                                sm={6}
-                                md={6}
-                                lg={3}
-                                data-aos="fade-right"
-                                data-aos-duration="2000"
-                              >
+                              <Grid item xs={12} sm={6} md={6} lg={3}>
                                 <Box
                                   sx={{
                                     mb: 2,
                                   }}
                                 >
                                   <div className="box_image">
-                                    <img
-                                      src={product.image}
-                                      alt={product.name}
-                                      width="150px"
-                                      height="230px"
-                                    />
+                                    <div>
+                                      {product.images?.[0] ? (
+                                        <img
+                                          src={product.images[0].url}
+                                          alt={`Product 1`}
+                                          style={{
+                                            width: "200px",
+                                            height: "200px",
+                                            borderRadius: "8px",
+                                            margin: "auto",
+                                          }}
+                                        />
+                                      ) : (
+                                        <p>No image available</p>
+                                      )}
+                                    </div>
                                     <div className="hover_image">
                                       <RemoveRedEyeIcon
                                         sx={{
@@ -464,15 +475,7 @@ function Product() {
                                   </div>
                                 </Box>
                               </Grid>
-                              <Grid
-                                item
-                                xs={12}
-                                sm={6}
-                                md={6}
-                                lg={9}
-                                data-aos="fade-left"
-                                data-aos-duration="2000"
-                              >
+                              <Grid item xs={12} sm={6} md={6} lg={9}>
                                 <Link
                                   to={`/product/${product._id}`}
                                   style={{ width: "100%" }}
@@ -502,7 +505,6 @@ function Product() {
                                   >
                                     {product.description}
                                   </Typography>
-
                                   <Typography
                                     sx={{
                                       color: theme.palette.grey.main,
@@ -530,10 +532,10 @@ function Product() {
                                       display: "flex",
                                       gap: 2,
                                       alignItems: "center",
-                                      justifyContent:{
-                                        xs:'center',
-                                        md:'flex-start'
-                                      }
+                                      justifyContent: {
+                                        xs: "center",
+                                        md: "flex-start",
+                                      },
                                     }}
                                   >
                                     <FacebookShareButton
@@ -551,8 +553,9 @@ function Product() {
                                     <WhatsappShareButton
                                       url={productUrl}
                                       title={`Check out this product: ${product.name}`}
+                                      media={product?.images?.[0]?.url}
                                     >
-                                      <WhatsappIcon size={25} round />
+                                      <WhatsappIcon size={20} round />
                                     </WhatsappShareButton>
                                   </Box>
                                 </Box>

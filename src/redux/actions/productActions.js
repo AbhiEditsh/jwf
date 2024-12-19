@@ -98,3 +98,19 @@ export const createInquiry = (inquiryData) => async (dispatch) => {
     });
   }
 };
+
+export const createProductInquiry = (ProductinquiryData) => async (dispatch) => {
+  try {
+    dispatch({ type: "PRODUCT_INQUIRY_REQUEST" });
+    const { data } = await api.post("/product-inquiries", ProductinquiryData);
+    dispatch({
+      type: "PRODUCT_INQUIRY_SUCCESS",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "PRODUCT_INQUIRY_FAIL",
+      payload: error.response ? error.response.data.error : error.message,
+    });
+  }
+};

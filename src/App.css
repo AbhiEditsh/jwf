@@ -143,3 +143,6 @@ img {
   width: 30px;
   height: 30px;
 }
+input:focus-visible{
+  outline: none;
+}

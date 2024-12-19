@@ -21,11 +21,8 @@ import TopHeader from "../../src/Global/TopHeader";
 const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
   backgroundColor: backgroundColor || theme.palette.background.paper,
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-  // padding: "8px 24px",
-  // margin: "0 auto",
   m: 0,
   transition: "background-color 0.3s ease-in-out",
-  // position: "relative",
 }));
 
 const Header = () => {
@@ -56,7 +53,7 @@ const Header = () => {
     if (query) {
       try {
         const response = await axios.get(
-          `https://jewellery01-back.onrender.com/api/products/search?query=${encodeURIComponent(
+          `http://localhost:9000/api/products/search?query=${encodeURIComponent(
             query
           )}`
         );
@@ -203,17 +200,22 @@ const Header = () => {
                       cursor: "pointer",
                     }}
                   >
-                    <img
-                      src={option.image || "/placeholder-image.png"}
-                      alt={option.name}
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        marginRight: "12px",
-                        objectFit: "cover",
-                        borderRadius: "4px",
-                      }}
-                    />
+                    <div>
+                      {option.images?.[0] ? (
+                        <img
+                          src={option.images[0].url}
+                          alt={`Product 1`}
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "8px",
+                            margin: "auto",
+                          }}
+                        />
+                      ) : (
+                        <p>No image available</p>
+                      )}
+                    </div>
                     <Typography>{option.name}</Typography>
                   </Box>
                 )}
@@ -257,7 +259,7 @@ const Header = () => {
                         "&:hover": {
                           color: theme.palette.secondary.main,
                           borderBottom: `1px solid ${theme.palette.primary.main} `,
-                          transition:'all 0.4s ease in'
+                          transition: "all 0.4s ease in",
                         },
                       }}
                     >

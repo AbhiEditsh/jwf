@@ -68,7 +68,6 @@ export const relatedProductsReducer = (
   }
 };
 
-// reducers/productReducer.js
 const productsByCategoryInitialState = {
   loading: false,
   products: [],
@@ -123,6 +122,27 @@ export const ReviewListReducer = (state = reviewListInitialState, action) => {
     case "REVIEW_LIST_SUCCESS":
       return { ...state, loading: false, review: action.payload };
     case "REVIEW_LIST_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+
+// ProductInquiry Reducer
+const ProductinquiryInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+
+export const ProductinquiryReducer = (state = ProductinquiryInitialState, action) => {
+  switch (action.type) {
+    case "PRODUCT_INQUIRY_REQUEST":
+      return { ...state, loading: true, success: action.payload };
+    case "PRODUCT_INQUIRY_SUCCESS":
+      return { loading: false, success: true, data: action.payload };
+    case "PRODUCT_INQUIRY_FAIL":
       return { ...state, loading: false, error: action.payload };
     default:
       return state;

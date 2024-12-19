@@ -9,6 +9,7 @@ import {
   productsByCategoryReducer,
   inquiryReducer,
   ReviewListReducer,
+  ProductinquiryReducer,
 } from "./reducers/productReducer";
 
 const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   productsByCategory: productsByCategoryReducer,
   inquiry: inquiryReducer,
   reviewList: ReviewListReducer,
+  ProductInquiry: ProductinquiryReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
