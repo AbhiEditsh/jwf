@@ -339,7 +339,7 @@ function Product() {
                 </div>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   onClick={handleClearFilters}
                   fullWidth
                   sx={{ marginTop: 2, color: theme.palette.white.main }}
@@ -393,6 +393,13 @@ function Product() {
                                   sx={{
                                     color: theme.palette.primary.main,
                                     textAlign: "center",
+                                    fontSize: "14px",
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    mb: 1,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
                                   }}
                                 >
                                   {product.name}
@@ -589,13 +596,18 @@ function Product() {
                   )}
                 </Grid>
               </Container>
-              <Pagination
-                count={Math.ceil(filteredProducts.length / itemsPerPage)}
-                page={page}
-                onChange={handlePageChange}
-                color="primary"
-                sx={{ marginTop: 4 }}
-              />
+              <Box
+                sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}
+              >
+                <Pagination
+                  count={Math.ceil(filteredProducts.length / itemsPerPage)}
+                  page={page}
+                  onChange={handlePageChange}
+                  sx={{
+                    color: theme.palette.primary.main,
+                  }}
+                />
+              </Box>
             </Grid>
           </Grid>
         </Container>

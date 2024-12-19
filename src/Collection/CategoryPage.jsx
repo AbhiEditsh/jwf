@@ -152,7 +152,7 @@ function CategoryPage() {
         >
           {categories}
         </Typography>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{}}>
           <Grid item xs={12} sm={4} md={3}>
             <Box
               sx={{
@@ -179,12 +179,12 @@ function CategoryPage() {
               </div>
               <Button
                 variant="contained"
-                color="secondary"
+                color="primary"
                 onClick={handleClearFilters}
                 fullWidth
-                sx={{ marginTop: 2 }}
+                sx={{ marginTop: 2, color: theme.palette.white.main }}
               >
-                Clear 
+                Clear
               </Button>
             </Box>
           </Grid>
@@ -238,7 +238,7 @@ function CategoryPage() {
                   </IconButton>
                 </Box>
               </Box>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} sx={{ pt: 4 }}>
                 <Container>
                   <Grid container spacing={3}>
                     {view === "grid" ? (
@@ -475,7 +475,7 @@ function CategoryPage() {
                                       <WhatsappShareButton
                                         url={productUrl}
                                         title={`Check out this product: ${product.name}`}
-                                        media={product?.images?.[0]?.url} 
+                                        media={product?.images?.[0]?.url}
                                       >
                                         <WhatsappIcon size={20} round />
                                       </WhatsappShareButton>
