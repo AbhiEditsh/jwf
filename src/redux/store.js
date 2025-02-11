@@ -10,6 +10,13 @@ import {
   inquiryReducer,
   ReviewListReducer,
   ProductinquiryReducer,
+  registerReducer,
+  loginReducer,
+  ForgotPasswordReducer,
+  ResetPasswordReducer,
+  LogoutReducer,
+  getUserProfileReducer,
+  userUpdateReducer,
 } from "./reducers/productReducer";
 
 const rootReducer = combineReducers({
@@ -20,6 +27,14 @@ const rootReducer = combineReducers({
   inquiry: inquiryReducer,
   reviewList: ReviewListReducer,
   ProductInquiry: ProductinquiryReducer,
+  Register: registerReducer,
+  Login: loginReducer,
+  ForgotPassword:ForgotPasswordReducer,
+  ResetPassword:ResetPasswordReducer,
+  Logout:LogoutReducer,
+  // User Profile
+  userProfile: getUserProfileReducer,
+  userUpdate: userUpdateReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

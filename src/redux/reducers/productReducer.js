@@ -1,5 +1,3 @@
-// src/redux/reducers/productReducer.js
-
 // Initial state for product list
 const productListInitialState = {
   products: [],
@@ -7,7 +5,6 @@ const productListInitialState = {
   error: null,
 };
 
-// Reducer for product list
 export const productListReducer = (state = productListInitialState, action) => {
   switch (action.type) {
     case "PRODUCT_LIST_REQUEST":
@@ -21,14 +18,12 @@ export const productListReducer = (state = productListInitialState, action) => {
   }
 };
 
-// Initial state for product details
 const productDetailsInitialState = {
   loading: false,
   product: null,
   error: null,
 };
 
-// Reducer for single product details
 export const productDetailsReducer = (
   state = productDetailsInitialState,
   action
@@ -45,7 +40,6 @@ export const productDetailsReducer = (
   }
 };
 
-//Reducrer for Relelted Product
 const relatedProductsInitialState = {
   loading: false,
   products: [],
@@ -128,15 +122,16 @@ export const ReviewListReducer = (state = reviewListInitialState, action) => {
   }
 };
 
-
-// ProductInquiry Reducer
 const ProductinquiryInitialState = {
   loading: false,
   success: false,
   error: null,
 };
 
-export const ProductinquiryReducer = (state = ProductinquiryInitialState, action) => {
+export const ProductinquiryReducer = (
+  state = ProductinquiryInitialState,
+  action
+) => {
   switch (action.type) {
     case "PRODUCT_INQUIRY_REQUEST":
       return { ...state, loading: true, success: action.payload };
@@ -144,6 +139,165 @@ export const ProductinquiryReducer = (state = ProductinquiryInitialState, action
       return { loading: false, success: true, data: action.payload };
     case "PRODUCT_INQUIRY_FAIL":
       return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+// Register
+const RegisterInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+export const registerReducer = (state = RegisterInitialState, action) => {
+  switch (action.type) {
+    case "REGISTER_REQUEST":
+      return { ...state, loading: true, success: action.payload };
+    case "REGISTER_SUCCESS":
+      return { loading: false, success: true, data: action.payload };
+    case "REGISTER_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+// Login
+const LoginInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+export const loginReducer = (state = LoginInitialState, action) => {
+  switch (action.type) {
+    case "LOGIN_REQUEST":
+      return { ...state, loading: true, success: action.payload };
+    case "LOGIN_SUCCESS":
+      return { loading: false, success: true, data: action.payload };
+    case "LOGIN_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+// FORGOT PASSWORD
+const ForgotPasswordInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+export const ForgotPasswordReducer = (
+  state = ForgotPasswordInitialState,
+  action
+) => {
+  switch (action.type) {
+    case "FORGOT_REQUEST":
+      return { ...state, loading: true, success: action.payload };
+    case "FORGOT_SUCCESS":
+      return { loading: false, success: true, data: action.payload };
+    case "FORGOT_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+//RESET PASSWORD
+const ResetPasswordInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+export const ResetPasswordReducer = (
+  state = ResetPasswordInitialState,
+  action
+) => {
+  switch (action.type) {
+    case "RESET_REQUEST":
+      return { ...state, loading: true, success: action.payload };
+    case "RESET_SUCCESS":
+      return { loading: false, success: true, data: action.payload };
+    case "RESET_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+//RESET PASSWORD
+const LogoutInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+};
+export const LogoutReducer = (state = LogoutInitialState, action) => {
+  switch (action.type) {
+    case "LOGOUT_REQUEST":
+      return { ...state, loading: true, success: action.payload };
+    case "LOGOUT_SUCCESS":
+      return { loading: false, success: true, data: action.payload };
+    case "LOGOUT_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+//GET USER PROFILE
+const UserProfileInitialState = {
+  loading: false,
+  success: false,
+  data: null,
+  error: null,
+};
+
+export const getUserProfileReducer = (
+  state = UserProfileInitialState,
+  action
+) => {
+  switch (action.type) {
+    case "GET_USER_PROFILE_REQUEST":
+      return { ...state, loading: true, success: false };
+    case "GET_USER_PROFILE_SUCCESS":
+      return {
+        loading: false,
+        success: true,
+        data: action.payload,
+        error: null,
+      };
+    case "GET_USER_PROFILE_FAIL":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        success: false,
+      };
+    default:
+      return state;
+  }
+};
+
+//USER PROFILE UPDATE
+
+const UpdateUserProfileInitialState = {
+  loading: false,
+  userInfo: JSON.parse(localStorage.getItem("userInfo")) || null,
+  error: null,
+};
+
+export const userUpdateReducer = (
+  state = UpdateUserProfileInitialState,
+  action
+) => {
+  switch (action.type) {
+    case "UPDATE_USER_PROFILE_REQUEST":
+      return { ...state, loading: true };
+    case "UPDATE_USER_PROFILE_SUCCESS":
+      return { loading: false, userInfo: action.payload, error: null };
+    case "UPDATE_USER_PROFILE_FAIL":
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
