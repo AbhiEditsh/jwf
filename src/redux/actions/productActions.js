@@ -312,3 +312,20 @@ export const addWishList = (userId, productId) => async (dispatch) => {
     });
   }
 };
+
+// WISH LIST ADD
+export const GetWishlist = (userId) => async (dispatch) => {
+  try {
+    dispatch({ type: "WISH_LIST_REQUEST" });
+    const { data } = await api.get(`/wishlist`, { params: { userId } });
+    dispatch({
+      type: "WISH_LIST_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "WISH_LIST_FAIL",
+      payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};

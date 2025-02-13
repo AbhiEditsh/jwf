@@ -21,6 +21,7 @@ import {
   CartListReducer,
   removeCartReducer,
   wishlistReducer,
+  WishListViewReducer,
 } from "./reducers/productReducer";
 
 const rootReducer = combineReducers({
@@ -47,7 +48,8 @@ const rootReducer = combineReducers({
   cartList: CartListReducer,
   removeCart:removeCartReducer,
   //add wish list
-  wishlist:wishlistReducer
+  wishlist:wishlistReducer,
+  wishListView:WishListViewReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

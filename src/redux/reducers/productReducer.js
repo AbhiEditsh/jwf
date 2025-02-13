@@ -390,5 +390,28 @@ export const wishlistReducer = (state = wishListInitialState, action) => {
   }
 };
 
+//GET  WISHLIST PRODUCT
+const wishListViewInitialState = {
+  loading: false,
+  wishlist: {
+    items: [],
+  },
+  error: null,
+};
 
-//
+export const WishListViewReducer = (state = wishListViewInitialState, action) => {
+  switch (action.type) {
+    case "WISH_LIST_REQUEST":
+      return { ...state, loading: true };
+    case "WISH_LIST_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        cart: action.payload,
+      };
+    case "WISH_LIST_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
