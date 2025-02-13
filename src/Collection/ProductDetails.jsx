@@ -21,25 +21,34 @@ import {
 } from "react-share";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
+  addToCart,
+  addWishList,
   getProductDetails,
   getRelatedProducts,
 } from "../redux/actions/productActions";
 import theme from "../theme/theme";
 import ProductModel from "./ProductModel";
 import InquiryModel from "./InquiryModel";
-import ProductSlider from "./ProductSlider";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+// import ProductSlider from "./ProductSlider";
 
 function ProductDetails() {
   const { productId } = useParams();
   const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
+  const user = JSON.parse(localStorage.getItem("user"));
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const [openInquiryModal, setOpenInquiryModal] = useState(false);
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
+
+  
   const productUrl = `${window.location.origin}/product/${productId}`;
   useEffect(() => {
     dispatch(getProductDetails(productId));
@@ -58,6 +67,31 @@ function ProductDetails() {
   };
   const handleInquiryClose = () => {
     setOpenInquiryModal(false);
+  };
+  // Add data  logic
+
+  const handleIncrement = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+  const handleDecrement = () => {
+    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
+  };
+
+  const handleAddToCart = () => {
+    if (!user) {
+      alert("Please log in first");
+      return;
+    }
+    dispatch(addToCart(user._id, product._id, quantity));
+  };
+
+  const handleAddToWishlist = () => {
+    if (!user) {
+      alert("Please log in first");
+      return;
+    }
+    dispatch(addWishList(user._id, product._id));
+    setIsWishlisted(true);
   };
   if (loading) {
     return (
@@ -102,7 +136,7 @@ function ProductDetails() {
             Home
           </Link>
           <Link
-            to={`/category/${product.category.id}`}
+            to={`/category/${product.category.name}`}
             style={{ textDecoration: "none", color: "inherit" }}
           >
             {product.category ? product.category.name : "Not available"}
@@ -113,25 +147,50 @@ function ProductDetails() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <Box sx={{ textAlign: "center" }}>
-              <ProductSlider product={product} />
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "600px",
+                }}
+              >
+                <Link
+                  to={`/product/${product._id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <img
+                    src={product.ProductImage}
+                    alt={`Product`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      borderRadius: "8px",
+                      margin: "auto",
+                    }}
+                  />
+                </Link>
+              </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
             <Box sx={{ marginTop: 4 }}>
+              <Typography variant="h5" fontWeight={"bold"} gutterBottom>
+                {product.name}
+              </Typography>
               <Typography variant="body1" gutterBottom fontWeight={"bold"}>
                 {product.category ? product.category.name : "Not available"}
               </Typography>
               <Typography variant="body1" gutterBottom>
                 <strong>SKU:</strong>
-                {product.number}
+                <span style={{ marginLeft: "10px" }}> {product.sku}</span>
               </Typography>
 
               <Divider sx={{ my: 1 }} />
               <Box>
                 <Typography variant="body1" gutterBottom>
-                  <strong style={{ marginRight: "5px" }}>Category</strong>
+                  <b style={{ marginRight: "5px" }}>Category:</b>
                   <Link
-                    to={`/category/${product.category.id}`}
+                    to={`/category/${product.category.name}`}
                     style={{
                       textDecoration: "none",
                       color: theme.palette.grey.main,
@@ -145,33 +204,97 @@ function ProductDetails() {
                   {product.description}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
+                  {product.oldPrice && <span>&#8377; {product.price}</span>}
                   <span
                     style={{
-                      marginRight: "10pox",
-                      color: theme.palette.black.main,
-                      fontWeighgt: "bold",
+                      textDecoration: product.oldPrice
+                        ? "line-through"
+                        : "none",
+                      marginLeft: "10px",
+                      color: "red",
                     }}
                   >
-                    &#8377;
+                    &#8377; {product.oldPrice}
                   </span>
-                  {product.price}
                 </Typography>
               </Box>
               <Divider sx={{ my: 1 }} />
-              <Box>
+
+              {/* Increment and Decrement Buttons */}
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 1, my: 2 }}
+              >
+                <Box
+                  sx={{
+                    borderRadius: "50px",
+                    p: 0.5,
+                    border: `1px solid ${theme.palette.primary.main} `,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    gap: 1,
+                    width: "30%",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      cursor: quantity > 1 ? "pointer" : "not-allowed",
+                      opacity: quantity > 1 ? 1 : 0.5,
+                      fontSize: "1.5rem",
+                      userSelect: "none",
+                    }}
+                    onClick={handleDecrement}
+                  >
+                    -
+                  </Box>
+                  <Typography variant="body1">{quantity}</Typography>
+                  <Box
+                    sx={{
+                      cursor: "pointer",
+                      fontSize: "1.5rem",
+                      userSelect: "none",
+                    }}
+                    onClick={handleIncrement}
+                  >
+                    +
+                  </Box>
+                </Box>
+
                 <Button
                   sx={{
-                    mt: 1,
-                    border: `1px solid ${theme.palette.primary.main}`,
-                    borderRadius: "5%",
+                    backgroundColor: theme.palette.black.main,
+                    borderRadius: "50px",
+                    p: "10px 30px",
+                    color: theme.palette.white.main,
                   }}
                   size="small"
-                  onClick={handleInquiryOpen}
+                  onClick={handleAddToCart}
                 >
-                  Inquiry Now
+                  Add to Cart
                 </Button>
+                <Box
+                  sx={{
+                    borderRadius: "50%",
+                    width: "40px",
+                    height: "40px",
+                    p: 1,
+                    border: `1px solid ${theme.palette.primary.main} `,
+                  }}
+                >
+                  {isWishlisted ? (
+                    <FavoriteIcon
+                      onClick={handleAddToWishlist}
+                      sx={{ color: theme.palette.red.main }}
+                    />
+                  ) : (
+                    <FavoriteBorderIcon
+                      onClick={handleAddToWishlist}
+                      sx={{ color: theme.palette.primary.main }}
+                    />
+                  )}
+                </Box>
               </Box>
-              {/* Share Section */}
+
               <Box sx={{ my: 2 }}>
                 <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                   <span style={{ marginRight: "5px" }}>Share:</span>
@@ -196,7 +319,6 @@ function ProductDetails() {
             </Box>
           </Grid>
         </Grid>
-
         {/* Related Products Section */}
         <Box sx={{ mt: 2 }}>
           {/* title */}
@@ -245,13 +367,13 @@ function ProductDetails() {
                     >
                       <div className="box_image">
                         <div>
-                          {related.images?.[0] ? (
+                          {related.ProductImage ? (
                             <img
-                              src={related.images[0].url}
-                              alt={`Product 1`}
+                              src={related.ProductImage}
+                              alt={`Product`}
                               style={{
-                                width: "200px",
-                                height: "200px",
+                                width: "100%",
+                                height: "100%",
                                 borderRadius: "8px",
                                 margin: "auto",
                               }}

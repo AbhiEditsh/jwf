@@ -18,48 +18,43 @@ import { styled, useTheme } from "@mui/system";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import axios from "axios";
 import TopHeader from "../../src/Global/TopHeader";
 import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
-import { LoginData } from "../redux/actions/productActions";
+import { GetAddToCart, LoginData } from "../redux/actions/productActions";
+import { Favorite, ShoppingCart } from "@mui/icons-material";
 
 const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
   backgroundColor: backgroundColor || theme.palette.background.paper,
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-  m: 0,
+  margin: 0,
   transition: "background-color 0.3s ease-in-out",
 }));
 
 const Header = () => {
+  const [drawerState, setDrawerState] = useState({ menu: false });
+  // eslint-disable-next-line
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [searchResults, setSearchResults] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const cartList = useSelector((state) => state.cartList);
+  const { cart } = cartList || {};
   const user = JSON.parse(localStorage.getItem("user"));
-  
-  const { data, error } = useSelector(
-    (state) =>
-      state.Logout || {
-        data: null,
-        error: null,
-      }
-    );
     
-  const [backgroundColor, setBackgroundColor] = useState(
-    theme.palette.background.paper
-  );
-  const [drawerState, setDrawerState] = useState({ menu: false });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [cartItemsCount, setCartItemsCount] = useState(5); // Example count
-  const [wishlistItemsCount, setWishlistItemsCount] = useState(2); // Example count
-  const [anchorEl, setAnchorEl] = useState(null); // For profile dropdown menu
-
+  useEffect(() => {
+    if (user && user._id) {
+      dispatch(GetAddToCart(user._id));
+    }
+  }, [dispatch, user?._id, cart?.totalItems]);
+  
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -68,22 +63,15 @@ const Header = () => {
     setAnchorEl(null);
   };
 
-  // Handle logout
   const handleLogout = () => {
     dispatch(LoginData(user._id));
     localStorage.clear();
     handleProfileMenuClose();
     navigate("/login");
   };
-
-  useEffect(() => {
-    if (data) {
-      toast.success(data.message);
-    } else if (error) {
-      toast.error(error.message);
-    }
-  }, [data, error]);
-
+  const [backgroundColor, setBackgroundColor] = useState(
+    theme.palette.background.paper
+  );
   const menuItems = [
     { label: "Home", to: "/" },
     { label: "Collection", to: "/collection" },
@@ -336,22 +324,18 @@ const Header = () => {
                 marginLeft: isSmallScreen ? "auto" : 2,
               }}
             >
-              <IconButton
-                color="inherit"
-                onClick={() => navigate("/cart")}
-                sx={{ p: 1 }}
-              >
-                <Badge badgeContent={cartItemsCount} color="secondary">
-                  <ShoppingCartIcon />
+              <IconButton component={Link} to="/wishlist" color="inherit">
+                <Badge color="secondary" badgeContent={4}>
+                  <Favorite />
                 </Badge>
               </IconButton>
-              <IconButton
-                color="inherit"
-                onClick={() => navigate("/wishlist")}
-                sx={{ p: 1 }}
-              >
-                <Badge badgeContent={wishlistItemsCount} color="secondary">
-                  <FavoriteBorderIcon />
+
+              <IconButton component={Link} to="/cart" color="inherit">
+                <Badge
+                  badgeContent={cart?.totalItems || 0}
+                  color="secondary"
+                >
+                  <ShoppingCart />
                 </Badge>
               </IconButton>
               <IconButton
@@ -377,7 +361,7 @@ const Header = () => {
                       if (item.onClick) {
                         item.onClick(); // Handle logout
                       } else {
-                        navigate(item.to); // Navigate to the specified route
+                        navigate(item.to);
                       }
                     }}
                   >

@@ -23,6 +23,12 @@ const theme = createTheme({
     lightgrey: {
       main: "#f4f6f6",
     },
+    darkGrey: {
+      main: "#e1e1e1",
+    },
+    red:{
+      main:"#FF0000"
+    }
   },
 });
 

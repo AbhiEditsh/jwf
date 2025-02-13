@@ -17,7 +17,6 @@ const UserProfile = () => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.userProfile);
   const { loading, error, data } = userProfile;
-  console.log(data);
 
   useEffect(() => {
     dispatch(getUserProfile());

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api"; // Backend URL
+const API_URL = "http://localhost:7001/api"; // Backend URL
 
 const api = axios.create({
   baseURL: API_URL,
@@ -38,12 +38,9 @@ api.interceptors.response.use(
         console.log(refreshToken);
         
         if (!refreshToken) throw new Error("No refresh token available");
-
-        // Call Refresh Token API
         const res = await axios.post(`${API_URL}/users/refresh-token`, {
           refreshToken,
         });
-        console.log(res);
 
         // Store new tokens in localStorage
         localStorage.setItem("token", res.data.token);

@@ -1,10 +1,9 @@
-// Initial state for product list
+// PRODUCT LIST
 const productListInitialState = {
   products: [],
   loading: false,
   error: null,
 };
-
 export const productListReducer = (state = productListInitialState, action) => {
   switch (action.type) {
     case "PRODUCT_LIST_REQUEST":
@@ -17,13 +16,12 @@ export const productListReducer = (state = productListInitialState, action) => {
       return state;
   }
 };
-
+//PRODUCT dETAILS
 const productDetailsInitialState = {
   loading: false,
   product: null,
   error: null,
 };
-
 export const productDetailsReducer = (
   state = productDetailsInitialState,
   action
@@ -252,7 +250,6 @@ const UserProfileInitialState = {
   data: null,
   error: null,
 };
-
 export const getUserProfileReducer = (
   state = UserProfileInitialState,
   action
@@ -280,13 +277,11 @@ export const getUserProfileReducer = (
 };
 
 //USER PROFILE UPDATE
-
 const UpdateUserProfileInitialState = {
   loading: false,
   userInfo: JSON.parse(localStorage.getItem("userInfo")) || null,
   error: null,
 };
-
 export const userUpdateReducer = (
   state = UpdateUserProfileInitialState,
   action
@@ -302,3 +297,98 @@ export const userUpdateReducer = (
       return state;
   }
 };
+
+//ADD TO CART
+const AddToCartInitialState = {
+  cartItems: [],
+  loading: false,
+  error: null,
+};
+
+export const cartReducer = (state = AddToCartInitialState, action) => {
+  switch (action.type) {
+    case "ADD_TO_CART_REQUEST":
+      return { ...state, loading: true };
+
+    case "ADD_TO_CART_SUCCESS":
+      return { ...state, loading: false, cart: action.payload, error: null };
+
+    case "ADD_TO_CART_FAIL":
+      return { ...state, loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+//GET ADD TO CART
+const CartListInitialState = {
+  loading: false,
+  cart: {
+    items: [],
+    totalPrice: 0,
+  },
+  error: null,
+};
+
+export const CartListReducer = (state = CartListInitialState, action) => {
+  switch (action.type) {
+    case "CART_LIST_REQUEST":
+      return { ...state, loading: true };
+    case "CART_LIST_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        cart: action.payload,
+      };
+    case "CART_LIST_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+//REMOVE ADD TO CART
+const removeCartInitialState = {
+  loading: false,
+  error: null,
+};
+
+export const removeCartReducer = (state = removeCartInitialState, action) => {
+  switch (action.type) {
+    case "REMOVE_FROM_CART_REQUEST":
+      return { ...state, loading: true };
+    case "REMOVE_FROM_CART_SUCCESS":
+      return { ...state, loading: false, error: null };
+    case "REMOVE_FROM_CART_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+//WISH LIST ADD
+const wishListInitialState = {
+  loading: false,
+  wishList: [],
+  error: null,
+};
+
+export const wishlistReducer = (state = wishListInitialState, action) => {
+  switch (action.type) {
+    case "WISHLIST_REQUEST":
+      return { ...state, loading: true };
+    case "WISHLIST_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        wishList: action.payload,
+      };
+    case "WISHLIST_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+
+//

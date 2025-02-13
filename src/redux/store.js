@@ -17,16 +17,23 @@ import {
   LogoutReducer,
   getUserProfileReducer,
   userUpdateReducer,
+  cartReducer,
+  CartListReducer,
+  removeCartReducer,
+  wishlistReducer,
 } from "./reducers/productReducer";
 
 const rootReducer = combineReducers({
+  //Other
+  inquiry: inquiryReducer,
+  reviewList: ReviewListReducer,
+  //Product 
   productList: productListReducer,
   productDetails: productDetailsReducer,
   relatedProducts: relatedProductsReducer,
   productsByCategory: productsByCategoryReducer,
-  inquiry: inquiryReducer,
-  reviewList: ReviewListReducer,
   ProductInquiry: ProductinquiryReducer,
+  //Auth
   Register: registerReducer,
   Login: loginReducer,
   ForgotPassword:ForgotPasswordReducer,
@@ -35,6 +42,12 @@ const rootReducer = combineReducers({
   // User Profile
   userProfile: getUserProfileReducer,
   userUpdate: userUpdateReducer,
+  // add to cart
+  cart: cartReducer,
+  cartList: CartListReducer,
+  removeCart:removeCartReducer,
+  //add wish list
+  wishlist:wishlistReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

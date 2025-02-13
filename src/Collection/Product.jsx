@@ -373,9 +373,9 @@ function Product() {
                             <div className="box_image">
                               <Link to={`/product/${product._id}`}>
                                 <div>
-                                  {product.images?.[0] ? (
+                                  {product.ProductImage ? (
                                     <img
-                                      src={product.images[0].url}
+                                      src={product.ProductImage}
                                       alt={`Product 1`}
                                       style={{
                                         width: "200px",
@@ -474,7 +474,7 @@ function Product() {
                                     <div>
                                       {product.images?.[0] ? (
                                         <img
-                                          src={product.images[0].url}
+                                          src={product.ProductImage}
                                           alt={`Product 1`}
                                           style={{
                                             width: "200px",

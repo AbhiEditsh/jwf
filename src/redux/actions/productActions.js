@@ -1,9 +1,9 @@
 import api from "../../utils/api";
-
+//GET PRODUCT LIST
 export const getProducts = () => async (dispatch) => {
   try {
     dispatch({ type: "PRODUCT_LIST_REQUEST" });
-    const response = await api.get("/products");
+    const response = await api.get("/product");
     dispatch({
       type: "PRODUCT_LIST_SUCCESS",
       payload: response.data.products,
@@ -15,7 +15,22 @@ export const getProducts = () => async (dispatch) => {
     });
   }
 };
-
+//GET PRODUCT DETAILS
+export const getProductDetails = (productId) => async (dispatch) => {
+  try {
+    dispatch({ type: "PRODUCT_DETAILS_REQUEST" });
+    const response = await api.get(`/product/${productId}`);
+    dispatch({
+      type: "PRODUCT_DETAILS_SUCCESS",
+      payload: response.data.product,
+    });
+  } catch (error) {
+    dispatch({
+      type: "PRODUCT_DETAILS_FAIL",
+      payload: error.response ? error.response.data.error : error.message,
+    });
+  }
+};
 export const getReview = () => async (dispatch) => {
   try {
     dispatch({ type: "REVIEW_LIST_REQUEST" });
@@ -32,21 +47,6 @@ export const getReview = () => async (dispatch) => {
   }
 };
 
-export const getProductDetails = (productId) => async (dispatch) => {
-  try {
-    dispatch({ type: "PRODUCT_DETAILS_REQUEST" });
-    const response = await api.get(`/products/${productId}`);
-    dispatch({
-      type: "PRODUCT_DETAILS_SUCCESS",
-      payload: response.data.product,
-    });
-  } catch (error) {
-    dispatch({
-      type: "PRODUCT_DETAILS_FAIL",
-      payload: error.response ? error.response.data.error : error.message,
-    });
-  }
-};
 export const getRelatedProducts = (productId) => async (dispatch) => {
   try {
     dispatch({ type: "RELATED_PRODUCTS_REQUEST" });
@@ -62,15 +62,15 @@ export const getRelatedProducts = (productId) => async (dispatch) => {
     });
   }
 };
-
-export const getProductsByCategory = (categoryId) => async (dispatch) => {
+//CATEGORY WISE FILTER
+export const getProductsByCategory = (category) => async (dispatch) => {
   try {
     dispatch({ type: "PRODUCTS_BY_CATEGORY_REQUEST" });
-    const { data } = await api.get(`/categories/${categoryId}/products`);
+    const { data } = await api.get(`/product/category/${category}`);
 
     dispatch({
       type: "PRODUCTS_BY_CATEGORY_SUCCESS",
-      payload: data,
+      payload: data.products,
     });
   } catch (error) {
     dispatch({
@@ -233,6 +233,82 @@ export const updateUserProfile = (userData) => async (dispatch, getState) => {
     dispatch({
       type: "UPDATE_USER_PROFILE_FAIL",
       payload: error.response?.data?.error || error.message,
+    });
+  }
+};
+//ADD TO CART
+
+export const addToCart = (userId, productId, quantity) => async (dispatch) => {
+  try {
+    dispatch({ type: "ADD_TO_CART_REQUEST" });
+
+    const { data } = await api.post("/cart/add", {
+      userId,
+      productId,
+      quantity,
+    });
+
+    dispatch({ type: "ADD_TO_CART_SUCCESS", payload: data.cart });
+  } catch (error) {
+    dispatch({
+      type: "ADD_TO_CART_FAIL",
+      payload: error.response?.data?.message || "Something went wrong!",
+    });
+  }
+};
+
+//GET ADD TO CART
+export const GetAddToCart = (userId) => async (dispatch) => {
+  try {
+    dispatch({ type: "CART_LIST_REQUEST" });
+    const { data } = await api.get(`/cart`, { params: { userId } });
+    dispatch({
+      type: "CART_LIST_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "CART_LIST_FAIL",
+      payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};
+
+//REMOVE CART
+export const removeFromCart = (productId, userId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "REMOVE_FROM_CART_REQUEST",
+    });
+    const { data } = await api.delete(`/cart/remove/${productId}`, {
+      data: { userId },
+    });
+    dispatch({
+      type: "REMOVE_FROM_CART_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "REMOVE_FROM_CART_FAIL",
+      payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};
+
+// WISH LIST ADD
+export const addWishList = (userId, productId) => async (dispatch) => {
+  console.log(userId, productId);
+  try {
+    dispatch({ type: "ADD_TO_WISH_LIST_REQUEST" });
+    const { data } = await api.post(`/wishlist/add`, { userId, productId });
+    dispatch({
+      type: "ADD_TO_WISH_LIST_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "ADD_TO_WISH_LIST_FAIL",
+      payload: error.response ? error.response.data.message : error.message,
     });
   }
 };

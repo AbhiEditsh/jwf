@@ -57,7 +57,7 @@ function App() {
           <Route path="/customize-jewelry" element={<CustomizeJewellery />} />
           <Route path="/certification" element={<Certification />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
-          <Route path="/category/:categoryId" element={<CategoryPage />} />
+          <Route path="/category/:category" element={<CategoryPage />} />
           <Route path="/lab-vs-natural" element={<LabVsNatural />} />
           <Route path="/the-4-cs-of-diamonds" element={<Thediamonds />} />
 

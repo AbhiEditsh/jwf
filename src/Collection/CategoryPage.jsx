@@ -32,7 +32,7 @@ import {
 } from "react-share";
 
 function CategoryPage() {
-  const { productId, categoryId } = useParams();
+  const { productId, category } = useParams();
   const dispatch = useDispatch();
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -46,8 +46,8 @@ function CategoryPage() {
   const { loading, products, error } = productsByCategory;
 
   useEffect(() => {
-    dispatch(getProductsByCategory(categoryId));
-  }, [dispatch, categoryId]);
+    dispatch(getProductsByCategory(category));
+  }, [dispatch, category]);
 
   useEffect(() => {
     if (products) {
@@ -80,7 +80,7 @@ function CategoryPage() {
   };
 
   const handleOpenModal = (product) => {
-    setSelectedProduct(product);
+    setSelectedProduct(products);
     setOpenModal(true);
   };
 
@@ -111,6 +111,8 @@ function CategoryPage() {
     setSortKey(key);
     setFilteredProducts(sorted);
   };
+
+  
 
   // Pagination
   const itemsPerPage = 9;
@@ -244,91 +246,93 @@ function CategoryPage() {
                     {view === "grid" ? (
                       paginatedProducts.length > 0 ? (
                         paginatedProducts.map((product) => (
-                          <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={4}
-                            lg={4}
-                            key={product.id}
-                          >
-                            <Box
-                              padding={2}
-                              borderRadius={2}
-                              sx={{
-                                boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                              }}
+                          <>
+                            <Grid
+                              item
+                              xs={12}
+                              sm={6}
+                              md={4}
+                              lg={4}
+                              key={product.id}
                             >
-                              <div className="box_image">
-                                <div>
-                                  {product.images?.[0] ? (
-                                    <img
-                                      src={product.images[0].url}
-                                      alt={`Product 1`}
-                                      style={{
-                                        borderRadius: "8px",
-                                        margin: "auto",
+                              <Box
+                                padding={2}
+                                borderRadius={2}
+                                sx={{
+                                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                                }}
+                              >
+                                <div className="box_image">
+                                  <div>
+                                    {product.ProductImage ? (
+                                      <img
+                                        src={product.ProductImage}
+                                        alt={`Product 1`}
+                                        style={{
+                                          borderRadius: "8px",
+                                          margin: "auto",
+                                        }}
+                                      />
+                                    ) : (
+                                      <p>No image available</p>
+                                    )}
+                                  </div>
+                                  <div className="hover_image">
+                                    <RemoveRedEyeIcon
+                                      sx={{
+                                        color: theme.palette.black.main,
+                                        cursor: "pointer",
                                       }}
+                                      onClick={() => handleOpenModal(product)}
                                     />
-                                  ) : (
-                                    <p>No image available</p>
-                                  )}
+                                  </div>
                                 </div>
-                                <div className="hover_image">
-                                  <RemoveRedEyeIcon
+                                <Link to={`/product/${product._id}`}>
+                                  <Typography
+                                    variant="h6"
                                     sx={{
-                                      color: theme.palette.black.main,
-                                      cursor: "pointer",
+                                      color: theme.palette.primary.main,
+                                      textAlign: "center",
                                     }}
-                                    onClick={() => handleOpenModal(product)}
-                                  />
-                                </div>
-                              </div>
-                              <Link to={`/product/${product._id}`}>
-                                <Typography
-                                  variant="h6"
-                                  sx={{
-                                    color: theme.palette.primary.main,
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  {product.name}
-                                </Typography>
+                                  >
+                                    {product.name}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      color: theme.palette.grey.main,
+                                      textAlign: "center",
+                                      fontSize: "14px",
+                                      display: "-webkit-box",
+                                      WebkitLineClamp: 2,
+                                      mb: 1,
+                                      WebkitBoxOrient: "vertical",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                    }}
+                                  >
+                                    {product.description}
+                                  </Typography>
+                                </Link>
                                 <Typography
                                   sx={{
                                     color: theme.palette.grey.main,
                                     textAlign: "center",
                                     fontSize: "14px",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: 2,
-                                    mb: 1,
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
                                   }}
                                 >
-                                  {product.description}
+                                  <span
+                                    style={{
+                                      color: theme.palette.primary.main,
+                                      marginRight: "5px",
+                                    }}
+                                  >
+                                    &#x20B9;
+                                  </span>
+                                  {product.price}
                                 </Typography>
-                              </Link>
-                              <Typography
-                                sx={{
-                                  color: theme.palette.grey.main,
-                                  textAlign: "center",
-                                  fontSize: "14px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color: theme.palette.primary.main,
-                                    marginRight: "5px",
-                                  }}
-                                >
-                                  &#x20B9;
-                                </span>
-                                {product.price}
-                              </Typography>
-                            </Box>
-                          </Grid>
+                              </Box>
+                            </Grid>
+                          </>
                         ))
                       ) : (
                         <Grid item xs={12}>
@@ -359,9 +363,9 @@ function CategoryPage() {
                                   >
                                     <div className="box_image">
                                       <div>
-                                        {product.images?.[0] ? (
+                                        {product.ProductImage ? (
                                           <img
-                                            src={product.images[0].url}
+                                            src={product.ProductImage}
                                             alt={`Product 1`}
                                             style={{
                                               width: "200px",
