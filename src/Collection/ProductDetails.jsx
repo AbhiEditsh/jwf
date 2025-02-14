@@ -25,6 +25,7 @@ import {
   addWishList,
   getProductDetails,
   getRelatedProducts,
+  removeWishlist,
 } from "../redux/actions/productActions";
 import theme from "../theme/theme";
 import ProductModel from "./ProductModel";
@@ -44,11 +45,13 @@ function ProductDetails() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [openInquiryModal, setOpenInquiryModal] = useState(false);
+  const { wishlist } = useSelector((state) => state.wishlist);
+  console.log(wishlist);
+
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
 
-  
   const productUrl = `${window.location.origin}/product/${productId}`;
   useEffect(() => {
     dispatch(getProductDetails(productId));
@@ -58,6 +61,14 @@ function ProductDetails() {
     setSelectedProduct(product);
     setOpenModal(true);
   };
+  useEffect(() => {
+    if (wishlist && product) {
+      setIsWishlisted(
+        wishlist.some((item) => item.productId === product._id && item.liked)
+      );
+    }
+  }, [wishlist, product]);
+
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedProduct(null);
@@ -68,7 +79,6 @@ function ProductDetails() {
   const handleInquiryClose = () => {
     setOpenInquiryModal(false);
   };
-  // Add data  logic
 
   const handleIncrement = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -85,13 +95,14 @@ function ProductDetails() {
     dispatch(addToCart(user._id, product._id, quantity));
   };
 
-  const handleAddToWishlist = () => {
+  const handleWishlistToggle = () => {
     if (!user) {
       alert("Please log in first");
       return;
     }
-    dispatch(addWishList(user._id, product._id));
-    setIsWishlisted(true);
+    isWishlisted
+      ? dispatch(removeWishlist(user._id, product._id))
+      : dispatch(addWishList(user._id, product._id));
   };
   if (loading) {
     return (
@@ -272,25 +283,13 @@ function ProductDetails() {
                 >
                   Add to Cart
                 </Button>
-                <Box
-                  sx={{
-                    borderRadius: "50%",
-                    width: "40px",
-                    height: "40px",
-                    p: 1,
-                    border: `1px solid ${theme.palette.primary.main} `,
-                  }}
-                >
-                  {isWishlisted ? (
-                    <FavoriteIcon
-                      onClick={handleAddToWishlist}
-                      sx={{ color: theme.palette.red.main }}
-                    />
+                <Box onClick={handleWishlistToggle} sx={{ cursor: "pointer" }}>
+                  {loading ? (
+                    <CircularProgress size={24} sx={{ color: "white" }} />
+                  ) : isWishlisted ? (
+                    <FavoriteIcon sx={{ color: "red" }} />
                   ) : (
-                    <FavoriteBorderIcon
-                      onClick={handleAddToWishlist}
-                      sx={{ color: theme.palette.primary.main }}
-                    />
+                    <FavoriteBorderIcon sx={{ color: "white" }} />
                   )}
                 </Box>
               </Box>

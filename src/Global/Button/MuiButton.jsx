@@ -33,3 +33,22 @@ export const SecondaryButton = ({ text, onClick, ...rest }) => {
     </Button>
   );
 };
+
+
+export const DarkButton = ({ text, onClick, ...rest }) => {
+  return (
+    <Button
+      onClick={onClick ? onClick : undefined}
+      sx={{
+        color: theme.palette.white.main,
+        backgroundColor:theme.palette.black.main,
+        borderRadius:'50px',
+        padding:"4px 6px",
+
+      }}
+      {...rest}
+    >
+      {text}
+    </Button>
+  );
+};

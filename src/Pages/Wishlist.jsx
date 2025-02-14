@@ -16,44 +16,57 @@ import {
   CardContent,
   TableHead,
 } from "@mui/material";
-import { GetWishlist } from "../redux/actions/productActions";
+import {
+  addToCart,
+  GetWishlist,
+  removeWishlist,
+} from "../redux/actions/productActions";
 import EmptyCart from "../assets/image/emptycart.png";
-import { SecondaryButton } from "../Global/Button/MuiButton";
+import { DarkButton, SecondaryButton } from "../Global/Button/MuiButton";
 import { useNavigate } from "react-router-dom";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import theme from "../theme/theme";
 
 const Wishlist = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const wishlist= useSelector((state) => state.wishlist);
-  const { loading, wish, error } = wishlist || {};
+  const { loading, wishlist } =useSelector((state) => state.wishlist) || {};
   const isMobile = useMediaQuery("(max-width:767px)");
-
-  
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
-
-  console.log(wish);
-  
 
   useEffect(() => {
     if (userId) {
       dispatch(GetWishlist(userId));
     }
   }, [dispatch, userId]);
+  
+
+  const handleAddToCart = (productId) => {
+    if (!user) {
+      alert("Please log in first");
+      return;
+    }
+    dispatch(addToCart(user._id, productId, 1));
+  };
+  const handleRemove = async (productId) => {
+    await dispatch(removeWishlist(userId, productId));
+  };
+  
+  
 
   return (
     <Container>
       <Box sx={{ m: 2 }}>
         {loading && <CircularProgress />}
-        {error && <Typography color="error">{error}</Typography>}
 
-        {wish?.items?.length > 0 ? (
+        {wishlist?.length > 0 ? (
           <>
             {isMobile ? (
-              wish?.items?.map((item) => (
+              wishlist.map((item) => (
                 <Card
-                  key={item.productId._id}
+                  key={item.productId}
                   sx={{
                     display: "flex",
                     mb: 2,
@@ -62,9 +75,17 @@ const Wishlist = () => {
                     p: 1,
                   }}
                 >
+                  <HighlightOffOutlinedIcon
+                    onClick={() => handleRemove(item.productId)}
+                    sx={{
+                      cursor: "pointer",
+                      fontSize: "16px",
+                      color: theme.palette.red.main,
+                    }}
+                  />
                   <img
-                    src={item.productId.ProductImage}
-                    alt={item.productId.name}
+                    src={item.ProductImage || EmptyCart}
+                    alt={item.name || "No Image"}
                     style={{
                       height: "80px",
                       width: "80px",
@@ -74,31 +95,33 @@ const Wishlist = () => {
                   />
                   <CardContent sx={{ flex: 1, p: 1 }}>
                     <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
+                      sx={{ display: "flex", justifyContent: "space-between" }}
                     >
-                      <Box>
-                        <Typography variant="body1">
-                          {item.productId.name}
-                        </Typography>
-                      </Box>
+                      <Typography variant="body1">
+                        {item.name || "Unknown Product"}
+                      </Typography>
                     </Box>
                     <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
+                      sx={{ display: "flex", justifyContent: "space-between" }}
                     >
-                      <Box>
-                        <span> Price: </span>
-                      </Box>
-                      <Box>₹{item.productId.price}</Box>
+                      <Typography variant="body2">Price:</Typography>
+                      <Typography>
+                        <Box sx={{
+                          backgroundColor:theme.palette.lightgrey.main,
+                          border:`1px solid ${theme.palette.darkGrey.main}`,
+                          padding:"4px 3px",
+                          borderRadius:'10px'
+                        }}>₹{item.price || 0}</Box>
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <Typography>{item.Available}</Typography>
+                      <DarkButton
+                        text="ADD TO CART"
+                        onClick={() => handleAddToCart(item.productId)}
+                      />
                     </Box>
                   </CardContent>
                 </Card>
@@ -106,28 +129,30 @@ const Wishlist = () => {
             ) : (
               <TableContainer
                 component={Paper}
-                sx={{
-                  overflowX: "auto",
-                  borderRadius: 2,
-                  boxShadow: 3,
-                  maxWidth: "100%",
-                }}
+                sx={{ overflowX: "auto", borderRadius: 2, boxShadow: 3 }}
               >
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell></TableCell>
-                      <TableCell>Product</TableCell>
-                      <TableCell align="right">Price</TableCell>
-                    </TableRow>
-                  </TableHead>
+                <Table
+                  sx={{
+                    minWidth: 550,
+                  }}
+                >
                   <TableBody>
-                    {wish?.items?.map((item) => (
-                      <TableRow key={item.productId._id}>
+                    {wishlist.map((item) => (
+                      <TableRow key={item.productId}>
+                        <TableCell align="center">
+                          <HighlightOffOutlinedIcon
+                            onClick={() => handleRemove(item.productId)}
+                            sx={{
+                              cursor: "pointer",
+                              fontSize: "20px",
+                              color: theme.palette.red.main,
+                            }}
+                          />
+                        </TableCell>
                         <TableCell>
                           <img
-                            src={item.productId.ProductImage}
-                            alt={item.productId.name}
+                            src={item.ProductImage || EmptyCart}
+                            alt={item.name || "No Image"}
                             style={{
                               height: "80px",
                               width: "80px",
@@ -136,12 +161,36 @@ const Wishlist = () => {
                           />
                         </TableCell>
                         <TableCell>
-                          <Typography fontWeight="bold">
-                            {item.productId.name}
+                          <Typography variant="body1">{item.name}</Typography>
+                          <Typography variant="body1" gutterBottom>
+                            {item.oldPrice && <span>&#8377; {item.price}</span>}
+                            <span
+                              style={{
+                                textDecoration: item.oldPrice
+                                  ? "line-through"
+                                  : "none",
+                                marginLeft: "10px",
+                                color: theme.palette.grey.main,
+                              }}
+                            >
+                              &#8377; {item.oldPrice}
+                            </span>
                           </Typography>
                         </TableCell>
-                        <TableCell align="right">
-                          ₹{item.productId.price}
+                        <TableCell align="right"></TableCell>
+                        <TableCell align="center">
+                          <Typography
+                            sx={{
+                              fontSize: "16px",
+                              mb: 0,
+                            }}
+                          >
+                            {item.Available ? "In stock" : "Out of stock"}
+                          </Typography>
+                          <DarkButton
+                            text="ADD TO CART"
+                            onClick={() => handleAddToCart(item.productId)}
+                          />
                         </TableCell>
                       </TableRow>
                     ))}
@@ -154,31 +203,23 @@ const Wishlist = () => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
               flexDirection: "column",
+              alignItems: "center",
               m: 2,
             }}
           >
-            <Box sx={{ textAlign: "center" }}>
-              <img
-                src={EmptyCart}
-                alt="Empty Cart"
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  textAlign: "center",
-                  margin: "auto",
-                }}
-              />
-              <Typography sx={{ fontSize: 20, fontWeight: 500, my: 1 }}>
-                Your wishlist is empty.
-              </Typography>
-              <SecondaryButton
-                text="START SHOPPING"
-                onClick={() => navigate("/collection")}
-              />
-            </Box>
+            <img
+              src={EmptyCart}
+              alt="Empty Cart"
+              style={{ width: "100px", height: "100px" }}
+            />
+            <Typography sx={{ fontSize: 20, fontWeight: 500, my: 1 }}>
+              Your wishlist is empty.
+            </Typography>
+            <SecondaryButton
+              text="START SHOPPING"
+              onClick={() => navigate("/collection")}
+            />
           </Box>
         )}
       </Box>

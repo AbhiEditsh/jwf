@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:7000/api"; // Backend URL
+const API_URL = "http://localhost:7000/api";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -13,7 +13,6 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem("token");
-    console.log(token);
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -35,13 +34,10 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const refreshToken = localStorage.getItem("refreshToken");
-        console.log(refreshToken);
-        
         if (!refreshToken) throw new Error("No refresh token available");
         const res = await axios.post(`${API_URL}/users/refresh-token`, {
           refreshToken,
         });
-
         // Store new tokens in localStorage
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("refreshToken", res.data.refreshToken);

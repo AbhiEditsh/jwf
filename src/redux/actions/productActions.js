@@ -320,11 +320,32 @@ export const GetWishlist = (userId) => async (dispatch) => {
     const { data } = await api.get(`/wishlist`, { params: { userId } });
     dispatch({
       type: "WISH_LIST_SUCCESS",
-      payload: data,
+      payload: data.wishlist.items,
     });
   } catch (error) {
     dispatch({
       type: "WISH_LIST_FAIL",
+      payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};
+
+//REMOVE WISHLIST
+export const removeWishlist = (userId, productId) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "REMOVE_FROM_WISH_LIST_REQUEST",
+    });
+    const { data } = await api.delete(`/wishlist/remove`, {
+      data: { userId, productId },
+    });
+    dispatch({
+      type: "REMOVE_FROM_WISH_LIST_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "REMOVE_FROM_WISH_LIST_FAIL",
       payload: error.response ? error.response.data.message : error.message,
     });
   }
