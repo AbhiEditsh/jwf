@@ -10,6 +10,8 @@ import {
   Breadcrumbs,
   Divider,
   Button,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import {
   FacebookShareButton,
@@ -19,7 +21,6 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from "react-share";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   addToCart,
   addWishList,
@@ -32,10 +33,16 @@ import ProductModel from "./ProductModel";
 import InquiryModel from "./InquiryModel";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-// import ProductSlider from "./ProductSlider";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import RelatedProducts from "./RelatedProducts ";
+import ProductReviewCreate from "./ProductReview/ProductReviewCreate";
+import ProductReviewView from "./ProductReview/ProductReviewView";
+import PropTypes from "prop-types";
 
 function ProductDetails() {
   const { productId } = useParams();
+  const [navValue, setNavValue] = useState(0);
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
@@ -46,8 +53,6 @@ function ProductDetails() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [openInquiryModal, setOpenInquiryModal] = useState(false);
   const { wishlist } = useSelector((state) => state.wishlist);
-  console.log(wishlist);
-
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
@@ -104,6 +109,38 @@ function ProductDetails() {
       ? dispatch(removeWishlist(user._id, product._id))
       : dispatch(addWishList(user._id, product._id));
   };
+
+  function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      </div>
+    );
+  }
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleNavChange = (event, newValue) => {
+    setNavValue(newValue);
+  };
+  CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+
   if (loading) {
     return (
       <Box
@@ -317,10 +354,35 @@ function ProductDetails() {
               </Box>
             </Box>
           </Grid>
+          <Box sx={{ width: "100%" }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={navValue}
+                onChange={handleNavChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Description" {...a11yProps(0)} />
+                <Tab label="Reviews" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={navValue} index={0}>
+              <Typography variant="body1" gutterBottom>
+                {product.description}
+              </Typography>
+            </CustomTabPanel>
+            <CustomTabPanel value={navValue} index={1}>
+              <Grid row container spacing={2}>
+                <Grid item xs={12} lg={6}>
+                  <ProductReviewCreate productId={product._id} />
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <ProductReviewView productId={product._id}/>
+                </Grid>
+              </Grid>
+            </CustomTabPanel>
+          </Box>
         </Grid>
-        {/* Related Products Section */}
         <Box sx={{ mt: 2 }}>
-          {/* title */}
           <Box
             sx={{
               borderBottom: "1px solid #e1e1e1",
@@ -349,100 +411,7 @@ function ProductDetails() {
               <CircularProgress />
             </Box>
           ) : (
-            <Grid container spacing={3}>
-              {relatedProducts.map((related) => (
-                <Grid item xs={12} sm={6} md={3} key={related._id}>
-                  <Box
-                    sx={{
-                      border: "1px solid #ddd",
-                      borderRadius: "8px",
-                      padding: "16px",
-                      textAlign: "center",
-                    }}
-                  >
-                    <Link
-                      to={`/product/${related._id}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <div className="box_image">
-                        <div>
-                          {related.ProductImage ? (
-                            <img
-                              src={related.ProductImage}
-                              alt={`Product`}
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                borderRadius: "8px",
-                                margin: "auto",
-                              }}
-                            />
-                          ) : (
-                            <p>No image available</p>
-                          )}
-                        </div>
-                        <div className="hover_image">
-                          <RemoveRedEyeIcon
-                            sx={{
-                              color: theme.palette.black.main,
-                              cursor: "pointer",
-                            }}
-                            onClick={() => handleOpenModal(product)}
-                          />
-                        </div>
-                      </div>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          color: theme.palette.primary.main,
-                          textAlign: "center",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          mb: 1,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {related.name}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: theme.palette.grey.main,
-                          textAlign: "center",
-                          fontSize: "14px",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          mb: 1,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {related.description}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          color: theme.palette.grey.main,
-                          textAlign: "center",
-                          fontSize: "14px",
-                        }}
-                      >
-                        <span
-                          style={{
-                            color: theme.palette.primary.main,
-                            marginRight: "5px",
-                          }}
-                        >
-                          &#x20B9;
-                        </span>
-                        {related.price}
-                      </Typography>
-                    </Link>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
+            <RelatedProducts relatedProducts={relatedProducts} />
           )}
         </Box>
       </Container>

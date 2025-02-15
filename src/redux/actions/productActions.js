@@ -31,6 +31,7 @@ export const getProductDetails = (productId) => async (dispatch) => {
     });
   }
 };
+//GET REVIEW
 export const getReview = () => async (dispatch) => {
   try {
     dispatch({ type: "REVIEW_LIST_REQUEST" });
@@ -46,14 +47,14 @@ export const getReview = () => async (dispatch) => {
     });
   }
 };
-
+//GET RELATED PRODUCT
 export const getRelatedProducts = (productId) => async (dispatch) => {
   try {
     dispatch({ type: "RELATED_PRODUCTS_REQUEST" });
-    const response = await api.get(`/products/related/${productId}`);
+    const response = await api.get(`/product/related/${productId}`);
     dispatch({
       type: "RELATED_PRODUCTS_SUCCESS",
-      payload: response.data.relatedProducts,
+      payload: response.data,
     });
   } catch (error) {
     dispatch({
@@ -79,7 +80,7 @@ export const getProductsByCategory = (category) => async (dispatch) => {
     });
   }
 };
-
+//USER INQUIRY
 export const createInquiry = (inquiryData) => async (dispatch) => {
   try {
     dispatch({ type: "INQUIRY_REQUEST" });
@@ -97,7 +98,7 @@ export const createInquiry = (inquiryData) => async (dispatch) => {
     });
   }
 };
-
+//PRODUCT INQUIRY
 export const createProductInquiry =
   (ProductinquiryData) => async (dispatch) => {
     try {
@@ -165,7 +166,6 @@ export const ForgotData = (userData) => async (dispatch) => {
     });
   }
 };
-
 //Reset Password
 export const ResetData = (userData) => async (dispatch) => {
   try {
@@ -184,7 +184,6 @@ export const ResetData = (userData) => async (dispatch) => {
     });
   }
 };
-
 //LOGOUT
 export const Logout = (userData) => async (dispatch) => {
   try {
@@ -204,8 +203,7 @@ export const Logout = (userData) => async (dispatch) => {
     });
   }
 };
-
-//GET PREOFILE
+//GET PROFILE
 export const getUserProfile = () => async (dispatch) => {
   try {
     dispatch({ type: "GET_USER_PROFILE_REQUEST" });
@@ -237,7 +235,6 @@ export const updateUserProfile = (userData) => async (dispatch, getState) => {
   }
 };
 //ADD TO CART
-
 export const addToCart = (userId, productId, quantity) => async (dispatch) => {
   try {
     dispatch({ type: "ADD_TO_CART_REQUEST" });
@@ -256,7 +253,6 @@ export const addToCart = (userId, productId, quantity) => async (dispatch) => {
     });
   }
 };
-
 //GET ADD TO CART
 export const GetAddToCart = (userId) => async (dispatch) => {
   try {
@@ -273,7 +269,6 @@ export const GetAddToCart = (userId) => async (dispatch) => {
     });
   }
 };
-
 //REMOVE CART
 export const removeFromCart = (productId, userId) => async (dispatch) => {
   try {
@@ -294,7 +289,6 @@ export const removeFromCart = (productId, userId) => async (dispatch) => {
     });
   }
 };
-
 // WISH LIST ADD
 export const addWishList = (userId, productId) => async (dispatch) => {
   console.log(userId, productId);
@@ -312,7 +306,6 @@ export const addWishList = (userId, productId) => async (dispatch) => {
     });
   }
 };
-
 // WISH LIST ADD
 export const GetWishlist = (userId) => async (dispatch) => {
   try {
@@ -329,7 +322,6 @@ export const GetWishlist = (userId) => async (dispatch) => {
     });
   }
 };
-
 //REMOVE WISHLIST
 export const removeWishlist = (userId, productId) => async (dispatch) => {
   try {
@@ -347,6 +339,43 @@ export const removeWishlist = (userId, productId) => async (dispatch) => {
     dispatch({
       type: "REMOVE_FROM_WISH_LIST_FAIL",
       payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};
+//PRODUCT REVIEW
+export const createReview = (ReviewsData) => async (dispatch) => {
+  try {
+    dispatch({ type: "CREATE_REVIEW_REQUEST" });
+    const { data } = await api.post(`/review/create`, ReviewsData);
+    dispatch({
+      type: "CREATE_REVIEW_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "CREATE_REVIEW_FAIL",
+      payload: error.response ? error.response.data.message : error.message,
+    });
+  }
+};
+//GET SINGLE USER WISE PRODUCT REVIEWS
+export const fetchUserReviews = (userId, productId) => async (dispatch) => {
+  try {
+    dispatch({ type: "FETCH_USER_REVIEWS_REQUEST" });
+
+    const { data } = await api.get(`/review/user?userId=${userId}&productId=${productId}`);
+
+    dispatch({
+      type: "FETCH_USER_REVIEWS_SUCCESS",
+      payload: data.reviews,
+    });
+  } catch (error) {
+    dispatch({
+      type: "FETCH_USER_REVIEWS_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

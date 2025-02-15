@@ -16,7 +16,7 @@ export const productListReducer = (state = productListInitialState, action) => {
       return state;
   }
 };
-//PRODUCT dETAILS
+//PRODUCT DETAILS
 const productDetailsInitialState = {
   loading: false,
   product: null,
@@ -37,7 +37,7 @@ export const productDetailsReducer = (
       return state;
   }
 };
-
+//GET RELATED PRODUCT
 const relatedProductsInitialState = {
   loading: false,
   products: [],
@@ -59,7 +59,7 @@ export const relatedProductsReducer = (
       return state;
   }
 };
-
+//CATEGORY WISE FILTER
 const productsByCategoryInitialState = {
   loading: false,
   products: [],
@@ -81,7 +81,7 @@ export const productsByCategoryReducer = (
       return state;
   }
 };
-
+//USER INQUIRY
 const inquiryInitialState = {
   loading: false,
   success: false,
@@ -100,7 +100,7 @@ export const inquiryReducer = (state = inquiryInitialState, action) => {
       return state;
   }
 };
-
+// CLIENT REVIEW GET
 const reviewListInitialState = {
   review: [],
   loading: false,
@@ -372,7 +372,6 @@ const wishListInitialState = {
   wishList: [],
   error: null,
 };
-
 export const wishlistReducer = (state = wishListInitialState, action) => {
   switch (action.type) {
     case "WISHLIST_REQUEST":
@@ -396,7 +395,6 @@ const wishListViewInitialState = {
   wishlist: [],
   error: null,
 };
-
 export const WishListViewReducer = (
   state = wishListViewInitialState,
   action
@@ -416,6 +414,7 @@ export const WishListViewReducer = (
       return state;
   }
 };
+//REMOVE WISH LIST
 const removeWishlistInitialState = {
   loading: false,
   error: null,
@@ -432,6 +431,47 @@ export const removeWishlistReducer = (
       return { ...state, loading: false, error: null };
     case "REMOVE_FROM_WISH_LIST_FAIL":
       return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+//PRODUCT REVIEW
+const createReviewsInitialState = {
+  loading: false,
+  error: null,
+  success: false,
+};
+
+export const reviewCreateReducer = (
+  state = createReviewsInitialState,
+  action
+) => {
+  switch (action.type) {
+    case "CREATE_REVIEW_REQUEST":
+      return { ...state, loading: true, error: null };
+    case "CREATE_REVIEW_SUCCESS":
+      return { ...state, loading: false, error: null, success: true };
+    case "CREATE_REVIEW_FAIL":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+//GET SINGLE USER WISE PRODUCT REVIEWS
+const getReviewsInitialState = {
+  reviews: [],
+  loading: false,
+  error: null,
+};
+
+export const userReviewsReducer = (state = getReviewsInitialState, action) => {
+  switch (action.type) {
+    case "FETCH_USER_REVIEWS_REQUEST":
+      return { ...state, loading: true };
+    case "FETCH_USER_REVIEWS_SUCCESS":
+      return { loading: false, reviews: action.payload, error: null };
+    case "FETCH_USER_REVIEWS_FAIL":
+      return { loading: false, error: action.payload, reviews: [] };
     default:
       return state;
   }

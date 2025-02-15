@@ -14,7 +14,6 @@ import {
   useMediaQuery,
   Card,
   CardContent,
-  TableHead,
 } from "@mui/material";
 import {
   addToCart,
@@ -30,7 +29,7 @@ import theme from "../theme/theme";
 const Wishlist = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, wishlist } =useSelector((state) => state.wishlist) || {};
+  const { loading, wishlist } = useSelector((state) => state.wishlist) || {};
   const isMobile = useMediaQuery("(max-width:767px)");
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -41,7 +40,6 @@ const Wishlist = () => {
       dispatch(GetWishlist(userId));
     }
   }, [dispatch, userId]);
-  
 
   const handleAddToCart = (productId) => {
     if (!user) {
@@ -50,11 +48,12 @@ const Wishlist = () => {
     }
     dispatch(addToCart(user._id, productId, 1));
   };
+
   const handleRemove = async (productId) => {
     await dispatch(removeWishlist(userId, productId));
+    window.location.reload();
+    dispatch(GetWishlist(userId));
   };
-  
-  
 
   return (
     <Container>
@@ -106,12 +105,27 @@ const Wishlist = () => {
                     >
                       <Typography variant="body2">Price:</Typography>
                       <Typography>
-                        <Box sx={{
-                          backgroundColor:theme.palette.lightgrey.main,
-                          border:`1px solid ${theme.palette.darkGrey.main}`,
-                          padding:"4px 3px",
-                          borderRadius:'10px'
-                        }}>₹{item.price || 0}</Box>
+                        <Box
+                          sx={{
+                            backgroundColor: theme.palette.lightgrey.main,
+                            border: `1px solid ${theme.palette.darkGrey.main}`,
+                            padding: "4px 3px",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          ₹{item.price || 0}
+                        </Box>
+                        <span
+                          style={{
+                            textDecoration: item.oldPrice
+                              ? "line-through"
+                              : "none",
+                            marginLeft: "10px",
+                            color: theme.palette.grey.main,
+                          }}
+                        >
+                          &#8377; {item.oldPrice}
+                        </span>
                       </Typography>
                     </Box>
                     <Box
