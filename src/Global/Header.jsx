@@ -24,7 +24,11 @@ import TopHeader from "../../src/Global/TopHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { GetAddToCart, LoginData } from "../redux/actions/productActions";
+import {
+  GetAddToCart,
+  GetWishlist,
+  LoginData,
+} from "../redux/actions/productActions";
 import { Favorite, ShoppingCart } from "@mui/icons-material";
 
 const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
@@ -47,14 +51,17 @@ const Header = () => {
   const dispatch = useDispatch();
   const cartList = useSelector((state) => state.cartList);
   const { cart } = cartList || {};
+   const { wishlist } =useSelector((state) => state.wishlist) || {};
   const user = JSON.parse(localStorage.getItem("user"));
-    
+  
+
   useEffect(() => {
     if (user && user._id) {
       dispatch(GetAddToCart(user._id));
+      dispatch(GetWishlist(user._id));
     }
-  }, [dispatch, user?._id, cart?.totalItems]);
-  
+  }, [dispatch, user?._id, cart?.totalItems,wishlist.length]);
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -325,16 +332,16 @@ const Header = () => {
               }}
             >
               <IconButton component={Link} to="/wishlist" color="inherit">
-                <Badge color="secondary" badgeContent={4}>
+                <Badge
+                  color="secondary"
+                  badgeContent={wishlist.length || 0}
+                >
                   <Favorite />
                 </Badge>
               </IconButton>
 
               <IconButton component={Link} to="/cart" color="inherit">
-                <Badge
-                  badgeContent={cart?.totalItems || 0}
-                  color="secondary"
-                >
+                <Badge badgeContent={cart?.totalItems || 0} color="secondary">
                   <ShoppingCart />
                 </Badge>
               </IconButton>
