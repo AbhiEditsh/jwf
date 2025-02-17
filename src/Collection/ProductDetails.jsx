@@ -203,13 +203,13 @@ function ProductDetails() {
               >
                 <Link
                   to={`/product/${product._id}`}
-                  style={{ textDecoration: "none" }}
                 >
                   <img
                     src={product.ProductImage}
                     alt={`Product`}
                     style={{
                       width: "100%",
+
                       height: "100%",
                       objectFit: "cover",
                       borderRadius: "8px",
@@ -376,7 +376,7 @@ function ProductDetails() {
                   <ProductReviewCreate productId={product._id} />
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                  <ProductReviewView productId={product._id}/>
+                  <ProductReviewView productId={product._id} />
                 </Grid>
               </Grid>
             </CustomTabPanel>

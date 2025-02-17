@@ -457,14 +457,40 @@ export const reviewCreateReducer = (
       return state;
   }
 };
-//GET SINGLE USER WISE PRODUCT REVIEWS
-const getReviewsInitialState = {
+//GET PRODUCT WISE REVIEWS
+const getProductReviewsInitialState = {
   reviews: [],
   loading: false,
   error: null,
 };
 
-export const userReviewsReducer = (state = getReviewsInitialState, action) => {
+export const productReviewsReducer = (
+  state = getProductReviewsInitialState,
+  action
+) => {
+  switch (action.type) {
+    case "FETCH_PRODUCT_REVIEWS_REQUEST":
+      return { ...state, loading: true };
+    case "FETCH_PRODUCT_REVIEWS_SUCCESS":
+      return { loading: false, reviews: action.payload, error: null };
+    case "FETCH_PRODUCT_REVIEWS_FAIL":
+      return { loading: false, error: action.payload, reviews: [] };
+    default:
+      return state;
+  }
+};
+
+//GET SINGLE USER WISE PRODUCT REVIEWS
+const getUserReviewsInitialState = {
+  reviews: [],
+  loading: false,
+  error: null,
+};
+
+export const UserReviewsReducer = (
+  state = getUserReviewsInitialState,
+  action
+) => {
   switch (action.type) {
     case "FETCH_USER_REVIEWS_REQUEST":
       return { ...state, loading: true };
@@ -472,6 +498,25 @@ export const userReviewsReducer = (state = getReviewsInitialState, action) => {
       return { loading: false, reviews: action.payload, error: null };
     case "FETCH_USER_REVIEWS_FAIL":
       return { loading: false, error: action.payload, reviews: [] };
+    default:
+      return state;
+  }
+};
+//SEARCH PRODUCTS
+const initialState = {
+  searchResults: [],
+  loading: false,
+  error: null,
+};
+
+export const productSearchReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "SEARCH_PRODUCTS_REQUEST":
+      return { ...state, loading: true, searchResults: [] };
+    case "SEARCH_PRODUCTS_SUCCESS":
+      return { ...state, loading: false, searchResults: action.payload };
+    case "SEARCH_PRODUCTS_FAIL":
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }

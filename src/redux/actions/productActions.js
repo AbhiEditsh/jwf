@@ -208,7 +208,6 @@ export const getUserProfile = () => async (dispatch) => {
   try {
     dispatch({ type: "GET_USER_PROFILE_REQUEST" });
     const { data } = await api.get("/users/profile");
-    console.log(data);
 
     dispatch({
       type: "GET_USER_PROFILE_SUCCESS",
@@ -358,13 +357,37 @@ export const createReview = (ReviewsData) => async (dispatch) => {
     });
   }
 };
-//GET SINGLE USER WISE PRODUCT REVIEWS
-export const fetchUserReviews = (userId, productId) => async (dispatch) => {
+//GET PRODUCT WISE REVIEWS
+export const getProductReviews = (productId) => async (dispatch) => {
+  try {
+    dispatch({ type: "FETCH_PRODUCT_REVIEWS_REQUEST" });
+
+    const { data } = await api.get(`review/product/${productId}`);
+
+    dispatch({
+      type: "FETCH_PRODUCT_REVIEWS_SUCCESS",
+      payload: data.reviews,
+    });
+  } catch (error) {
+    dispatch({
+      type: "FETCH_PRODUCT_REVIEWS_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+
+export const getUserReviews = (userId) => async (dispatch) => {
   try {
     dispatch({ type: "FETCH_USER_REVIEWS_REQUEST" });
-
-    const { data } = await api.get(`/review/user?userId=${userId}&productId=${productId}`);
-
+    const { data } = await api.get(`review/user`, {
+      params: { userId }
+    });
+    console.log(data.reviews);
+    
     dispatch({
       type: "FETCH_USER_REVIEWS_SUCCESS",
       payload: data.reviews,
@@ -372,6 +395,29 @@ export const fetchUserReviews = (userId, productId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "FETCH_USER_REVIEWS_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+//SEARCH PRODUCTS
+export const searchProducts = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: "SEARCH_PRODUCTS_REQUEST" });
+    const { data } = await api.get(
+      `product/search?query=${encodeURIComponent(
+        query
+      )}`
+    );
+    dispatch({
+      type: "SEARCH_PRODUCTS_SUCCESS",
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: "SEARCH_PRODUCTS_FAIL",
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

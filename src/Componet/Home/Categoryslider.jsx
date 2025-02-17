@@ -13,6 +13,8 @@ function CategorySlider() {
   // Fetch products from Redux state
   const productList = useSelector((state) => state.productList);
   const { products, loading, error } = productList;
+  console.log(products);
+  
 
   useEffect(() => {
     dispatch(getProducts());
@@ -98,13 +100,13 @@ function CategorySlider() {
                     margin: "0 auto",
                   }}
                 >
-                  {product.images?.[0]?.url ? (
+                  {product.ProductImage? (
                     <Link
-                      to={`/category/${product.category?.id}`}
+                      to={`/category/${product.category?.name}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <img
-                        src={product.images[0].url}
+                        src={product.ProductImage}
                         alt={product.category?.name || "Category"}
                         style={{
                           width: "100%",

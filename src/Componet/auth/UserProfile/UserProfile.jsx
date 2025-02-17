@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserProfile } from "../../../redux/actions/productActions";
 import {
   Avatar,
   Box,
@@ -12,14 +11,16 @@ import {
 } from "@mui/material";
 import { Spin, Alert } from "antd";
 import UserUpdateForm from "./UserUpdateForm";
+import UserReviews from "./UserReviews";
+import { getUserProfile } from "../../../redux/actions/productActions";
 
-const UserProfile = () => {
+const UserProfile = ({userId}) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.userProfile);
   const { loading, error, data } = userProfile;
-
+  
   useEffect(() => {
-    dispatch(getUserProfile());
+    dispatch(getUserProfile(userId));
   }, [dispatch]);
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -76,6 +77,7 @@ const UserProfile = () => {
             >
               <Tab label="Dashboard" />
               <Tab label="Orders" />
+              <Tab label="Reviews" />
             </Tabs>
             <Box sx={{ p: 2, boxShadow: 2, borderRadius: "10px", mt: 2 }}>
               {tabIndex === 0 && (
@@ -87,6 +89,7 @@ const UserProfile = () => {
               {tabIndex === 1 && (
                 <Typography variant="body1">Here are your orders.</Typography>
               )}
+              {tabIndex === 2 && <UserReviews userId={data.user._id}/>}
             </Box>
           </Grid>
         </Grid>

@@ -210,7 +210,7 @@ const UserUpdateForm = () => {
         </Grid>
       </Grid>
     </form>
-  );
+  );           
 };
 
 export default UserUpdateForm;

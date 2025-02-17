@@ -28,6 +28,7 @@ import {
   GetAddToCart,
   GetWishlist,
   LoginData,
+  searchProducts,
 } from "../redux/actions/productActions";
 import { Favorite, ShoppingCart } from "@mui/icons-material";
 
@@ -41,9 +42,6 @@ const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
 const Header = () => {
   const [drawerState, setDrawerState] = useState({ menu: false });
   // eslint-disable-next-line
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const [searchResults, setSearchResults] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -51,16 +49,16 @@ const Header = () => {
   const dispatch = useDispatch();
   const cartList = useSelector((state) => state.cartList);
   const { cart } = cartList || {};
-   const { wishlist } =useSelector((state) => state.wishlist) || {};
+  const { wishlist } = useSelector((state) => state.wishlist) || {};
   const user = JSON.parse(localStorage.getItem("user"));
-  
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchResults = useSelector((state) => state.productSearch.searchResults);
   useEffect(() => {
     if (user && user._id) {
       dispatch(GetAddToCart(user._id));
       dispatch(GetWishlist(user._id));
     }
-  }, [dispatch, user?._id, cart?.totalItems,wishlist.length]);
+  }, [dispatch, user?._id, cart?.totalItems, wishlist.length]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -102,24 +100,7 @@ const Header = () => {
   const handleSearch = async (query) => {
     setSearchQuery(query);
     if (query) {
-      try {
-        const response = await axios.get(
-          `https://jewellery01-back.onrender.com/api/products/search?query=${encodeURIComponent(
-            query
-          )}`
-        );
-        const { data } = response;
-        if (data.success) {
-          setSearchResults(data.products);
-        } else {
-          setSearchResults([]);
-        }
-      } catch (error) {
-        console.error("Error fetching search results:", error.message);
-        setSearchResults([]);
-      }
-    } else {
-      setSearchResults([]);
+      dispatch(searchProducts(query));
     }
   };
 
@@ -269,56 +250,57 @@ const Header = () => {
                 marginBottom: isSmallScreen ? 2 : 0,
               }}
             >
-              <Autocomplete
-                freeSolo
-                options={searchResults}
-                getOptionLabel={(option) => option.name || ""}
-                onInputChange={(event, newValue) => handleSearch(newValue)}
-                onChange={handleProductSelect}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    placeholder="Search products..."
-                    variant="outlined"
-                    size="small"
-                    InputProps={{
-                      ...params.InputProps,
-                      startAdornment: (
-                        <SearchIcon sx={{ marginLeft: 1, marginRight: 1 }} />
-                      ),
-                    }}
-                  />
-                )}
-                renderOption={(props, option) => (
-                  <Box
-                    {...props}
-                    key={option._id}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <div>
-                      {option.images?.[0] ? (
-                        <img
-                          src={option.images[0].url}
-                          alt={`Product 1`}
-                          style={{
-                            width: "40px",
-                            height: "40px",
-                            borderRadius: "8px",
-                            margin: "auto",
-                          }}
-                        />
-                      ) : (
-                        <p>No image available</p>
-                      )}
-                    </div>
-                    <Typography>{option.name}</Typography>
-                  </Box>
-                )}
+             
+    <Autocomplete
+      freeSolo
+      options={searchResults || []} 
+      getOptionLabel={(option) => option.name || ""}
+      onInputChange={(event, newValue) => handleSearch(newValue)}
+      onChange={handleProductSelect}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          placeholder="Search products..."
+          variant="outlined"
+          size="small"
+          InputProps={{
+            ...params.InputProps,
+            startAdornment: (
+              <SearchIcon sx={{ marginLeft: 1, marginRight: 1 }} />
+            ),
+          }}
+        />
+      )}
+      renderOption={(props, option) => (
+        <Box
+          {...props}
+          key={option._id}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+        >
+          <div>
+            {option.productImage ? (
+              <img
+                src={option.productImage}
+                alt={`Product`}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "8px",
+                  margin: "auto",
+                }}
               />
+            ) : (
+              <p>No image available</p>
+            )}
+          </div>
+          <Typography>{option.name}</Typography>
+        </Box>
+      )}
+    />
             </Box>
 
             {/* Icons for Cart, Wishlist, and Profile */}
@@ -332,10 +314,7 @@ const Header = () => {
               }}
             >
               <IconButton component={Link} to="/wishlist" color="inherit">
-                <Badge
-                  color="secondary"
-                  badgeContent={wishlist.length || 0}
-                >
+                <Badge color="secondary" badgeContent={wishlist.length || 0}>
                   <Favorite />
                 </Badge>
               </IconButton>
@@ -366,7 +345,7 @@ const Header = () => {
                     onClick={() => {
                       handleProfileMenuClose();
                       if (item.onClick) {
-                        item.onClick(); // Handle logout
+                        item.onClick(); 
                       } else {
                         navigate(item.to);
                       }

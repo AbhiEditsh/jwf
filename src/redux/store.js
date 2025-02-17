@@ -24,7 +24,9 @@ import {
   WishListViewReducer,
   removeWishlistReducer,
   reviewCreateReducer,
-  userReviewsReducer,
+  productReviewsReducer,
+  UserReviewsReducer,
+  productSearchReducer,
 } from "./reducers/productReducer";
 
 const rootReducer = combineReducers({
@@ -57,7 +59,9 @@ const rootReducer = combineReducers({
   removeWish: removeWishlistReducer,
   //Product Review
   reviewCreate: reviewCreateReducer,
-  userReviews: userReviewsReducer,
+  productReviews: productReviewsReducer,
+  userReviews: UserReviewsReducer,
+  productSearch: productSearchReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
