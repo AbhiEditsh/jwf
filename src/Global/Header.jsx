@@ -19,7 +19,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import axios from "axios";
 import TopHeader from "../../src/Global/TopHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
@@ -52,7 +51,9 @@ const Header = () => {
   const { wishlist } = useSelector((state) => state.wishlist) || {};
   const user = JSON.parse(localStorage.getItem("user"));
   const [searchQuery, setSearchQuery] = useState("");
-  const searchResults = useSelector((state) => state.productSearch.searchResults);
+  const searchResults = useSelector(
+    (state) => state.productSearch.searchResults
+  );
   useEffect(() => {
     if (user && user._id) {
       dispatch(GetAddToCart(user._id));
@@ -250,57 +251,57 @@ const Header = () => {
                 marginBottom: isSmallScreen ? 2 : 0,
               }}
             >
-             
-    <Autocomplete
-      freeSolo
-      options={searchResults || []} 
-      getOptionLabel={(option) => option.name || ""}
-      onInputChange={(event, newValue) => handleSearch(newValue)}
-      onChange={handleProductSelect}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          placeholder="Search products..."
-          variant="outlined"
-          size="small"
-          InputProps={{
-            ...params.InputProps,
-            startAdornment: (
-              <SearchIcon sx={{ marginLeft: 1, marginRight: 1 }} />
-            ),
-          }}
-        />
-      )}
-      renderOption={(props, option) => (
-        <Box
-          {...props}
-          key={option._id}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-          }}
-        >
-          <div>
-            {option.productImage ? (
-              <img
-                src={option.productImage}
-                alt={`Product`}
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "8px",
-                  margin: "auto",
-                }}
+              <Autocomplete
+                freeSolo
+                options={searchResults || []}
+                getOptionLabel={(option) => option.name || ""}
+                onInputChange={(event, newValue) => handleSearch(newValue)}
+                onChange={handleProductSelect}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder="Search products..."
+                    variant="outlined"
+                    size="small"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <SearchIcon sx={{ marginLeft: 1, marginRight: 1 }} />
+                      ),
+                    }}
+                  />
+                )}
+                renderOption={(props, option) => (
+                  <Box
+                    {...props}
+                    key={option._id}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div>
+                      {option?.ProductImage ? (
+                        <img
+                          src={option?.ProductImage}
+                          alt={`Product`}
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "8px",
+                            margin: "auto",
+                            marginRight: "10px",
+                          }}
+                        />
+                      ) : (
+                        <p>No image available</p>
+                      )}
+                    </div>
+                    <Typography>{option.name}</Typography>
+                  </Box>
+                )}
               />
-            ) : (
-              <p>No image available</p>
-            )}
-          </div>
-          <Typography>{option.name}</Typography>
-        </Box>
-      )}
-    />
             </Box>
 
             {/* Icons for Cart, Wishlist, and Profile */}
@@ -345,7 +346,7 @@ const Header = () => {
                     onClick={() => {
                       handleProfileMenuClose();
                       if (item.onClick) {
-                        item.onClick(); 
+                        item.onClick();
                       } else {
                         navigate(item.to);
                       }
