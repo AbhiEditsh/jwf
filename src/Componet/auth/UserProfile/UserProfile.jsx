@@ -14,15 +14,14 @@ import UserUpdateForm from "./UserUpdateForm";
 import UserReviews from "./UserReviews";
 import { getUserProfile } from "../../../redux/actions/productActions";
 
-const UserProfile = ({userId}) => {
+const UserProfile = () => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.userProfile);
   const { loading, error, data } = userProfile;
-  
+  const userId=JSON.parse(localStorage.getItem("user"))._id;
   useEffect(() => {
     dispatch(getUserProfile(userId));
   }, [dispatch]);
-
   const [tabIndex, setTabIndex] = useState(0);
   const handleTabChange = (event, newIndex) => {
     setTabIndex(newIndex);

@@ -21,7 +21,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor - Handles Token Expiry and Refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {

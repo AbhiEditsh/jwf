@@ -386,8 +386,6 @@ export const getUserReviews = (userId) => async (dispatch) => {
     const { data } = await api.get(`review/user`, {
       params: { userId }
     });
-    console.log(data.reviews);
-    
     dispatch({
       type: "FETCH_USER_REVIEWS_SUCCESS",
       payload: data.reviews,
