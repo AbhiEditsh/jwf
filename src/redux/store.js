@@ -27,6 +27,10 @@ import {
   productReviewsReducer,
   UserReviewsReducer,
   productSearchReducer,
+  userOrdersReducer,
+  orderReducer,
+  cartsReducer,
+  getUserorderReducer,
 } from "./reducers/productReducer";
 
 const rootReducer = combineReducers({
@@ -62,6 +66,11 @@ const rootReducer = combineReducers({
   productReviews: productReviewsReducer,
   userReviews: UserReviewsReducer,
   productSearch: productSearchReducer,
+  userOrders: userOrdersReducer,
+  //Order
+  order: orderReducer,
+  carts: cartsReducer,
+  // userOrder: getUserorderReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

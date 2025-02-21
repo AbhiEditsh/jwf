@@ -503,13 +503,13 @@ export const UserReviewsReducer = (
   }
 };
 //SEARCH PRODUCTS
-const initialState = {
+const SearchinitialState = {
   searchResults: [],
   loading: false,
   error: null,
 };
 
-export const productSearchReducer = (state = initialState, action) => {
+export const productSearchReducer = (state = SearchinitialState, action) => {
   switch (action.type) {
     case "SEARCH_PRODUCTS_REQUEST":
       return { ...state, loading: true, searchResults: [] };
@@ -521,3 +521,113 @@ export const productSearchReducer = (state = initialState, action) => {
       return state;
   }
 };
+//USER ORDER LIST
+const UserOrderInitialState = {
+  loading: false,
+  orders: [],
+  error: null,
+};
+
+export const userOrdersReducer = (state = UserOrderInitialState, action) => {
+  switch (action.type) {
+    case "GET_USER_ORDERS_REQUEST":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "GET_USER_ORDERS_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        orders: action.payload,
+      };
+    case "GET_USER_ORDERS_FAIL":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+const OrderCreateInitialState = {
+  order: null,
+  loading: false,
+  error: null,
+  paymentData: null,
+};
+
+const ClearCartinitialState = {
+  cart: {
+    items: [],
+    totalItems: 0,
+    totalPrice: 0,
+  },
+};
+
+export const cartsReducer = (state = ClearCartinitialState, action) => {
+  switch (action.type) {
+    case "CLEAR_CART":
+      return {
+        ...state,
+        cart: {
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
+        },
+      };
+    default:
+      return state;
+  }
+};
+
+export const orderReducer = (state = OrderCreateInitialState, action) => {
+  switch (action.type) {
+    case "CREATE_ORDER_REQUEST":
+    case "PROCESS_PAYMENT_REQUEST":
+    case "VERIFY_PAYMENT_REQUEST":
+      return { ...state, loading: true };
+
+    case "CREATE_ORDER_SUCCESS":
+      return { ...state, loading: false, order: action.payload };
+
+    case "PROCESS_PAYMENT_SUCCESS":
+      return { ...state, loading: false, paymentData: action.payload };
+
+    case "VERIFY_PAYMENT_SUCCESS":
+      return { ...state, loading: false, order: { ...state.order, ...action.payload } };
+
+    case "CREATE_ORDER_FAIL":
+    case "PROCESS_PAYMENT_FAIL":
+    case "VERIFY_PAYMENT_FAIL":
+      return { ...state, loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+// const GetOrderinitialState = {
+//   orders: [],
+//   loading: false,
+//   error: null,
+//   success: false,
+// };
+
+// export const getUserorderReducer = (state = GetOrderinitialState, action) => {
+//   switch (action.type) {
+//     case "GET_ORDERS_REQUEST":
+//       return { ...state, loading: true };
+
+//     case "GET_ORDERS_SUCCESS":
+//       return { ...state, loading: false, orders: action.payload };
+
+//     case "GET_ORDERS_FAIL":
+//       return { ...state, loading: false, error: action.payload };
+
+//     default:
+//       return state;
+//   }
+// };

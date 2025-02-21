@@ -10,17 +10,27 @@ import theme from "./theme/theme";
 import App from "./App";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { CartProvider } from "./Context/CartContext";
+import { AuthProvider } from "./Context/authContext";
+
+const Root = () => {
+  return (
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <AuthProvider> 
+            <CartProvider>
+              <CssBaseline />
+              <App />
+            </CartProvider>
+          </AuthProvider>
+        </Provider>
+      </ThemeProvider>
+    </BrowserRouter>
+  );
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <BrowserRouter>
-    <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <CssBaseline />
-        <App />
-      </Provider>
-    </ThemeProvider>
-  </BrowserRouter>
-);
+root.render(<Root />);
 
 reportWebVitals();

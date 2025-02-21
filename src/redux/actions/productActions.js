@@ -208,7 +208,6 @@ export const getUserProfile = () => async (dispatch) => {
   try {
     dispatch({ type: "GET_USER_PROFILE_REQUEST" });
     const { data } = await api.get("/users/profile");
-
     dispatch({
       type: "GET_USER_PROFILE_SUCCESS",
       payload: data,
@@ -379,12 +378,11 @@ export const getProductReviews = (productId) => async (dispatch) => {
   }
 };
 
-
 export const getUserReviews = (userId) => async (dispatch) => {
   try {
     dispatch({ type: "FETCH_USER_REVIEWS_REQUEST" });
     const { data } = await api.get(`review/user`, {
-      params: { userId }
+      params: { userId },
     });
     dispatch({
       type: "FETCH_USER_REVIEWS_SUCCESS",
@@ -405,9 +403,7 @@ export const searchProducts = (query) => async (dispatch) => {
   try {
     dispatch({ type: "SEARCH_PRODUCTS_REQUEST" });
     const { data } = await api.get(
-      `product/search?query=${encodeURIComponent(
-        query
-      )}`
+      `product/search?query=${encodeURIComponent(query)}`
     );
     dispatch({
       type: "SEARCH_PRODUCTS_SUCCESS",
@@ -424,5 +420,97 @@ export const searchProducts = (query) => async (dispatch) => {
   }
 };
 //ORDER STATUS
+export const getUserOrders = () => async (dispatch) => {
+  try {
+    dispatch({ type: "GET_USER_ORDERS_REQUEST" });
+    const { data } = await api.get("orders/user-order");
+    dispatch({
+      type: "GET_USER_ORDERS_SUCCESS",
+      payload: data.orders,
+    });
+  } catch (error) {
+    dispatch({
+      type: "GET_USER_ORDERS_FAIL",
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
 
-  
+export const clearCart = () => ({
+  type: "CLEAR_CART",
+});
+
+// Create Order
+export const createOrder = (orderData) => async (dispatch) => {
+  try {
+    dispatch({ type: "CREATE_ORDER_REQUEST" });
+    const { data } = await api.post("/orders/create", orderData);
+    console.log(data);
+    dispatch({
+      type: "CREATE_ORDER_SUCCESS",
+      payload: data,
+    });
+    dispatch(clearCart());
+    return { payload: data };
+  } catch (error) {
+    dispatch({
+      type: "CREATE_ORDER_FAIL",
+      payload: error.response?.data.message || error.message,
+    });
+    throw error;
+  }
+};
+
+export const processPayment = (amount) => async (dispatch) => {
+  try {
+    dispatch({ type: "PROCESS_PAYMENT_REQUEST" });
+
+    const { data } = await api.post("/payment/razorpay", { amount });
+
+    dispatch({
+      type: "PROCESS_PAYMENT_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "PROCESS_PAYMENT_FAIL",
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
+
+export const verifyPayment = (paymentData) => async (dispatch) => {
+  try {
+    dispatch({ type: "VERIFY_PAYMENT_REQUEST" });
+
+    const { data } = await api.post("/payment/razorpay/verify", paymentData);
+
+    dispatch({
+      type: "VERIFY_PAYMENT_SUCCESS",
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: "VERIFY_PAYMENT_FAIL",
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
+
+// export const getOrdersByUserId = (userId) => async (dispatch) => {
+//   try {
+//     dispatch({ type: "GET_ORDERS_REQUEST" });
+
+//     const { data } = await api.get(`/orders/${userId}`);
+
+//     dispatch({
+//       type: "GET_ORDERS_SUCCESS",
+//       payload: data,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: "GET_ORDERS_FAIL",
+//       payload: error.response?.data.message || error.message,
+//     });
+//   }
+// };
