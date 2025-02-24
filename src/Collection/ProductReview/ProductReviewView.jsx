@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Container,
@@ -8,7 +7,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Rating from "@mui/material/Rating";
-import { fetchUserReviews } from "../../redux/actions/productActions";
+import { format } from "date-fns";
+import theme from "../../theme/theme";
 
 const ProductReviewView = ({ productId }) => {
   const dispatch = useDispatch();
@@ -42,7 +42,6 @@ const ProductReviewView = ({ productId }) => {
                 <Rating name="read-only" value={review.rating} readOnly />
                 <Typography variant="body1">{review.comment}</Typography>
               </Box>
-            </Grid>
           ))}
         </Grid>
       )}

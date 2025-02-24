@@ -98,13 +98,10 @@ function CategorySlider() {
                     margin: "0 auto",
                   }}
                 >
-                  {product.images?.[0]?.url ? (
                     <Link
-                      to={`/category/${product.category?.id}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <img
-                        src={product.images[0].url}
                         alt={product.category?.name || "Category"}
                         style={{
                           width: "100%",

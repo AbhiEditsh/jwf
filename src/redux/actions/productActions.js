@@ -208,8 +208,6 @@ export const getUserProfile = () => async (dispatch) => {
   try {
     dispatch({ type: "GET_USER_PROFILE_REQUEST" });
     const { data } = await api.get("/users/profile");
-    console.log(data);
-
     dispatch({
       type: "GET_USER_PROFILE_SUCCESS",
       payload: data,
@@ -234,6 +232,7 @@ export const updateUserProfile = (userData) => async (dispatch, getState) => {
     });
   }
 };
+
 //ADD TO CART
 export const addToCart = (userId, productId, quantity) => async (dispatch) => {
   try {
@@ -269,6 +268,7 @@ export const GetAddToCart = (userId) => async (dispatch) => {
     });
   }
 };
+
 //REMOVE CART
 export const removeFromCart = (productId, userId) => async (dispatch) => {
   try {
@@ -289,31 +289,32 @@ export const removeFromCart = (productId, userId) => async (dispatch) => {
     });
   }
 };
+
 // WISH LIST ADD
 export const addWishList = (userId, productId) => async (dispatch) => {
-  console.log(userId, productId);
   try {
-    dispatch({ type: "ADD_TO_WISH_LIST_REQUEST" });
+    dispatch({ type: "WISHLIST_REQUEST" });
     const { data } = await api.post(`/wishlist/add`, { userId, productId });
+    
     dispatch({
-      type: "ADD_TO_WISH_LIST_SUCCESS",
+      type: "WISHLIST_SUCCESS",
       payload: data,
     });
   } catch (error) {
     dispatch({
-      type: "ADD_TO_WISH_LIST_FAIL",
+      type: "WISHLIST_FAIL",
       payload: error.response ? error.response.data.message : error.message,
     });
   }
 };
-// WISH LIST ADD
+// GET WISH LIST 
 export const GetWishlist = (userId) => async (dispatch) => {
   try {
     dispatch({ type: "WISH_LIST_REQUEST" });
     const { data } = await api.get(`/wishlist`, { params: { userId } });
     dispatch({
       type: "WISH_LIST_SUCCESS",
-      payload: data.wishlist.items,
+      payload:data
     });
   } catch (error) {
     dispatch({
@@ -322,19 +323,24 @@ export const GetWishlist = (userId) => async (dispatch) => {
     });
   }
 };
+
 //REMOVE WISHLIST
 export const removeWishlist = (userId, productId) => async (dispatch) => {
   try {
-    dispatch({
-      type: "REMOVE_FROM_WISH_LIST_REQUEST",
-    });
+    dispatch({ type: "REMOVE_FROM_WISH_LIST_REQUEST" });
+
     const { data } = await api.delete(`/wishlist/remove`, {
       data: { userId, productId },
     });
-    dispatch({
-      type: "REMOVE_FROM_WISH_LIST_SUCCESS",
-      payload: data,
-    });
+
+    if (data.message === "Wishlist is now empty and has been deleted") {
+      dispatch({ type: "CLEAR_WISH_LIST" });
+    } else {
+      dispatch({
+        type: "REMOVE_FROM_WISH_LIST_SUCCESS",
+        payload: data,
+      });
+    }
   } catch (error) {
     dispatch({
       type: "REMOVE_FROM_WISH_LIST_FAIL",
@@ -342,6 +348,7 @@ export const removeWishlist = (userId, productId) => async (dispatch) => {
     });
   }
 };
+
 //PRODUCT REVIEW
 export const createReview = (ReviewsData) => async (dispatch) => {
   try {
@@ -358,13 +365,34 @@ export const createReview = (ReviewsData) => async (dispatch) => {
     });
   }
 };
-//GET SINGLE USER WISE PRODUCT REVIEWS
-export const fetchUserReviews = (userId, productId) => async (dispatch) => {
+//GET PRODUCT WISE REVIEWS
+export const getProductReviews = (productId) => async (dispatch) => {
+  try {
+    dispatch({ type: "FETCH_PRODUCT_REVIEWS_REQUEST" });
+
+    const { data } = await api.get(`review/product/${productId}`);
+
+    dispatch({
+      type: "FETCH_PRODUCT_REVIEWS_SUCCESS",
+      payload: data.reviews,
+    });
+  } catch (error) {
+    dispatch({
+      type: "FETCH_PRODUCT_REVIEWS_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+//USER PRODUCT REVIEWS
+export const getUserReviews = (userId) => async (dispatch) => {
   try {
     dispatch({ type: "FETCH_USER_REVIEWS_REQUEST" });
-
-    const { data } = await api.get(`/review/user?userId=${userId}&productId=${productId}`);
-
+    const { data } = await api.get(`review/user`, {
+      params: { userId },
+    });
     dispatch({
       type: "FETCH_USER_REVIEWS_SUCCESS",
       payload: data.reviews,
@@ -376,6 +404,115 @@ export const fetchUserReviews = (userId, productId) => async (dispatch) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+    });
+  }
+};
+//SEARCH PRODUCTS
+export const searchProducts = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: "SEARCH_PRODUCTS_REQUEST" });
+    const { data } = await api.get(
+      `product/search?query=${encodeURIComponent(query)}`
+    );
+    dispatch({
+      type: "SEARCH_PRODUCTS_SUCCESS",
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: "SEARCH_PRODUCTS_FAIL",
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+//ORDER STATUS
+export const getUserOrders = () => async (dispatch) => {
+  try {
+    dispatch({ type: "GET_USER_ORDERS_REQUEST" });
+    const { data } = await api.get("orders/user-order");
+    dispatch({
+      type: "GET_USER_ORDERS_SUCCESS",
+      payload: data.orders,
+    });
+  } catch (error) {
+    dispatch({
+      type: "GET_USER_ORDERS_FAIL",
+      payload: error.response?.data.message || error.message,
+    });
+  }
+};
+//clear cart
+export const clearCart = () => async (dispatch) => {
+  try {
+    const { data } = await api.delete("/cart/clear");
+    console.log(data);
+    dispatch({ type: "CLEAR_CART" });
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+  }
+};
+
+// Create Order
+export const createOrder = (orderData) => async (dispatch) => {
+  try {
+    dispatch({ type: "CREATE_ORDER_REQUEST" });
+    const { data } = await api.post("/orders/create", orderData);
+
+    dispatch({
+      type: "CREATE_ORDER_SUCCESS",
+      payload: data,
+    });
+
+    dispatch(clearCart());
+    return { payload: data };
+  } catch (error) {
+    dispatch({
+      type: "CREATE_ORDER_FAIL",
+      payload: error.response?.data.message || error.message,
+    });
+    throw error;
+  }
+};
+
+//PROCESS PAYMENT
+export const processPayment = (amount) => async (dispatch) => {
+  try {
+    dispatch({ type: "PROCESS_PAYMENT_REQUEST" });
+
+    const { data } = await api.post("/payment/razorpay", { amount });
+
+    dispatch({
+      type: "PROCESS_PAYMENT_SUCCESS",
+      payload: data,
+    });
+
+    return data;
+  } catch (error) {
+    dispatch({
+      type: "PROCESS_PAYMENT_FAIL",
+      payload: error.response?.data.message || error.message,
+    });
+    throw error;
+  }
+};
+
+//VERIFY PAYMENT
+export const verifyPayment = (paymentData) => async (dispatch) => {
+  try {
+    dispatch({ type: "VERIFY_PAYMENT_REQUEST" });
+    const { data } = await api.post("/payment/razorpay/verify", paymentData);
+    dispatch({
+      type: "VERIFY_PAYMENT_SUCCESS",
+      payload: data,
+    });
+    return { payload: data };
+  } catch (error) {
+    dispatch({
+      type: "VERIFY_PAYMENT_FAIL",
+      payload: error.response?.data.message || error.message,
     });
   }
 };

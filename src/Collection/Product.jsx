@@ -370,9 +370,6 @@ function Product() {
                               boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
                             }}
                           >
-                            <div className="box_image">
-                              <Link to={`/product/${product._id}`}>
-                                <div>
                                   {product.ProductImage ? (
                                     <img
                                       src={product.ProductImage}
@@ -381,53 +378,12 @@ function Product() {
                                         width: "200px",
                                         height: "200px",
                                         borderRadius: "8px",
-                                        margin: "auto",
                                       }}
                                     />
                                   ) : (
                                     <p>No image available</p>
                                   )}
                                 </div>
-                                <Typography
-                                  variant="h6"
-                                  sx={{
-                                    color: theme.palette.primary.main,
-                                    textAlign: "center",
-                                    fontSize: "14px",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: 2,
-                                    mb: 1,
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                  }}
-                                >
-                                  {product.name}
-                                </Typography>
-                                <Typography
-                                  sx={{
-                                    color: theme.palette.grey.main,
-                                    textAlign: "center",
-                                    fontSize: "14px",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: 2,
-                                    mb: 1,
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                  }}
-                                >
-                                  {product.description}
-                                </Typography>
-                              </Link>
-                              <div className="hover_image">
-                                <RemoveRedEyeIcon
-                                  sx={{
-                                    color: theme.palette.black.main,
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() => handleOpenModal(product)}
-                                />
                               </div>
                             </div>
 
@@ -471,8 +427,6 @@ function Product() {
                                   }}
                                 >
                                   <div className="box_image">
-                                    <div>
-                                      {product.images?.[0] ? (
                                         <img
                                           src={product.ProductImage}
                                           alt={`Product 1`}
@@ -486,16 +440,6 @@ function Product() {
                                       ) : (
                                         <p>No image available</p>
                                       )}
-                                    </div>
-                                    <div className="hover_image">
-                                      <RemoveRedEyeIcon
-                                        sx={{
-                                          color: theme.palette.black.main,
-                                          cursor: "pointer",
-                                        }}
-                                        onClick={() => handleOpenModal(product)}
-                                      />
-                                    </div>
                                   </div>
                                 </Box>
                               </Grid>

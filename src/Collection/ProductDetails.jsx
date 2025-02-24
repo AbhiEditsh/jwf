@@ -22,11 +22,8 @@ import {
   WhatsappIcon,
 } from "react-share";
 import {
-  addToCart,
-  addWishList,
   getProductDetails,
   getRelatedProducts,
-  removeWishlist,
 } from "../redux/actions/productActions";
 import theme from "../theme/theme";
 import ProductModel from "./ProductModel";
@@ -52,7 +49,6 @@ function ProductDetails() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [openInquiryModal, setOpenInquiryModal] = useState(false);
-  const { wishlist } = useSelector((state) => state.wishlist);
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
@@ -67,12 +63,8 @@ function ProductDetails() {
     setOpenModal(true);
   };
   useEffect(() => {
-    if (wishlist && product) {
-      setIsWishlisted(
-        wishlist.some((item) => item.productId === product._id && item.liked)
       );
     }
-  }, [wishlist, product]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -93,21 +85,11 @@ function ProductDetails() {
   };
 
   const handleAddToCart = () => {
-    if (!user) {
-      alert("Please log in first");
       return;
     }
-    dispatch(addToCart(user._id, product._id, quantity));
   };
 
-  const handleWishlistToggle = () => {
-    if (!user) {
-      alert("Please log in first");
-      return;
     }
-    isWishlisted
-      ? dispatch(removeWishlist(user._id, product._id))
-      : dispatch(addWishList(user._id, product._id));
   };
 
   function CustomTabPanel(props) {
@@ -201,15 +183,12 @@ function ProductDetails() {
                   height: "600px",
                 }}
               >
-                <Link
-                  to={`/product/${product._id}`}
-                  style={{ textDecoration: "none" }}
-                >
                   <img
                     src={product.ProductImage}
                     alt={`Product`}
                     style={{
                       width: "100%",
+
                       height: "100%",
                       objectFit: "cover",
                       borderRadius: "8px",
@@ -321,12 +300,9 @@ function ProductDetails() {
                   Add to Cart
                 </Button>
                 <Box onClick={handleWishlistToggle} sx={{ cursor: "pointer" }}>
-                  {loading ? (
                     <CircularProgress size={24} sx={{ color: "white" }} />
                   ) : isWishlisted ? (
-                    <FavoriteIcon sx={{ color: "red" }} />
                   ) : (
-                    <FavoriteBorderIcon sx={{ color: "white" }} />
                   )}
                 </Box>
               </Box>
@@ -376,7 +352,6 @@ function ProductDetails() {
                   <ProductReviewCreate productId={product._id} />
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                  <ProductReviewView productId={product._id}/>
                 </Grid>
               </Grid>
             </CustomTabPanel>

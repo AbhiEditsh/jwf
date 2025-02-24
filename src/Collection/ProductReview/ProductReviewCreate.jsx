@@ -1,11 +1,5 @@
-import React, { useState } from 'react';
-import { Container, Typography, TextField, Box, Rating } from '@mui/material';
-import { SecondaryButton } from '../../Global/Button/MuiButton';
-import { useDispatch, useSelector } from 'react-redux';
-import { createReview } from '../../redux/actions/productActions';
 
 const ProductReview = ({ productId }) => {
-  const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));

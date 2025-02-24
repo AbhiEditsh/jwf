@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserProfile } from "../../../redux/actions/productActions";
 import {
   Avatar,
   Box,
@@ -18,10 +17,11 @@ const UserProfile = () => {
   const userProfile = useSelector((state) => state.userProfile);
   const { loading, error, data } = userProfile;
 
+
   useEffect(() => {
-    dispatch(getUserProfile());
   }, [dispatch]);
 
+  
   const [tabIndex, setTabIndex] = useState(0);
   const handleTabChange = (event, newIndex) => {
     setTabIndex(newIndex);
@@ -33,7 +33,6 @@ const UserProfile = () => {
       {error && (
         <Alert message="Error" description={error} type="error" showIcon />
       )}
-      <Box>
         <Grid container spacing={2} row justifyContent={"center"}>
           <Grid item xs={12} md={4} lg={3}>
             <Box
@@ -85,7 +84,6 @@ const UserProfile = () => {
                 </Typography>
               )}
               {tabIndex === 1 && (
-                <Typography variant="body1">Here are your orders.</Typography>
               )}
             </Box>
           </Grid>
