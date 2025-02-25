@@ -44,7 +44,6 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
-  const user = JSON.parse(localStorage.getItem("user"));
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);

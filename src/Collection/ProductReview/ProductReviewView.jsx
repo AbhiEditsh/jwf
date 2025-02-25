@@ -12,12 +12,8 @@ import theme from "../../theme/theme";
 
 const ProductReviewView = ({ productId }) => {
   const dispatch = useDispatch();
-  const { reviews, loading, error } = useSelector((state) => state.userReviews);
-  const userId = JSON.parse(localStorage.getItem("user"))._id;
 
   useEffect(() => {
-    dispatch(fetchUserReviews(userId, productId));
-  }, [dispatch, userId, productId]);
 
   return (
     <Container>
@@ -28,22 +24,8 @@ const ProductReviewView = ({ productId }) => {
           {error}
         </Typography>
       ) : (
-        <Grid container spacing={2}>
-          {reviews.map((review) => (
-            <Grid item xs={12} key={review._id}>
-              <Box
-                sx={{
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  marginBottom: "16px",
-                }}
-              >
-                <Rating name="read-only" value={review.rating} readOnly />
-                <Typography variant="body1">{review.comment}</Typography>
               </Box>
           ))}
-        </Grid>
       )}
     </Container>
   );
