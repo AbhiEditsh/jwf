@@ -13,15 +13,20 @@ import { Spin, Alert } from "antd";
 import UserUpdateForm from "./UserUpdateForm";
 import UserReviews from "./UserReviews";
 import { getUserProfile } from "../../../redux/actions/productActions";
+import OrderStatus from "./Order/OrderStatus";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.userProfile);
   const { loading, error, data } = userProfile;
   const userId=JSON.parse(localStorage.getItem("user"))._id;
+
+
   useEffect(() => {
     dispatch(getUserProfile(userId));
   }, [dispatch]);
+
+  
   const [tabIndex, setTabIndex] = useState(0);
   const handleTabChange = (event, newIndex) => {
     setTabIndex(newIndex);
@@ -33,7 +38,9 @@ const UserProfile = () => {
       {error && (
         <Alert message="Error" description={error} type="error" showIcon />
       )}
-      <Box>
+      <Box sx={{
+        my:2
+      }}>
         <Grid container spacing={2} row justifyContent={"center"}>
           <Grid item xs={12} md={4} lg={3}>
             <Box
@@ -86,7 +93,7 @@ const UserProfile = () => {
                 </Typography>
               )}
               {tabIndex === 1 && (
-                <Typography variant="body1">Here are your orders.</Typography>
+                <OrderStatus/>
               )}
               {tabIndex === 2 && <UserReviews userId={data.user._id}/>}
             </Box>

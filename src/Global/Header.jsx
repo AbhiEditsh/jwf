@@ -30,6 +30,7 @@ import {
   searchProducts,
 } from "../redux/actions/productActions";
 import { Favorite, ShoppingCart } from "@mui/icons-material";
+import { useCart } from "../Context/CartContext";
 
 const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
   backgroundColor: backgroundColor || theme.palette.background.paper,
@@ -41,25 +42,24 @@ const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
 const Header = () => {
   const [drawerState, setDrawerState] = useState({ menu: false });
   // eslint-disable-next-line
+  const { totalItems,wishlistItems } = useCart(); 
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const cartList = useSelector((state) => state.cartList);
-  const { cart } = cartList || {};
-  const { wishlist } = useSelector((state) => state.wishlist) || {};
   const user = JSON.parse(localStorage.getItem("user"));
   const [searchQuery, setSearchQuery] = useState("");
   const searchResults = useSelector(
     (state) => state.productSearch.searchResults
   );
+  
   useEffect(() => {
     if (user && user._id) {
       dispatch(GetAddToCart(user._id));
       dispatch(GetWishlist(user._id));
     }
-  }, [dispatch, user?._id, cart?.totalItems, wishlist.length]);
+  }, [dispatch, user?._id,]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -315,13 +315,13 @@ const Header = () => {
               }}
             >
               <IconButton component={Link} to="/wishlist" color="inherit">
-                <Badge color="secondary" badgeContent={wishlist.length || 0}>
+                <Badge color="secondary" badgeContent={wishlistItems || 0}>
                   <Favorite />
                 </Badge>
               </IconButton>
 
               <IconButton component={Link} to="/cart" color="inherit">
-                <Badge badgeContent={cart?.totalItems || 0} color="secondary">
+                <Badge badgeContent={totalItems || 0} color="secondary">
                   <ShoppingCart />
                 </Badge>
               </IconButton>

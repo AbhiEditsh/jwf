@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Container,
   Typography,
-  CircularProgress,
   Table,
   TableBody,
   TableCell,
@@ -20,27 +19,23 @@ import {
   Divider,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import {
-  GetAddToCart,
-  removeFromCart,
-  addToCart,
-} from "../redux/actions/productActions";
+import { GetAddToCart } from "../redux/actions/productActions";
 import EmptyCart from "../assets/image/emptycart.png";
 import { SecondaryButton } from "../Global/Button/MuiButton";
 import { useNavigate } from "react-router-dom";
 import theme from "../theme/theme";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import { useAuth } from "../Context/authContext";
+import { useCart } from "../Context/CartContext";
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const { user } = useAuth();
+  const { cart, addProductToCart, removeProductFromCart } = useCart();
   const navigate = useNavigate();
-  const cartList = useSelector((state) => state.cartList);
-  const { loading, cart, error } = cartList.cart || {};
   const isMobile = useMediaQuery("(max-width:767px)");
-
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?._id;
+  const userId = user.user?._id;
 
   useEffect(() => {
     if (userId) {
@@ -49,36 +44,27 @@ const Cart = () => {
   }, [dispatch, userId]);
 
   const handleRemove = (productId) => {
-    dispatch(removeFromCart(productId, userId)).then(() => {
+    removeProductFromCart(productId, userId).then(() => {
       dispatch(GetAddToCart(userId));
     });
   };
 
   const handleIncrease = (productId, quantity) => {
-    dispatch(addToCart(userId, productId, quantity + 1)).then(() => {
+    addProductToCart(userId, productId, quantity + 1).then(() => {
       dispatch(GetAddToCart(userId));
     });
   };
 
   const handleDecrease = (productId, quantity) => {
     if (quantity > 1) {
-      dispatch(addToCart(userId, productId, quantity - 1)).then(() => {
+      addProductToCart(userId, productId, quantity - 1).then(() => {
         dispatch(GetAddToCart(userId));
       });
     } else {
-      dispatch(removeFromCart(productId, userId)).then(() => {
+      removeProductFromCart(productId, userId).then(() => {
         dispatch(GetAddToCart(userId));
       });
     }
-  };
-
-  const calculateTotalPrice = () => {
-    return (
-      cart?.items?.reduce(
-        (total, item) => total + item.productId.price * item.quantity,
-        0
-      ) || 0
-    );
   };
 
   return (
@@ -86,13 +72,10 @@ const Cart = () => {
       <Box sx={{ m: 2 }}>
         <Grid container row spacing={3}>
           <Grid item xs={12} md={6} lg={9}>
-            {loading && <CircularProgress />}
-            {error && <Typography color="error">{error}</Typography>}
-
-            {cart?.items?.length > 0 ? (
+            {cart.cart?.items?.length > 0 ? (
               <>
                 {isMobile ? (
-                  cart.items.map((item) => (
+                  cart.cart.items.map((item) => (
                     <Card
                       key={item.productId._id}
                       sx={{
@@ -136,6 +119,7 @@ const Cart = () => {
                               }}
                             />
                           </Box>
+                          <Box>₹{calculateTotalPrice().toFixed(2)}</Box>
                         </Box>
                         <Box
                           sx={{
@@ -201,22 +185,6 @@ const Cart = () => {
                             </Box>
                           </Box>
                         </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Box>
-                            <span> Sub total: </span>
-                          </Box>
-                          <Box>₹{calculateTotalPrice().toFixed(2)}</Box>
-                        </Box>
-
-                        <Typography variant="body2"></Typography>
                       </CardContent>
                     </Card>
                   ))
@@ -244,7 +212,7 @@ const Cart = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {cart.items.map((item) => (
+                        {cart.cart.items.map((item) => (
                           <TableRow key={item.productId._id}>
                             <TableCell align="center">
                               <HighlightOffOutlinedIcon
@@ -364,7 +332,7 @@ const Cart = () => {
                 <Box>
                   <span> Sub Total: </span>
                 </Box>
-                <Box>₹{calculateTotalPrice().toFixed(2)}</Box>
+                <Box>₹{cart.totalPrice}</Box>
               </Box>
 
               <Divider sx={{ my: 1 }} />
@@ -379,7 +347,7 @@ const Cart = () => {
                 <Box>
                   <b>Total: </b>
                 </Box>
-                <Box>₹{calculateTotalPrice().toFixed(2)}</Box>
+                <Box>₹{cart.totalPrice}</Box>
               </Box>
               <SecondaryButton
                 text="PROCEED TO CHECKOUT"

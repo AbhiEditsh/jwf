@@ -320,6 +320,7 @@ export const cartReducer = (state = AddToCartInitialState, action) => {
       return state;
   }
 };
+
 //GET ADD TO CART
 const CartListInitialState = {
   loading: false,
@@ -334,14 +335,14 @@ export const CartListReducer = (state = CartListInitialState, action) => {
   switch (action.type) {
     case "CART_LIST_REQUEST":
       return { ...state, loading: true };
+
     case "CART_LIST_SUCCESS":
-      return {
-        ...state,
-        loading: false,
-        cart: action.payload,
-      };
+      return { ...state, loading: false, cart: action.payload };
+
     case "CART_LIST_FAIL":
       return { ...state, loading: false, error: action.payload };
+    case "CLEAR_CART":
+      return { ...state, cart: { items: [], totalPrice: 0 }, error: null };
     default:
       return state;
   }
@@ -369,7 +370,10 @@ export const removeCartReducer = (state = removeCartInitialState, action) => {
 //WISH LIST ADD
 const wishListInitialState = {
   loading: false,
-  wishList: [],
+  wishlist: {
+    items: [],
+    totalItems: 0,
+  },
   error: null,
 };
 export const wishlistReducer = (state = wishListInitialState, action) => {
@@ -380,7 +384,7 @@ export const wishlistReducer = (state = wishListInitialState, action) => {
       return {
         ...state,
         loading: false,
-        wishList: action.payload,
+        wishlist: action.payload,
       };
     case "WISHLIST_FAIL":
       return { ...state, loading: false, error: action.payload };
@@ -392,7 +396,10 @@ export const wishlistReducer = (state = wishListInitialState, action) => {
 //GET  WISHLIST PRODUCT
 const wishListViewInitialState = {
   loading: false,
-  wishlist: [],
+  wishlist: {
+    items: [],
+    totalItems: 0,
+  },
   error: null,
 };
 export const WishListViewReducer = (
@@ -406,7 +413,7 @@ export const WishListViewReducer = (
       return {
         ...state,
         loading: false,
-        wishlist: action.payload,
+        wishlist:action.payload
       };
     case "WISH_LIST_FAIL":
       return { ...state, loading: false, error: action.payload };
@@ -418,23 +425,32 @@ export const WishListViewReducer = (
 const removeWishlistInitialState = {
   loading: false,
   error: null,
+  wishlist: [],
+  wishlistCleared: false,
 };
 
-export const removeWishlistReducer = (
-  state = removeWishlistInitialState,
-  action
-) => {
+export const removeWishlistReducer = (state = removeWishlistInitialState, action) => {
   switch (action.type) {
     case "REMOVE_FROM_WISH_LIST_REQUEST":
-      return { ...state, loading: true };
+      return { ...state, loading: true, wishlistCleared: false };
+
     case "REMOVE_FROM_WISH_LIST_SUCCESS":
-      return { ...state, loading: false, error: null };
+      return { ...state, loading: false, error: null, wishlistCleared: false };
+
     case "REMOVE_FROM_WISH_LIST_FAIL":
       return { ...state, loading: false, error: action.payload };
+
+    case "CLEAR_WISH_LIST":
+      return {
+        ...removeWishlistInitialState, // ✅ Reset everything using the initial state
+        wishlistCleared: true, // ✅ Mark wishlist as cleared
+      };
+
     default:
       return state;
   }
 };
+
 //PRODUCT REVIEW
 const createReviewsInitialState = {
   loading: false,
@@ -503,13 +519,13 @@ export const UserReviewsReducer = (
   }
 };
 //SEARCH PRODUCTS
-const initialState = {
+const SearchinitialState = {
   searchResults: [],
   loading: false,
   error: null,
 };
 
-export const productSearchReducer = (state = initialState, action) => {
+export const productSearchReducer = (state = SearchinitialState, action) => {
   switch (action.type) {
     case "SEARCH_PRODUCTS_REQUEST":
       return { ...state, loading: true, searchResults: [] };
@@ -517,6 +533,122 @@ export const productSearchReducer = (state = initialState, action) => {
       return { ...state, loading: false, searchResults: action.payload };
     case "SEARCH_PRODUCTS_FAIL":
       return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+//USER ORDER LIST
+const UserOrderInitialState = {
+  loading: false,
+  orders: [],
+  error: null,
+};
+
+export const userOrdersReducer = (state = UserOrderInitialState, action) => {
+  switch (action.type) {
+    case "GET_USER_ORDERS_REQUEST":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "GET_USER_ORDERS_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        orders: action.payload,
+      };
+    case "GET_USER_ORDERS_FAIL":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+const OrderCreateInitialState = {
+  order: null,
+  loading: false,
+  error: null,
+  paymentData: null,
+};
+//CLEAR CART
+const ClearCartinitialState = {
+  cart: {
+    items: [],
+    totalItems: 0,
+    totalPrice: 0,
+  },
+};
+
+export const cartsReducer = (state = ClearCartinitialState, action) => {
+  switch (action.type) {
+    case "CLEAR_CART":
+      return {
+        ...state,
+        cart: {
+          items: [],
+          totalItems: 0,
+          totalPrice: 0,
+        },
+      };
+    case "ADD_TO_CART":
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          items: action.payload.items,
+          totalItems: action.payload.items.reduce(
+            (acc, item) => acc + item.quantity,
+            0
+          ),
+        },
+      };
+    case "REMOVE_FROM_CART":
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          items: action.payload.items,
+          totalItems: action.payload.items.reduce(
+            (acc, item) => acc + item.quantity,
+            0
+          ),
+        },
+      };
+    default:
+      return state;
+  }
+};
+
+//CREATE ORDER
+export const orderReducer = (state = OrderCreateInitialState, action) => {
+  switch (action.type) {
+    case "CREATE_ORDER_REQUEST":
+    case "PROCESS_PAYMENT_REQUEST":
+    case "VERIFY_PAYMENT_REQUEST":
+      return { ...state, loading: true };
+
+    case "CREATE_ORDER_SUCCESS":
+      return { ...state, loading: false, order: action.payload };
+
+    case "PROCESS_PAYMENT_SUCCESS":
+      return { ...state, loading: false, paymentData: action.payload };
+
+    case "VERIFY_PAYMENT_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        order: { ...state.order, ...action.payload },
+      };
+
+    case "CREATE_ORDER_FAIL":
+    case "PROCESS_PAYMENT_FAIL":
+    case "VERIFY_PAYMENT_FAIL":
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }

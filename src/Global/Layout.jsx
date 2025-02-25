@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Fab, Zoom, useScrollTrigger } from "@mui/material";
+import { Box, Fab, Zoom, useScrollTrigger } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import theme from "../theme/theme";
@@ -62,13 +62,13 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div>
+    <Box>
       <Header />
-      <main style={{ minHeight: "calc(100vh - 200px)" }}>{children}</main>
+      <main style={{ minHeight: "calc(100vh - 200px)",marginBottom:'100px'}}>{children}</main>
       <Footer />
       <ScrollToTop onClick={scrollToTop} />
       <WhatsAppButton />
-    </div>
+    </Box>
   );
 };
 

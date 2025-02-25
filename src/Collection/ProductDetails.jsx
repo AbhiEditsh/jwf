@@ -22,11 +22,8 @@ import {
   WhatsappIcon,
 } from "react-share";
 import {
-  addToCart,
-  addWishList,
   getProductDetails,
   getRelatedProducts,
-  removeWishlist,
 } from "../redux/actions/productActions";
 import theme from "../theme/theme";
 import ProductModel from "./ProductModel";
@@ -39,23 +36,34 @@ import RelatedProducts from "./RelatedProducts ";
 import ProductReviewCreate from "./ProductReview/ProductReviewCreate";
 import ProductReviewView from "./ProductReview/ProductReviewView";
 import PropTypes from "prop-types";
+import { useAuth } from "../Context/authContext";
+import { useCart } from "../Context/CartContext";
+import MuiModal from "../Global/Modal/MuiModal";
 
 function ProductDetails() {
+  const { user } = useAuth();
+  const userId = user ? user.user._id : null;
+  const {
+    addProductToCart,
+    removeProductFromWishlist,
+    addProductToWishlist,
+    wishlist,
+  } = useCart();
   const { productId } = useParams();
   const [navValue, setNavValue] = useState(0);
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
-  const user = JSON.parse(localStorage.getItem("user"));
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [load, setLoad] = useState(false);
   const [openInquiryModal, setOpenInquiryModal] = useState(false);
-  const { wishlist } = useSelector((state) => state.wishlist);
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
+  const [muiModal, setMuiOpenModal] = useState(false);
 
   const productUrl = `${window.location.origin}/product/${productId}`;
   useEffect(() => {
@@ -67,12 +75,15 @@ function ProductDetails() {
     setOpenModal(true);
   };
   useEffect(() => {
-    if (wishlist && product) {
-      setIsWishlisted(
-        wishlist.some((item) => item.productId === product._id && item.liked)
+    if (wishlist?.wishlist?.items && product) {
+      const demo = wishlist.wishlist.items.some(
+        (item) => item.productId === product._id && item.liked
       );
+      console.log(demo);
+
+      setIsWishlisted(demo);
     }
-  }, [wishlist, product]);
+  }, [wishlist.wishlist, product]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -93,21 +104,28 @@ function ProductDetails() {
   };
 
   const handleAddToCart = () => {
-    if (!user) {
-      alert("Please log in first");
+    if (!userId) {
+      setOpenModal(true);
       return;
     }
-    dispatch(addToCart(user._id, product._id, quantity));
+    addProductToCart(userId, product._id, quantity);
   };
 
-  const handleWishlistToggle = () => {
-    if (!user) {
-      alert("Please log in first");
-      return;
+  const handleWishlistToggle = async () => {
+    if (!userId) return setOpenModal(true);
+
+    setLoad(true);
+    try {
+      isWishlisted
+        ? await removeProductFromWishlist(userId, product._id)
+        : await addProductToWishlist(userId, product._id);
+
+      setIsWishlisted(!isWishlisted);
+    } catch (error) {
+      console.error("Error handling wishlist toggle:", error.message);
+    } finally {
+      setLoad(false);
     }
-    isWishlisted
-      ? dispatch(removeWishlist(user._id, product._id))
-      : dispatch(addWishList(user._id, product._id));
   };
 
   function CustomTabPanel(props) {
@@ -201,9 +219,7 @@ function ProductDetails() {
                   height: "600px",
                 }}
               >
-                <Link
-                  to={`/product/${product._id}`}
-                >
+                <Link to={`/product/${product._id}`}>
                   <img
                     src={product.ProductImage}
                     alt={`Product`}
@@ -321,12 +337,12 @@ function ProductDetails() {
                   Add to Cart
                 </Button>
                 <Box onClick={handleWishlistToggle} sx={{ cursor: "pointer" }}>
-                  {loading ? (
+                  {load ? (
                     <CircularProgress size={24} sx={{ color: "white" }} />
                   ) : isWishlisted ? (
-                    <FavoriteIcon sx={{ color: "red" }} />
+                    <FavoriteIcon sx={{ color: "#ff0000" }} />
                   ) : (
-                    <FavoriteBorderIcon sx={{ color: "white" }} />
+                    <FavoriteBorderIcon sx={{ color: "#ddd" }} />
                   )}
                 </Box>
               </Box>
@@ -429,6 +445,13 @@ function ProductDetails() {
         open={openInquiryModal}
         onClose={handleInquiryClose}
         category={product.category.name}
+      />
+
+      <MuiModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        message="Please log in First🔐"
+        onConfirm={() => setOpenModal(false)}
       />
     </Box>
   );
