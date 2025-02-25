@@ -36,8 +36,19 @@ import RelatedProducts from "./RelatedProducts ";
 import ProductReviewCreate from "./ProductReview/ProductReviewCreate";
 import ProductReviewView from "./ProductReview/ProductReviewView";
 import PropTypes from "prop-types";
+import { useAuth } from "../Context/authContext";
+import { useCart } from "../Context/CartContext";
+import MuiModal from "../Global/Modal/MuiModal";
 
 function ProductDetails() {
+  const { user } = useAuth();
+  const userId = user ? user.user._id : null;
+  const {
+    addProductToCart,
+    removeProductFromWishlist,
+    addProductToWishlist,
+    wishlist,
+  } = useCart();
   const { productId } = useParams();
   const [navValue, setNavValue] = useState(0);
   const dispatch = useDispatch();
@@ -47,10 +58,12 @@ function ProductDetails() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [load, setLoad] = useState(false);
   const [openInquiryModal, setOpenInquiryModal] = useState(false);
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
+  const [muiModal, setMuiOpenModal] = useState(false);
 
   const productUrl = `${window.location.origin}/product/${productId}`;
   useEffect(() => {
@@ -62,8 +75,15 @@ function ProductDetails() {
     setOpenModal(true);
   };
   useEffect(() => {
+    if (wishlist?.wishlist?.items && product) {
+      const demo = wishlist.wishlist.items.some(
+        (item) => item.productId === product._id && item.liked
       );
+      console.log(demo);
+
+      setIsWishlisted(demo);
     }
+  }, [wishlist.wishlist, product]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -84,10 +104,27 @@ function ProductDetails() {
   };
 
   const handleAddToCart = () => {
+    if (!userId) {
+      setOpenModal(true);
       return;
     }
+    addProductToCart(userId, product._id, quantity);
   };
 
+  const handleWishlistToggle = async () => {
+    if (!userId) return setOpenModal(true);
+
+    setLoad(true);
+    try {
+      isWishlisted
+        ? await removeProductFromWishlist(userId, product._id)
+        : await addProductToWishlist(userId, product._id);
+
+      setIsWishlisted(!isWishlisted);
+    } catch (error) {
+      console.error("Error handling wishlist toggle:", error.message);
+    } finally {
+      setLoad(false);
     }
   };
 
@@ -182,6 +219,7 @@ function ProductDetails() {
                   height: "600px",
                 }}
               >
+                <Link to={`/product/${product._id}`}>
                   <img
                     src={product.ProductImage}
                     alt={`Product`}
@@ -299,9 +337,12 @@ function ProductDetails() {
                   Add to Cart
                 </Button>
                 <Box onClick={handleWishlistToggle} sx={{ cursor: "pointer" }}>
+                  {load ? (
                     <CircularProgress size={24} sx={{ color: "white" }} />
                   ) : isWishlisted ? (
+                    <FavoriteIcon sx={{ color: "#ff0000" }} />
                   ) : (
+                    <FavoriteBorderIcon sx={{ color: "#ddd" }} />
                   )}
                 </Box>
               </Box>
@@ -351,6 +392,7 @@ function ProductDetails() {
                   <ProductReviewCreate productId={product._id} />
                 </Grid>
                 <Grid item xs={12} lg={6}>
+                  <ProductReviewView productId={product._id} />
                 </Grid>
               </Grid>
             </CustomTabPanel>
@@ -403,6 +445,13 @@ function ProductDetails() {
         open={openInquiryModal}
         onClose={handleInquiryClose}
         category={product.category.name}
+      />
+
+      <MuiModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        message="Please log in First🔐"
+        onConfirm={() => setOpenModal(false)}
       />
     </Box>
   );

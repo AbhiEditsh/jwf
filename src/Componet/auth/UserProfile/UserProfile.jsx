@@ -11,14 +11,19 @@ import {
 } from "@mui/material";
 import { Spin, Alert } from "antd";
 import UserUpdateForm from "./UserUpdateForm";
+import UserReviews from "./UserReviews";
+import { getUserProfile } from "../../../redux/actions/productActions";
+import OrderStatus from "./Order/OrderStatus";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.userProfile);
   const { loading, error, data } = userProfile;
+  const userId=JSON.parse(localStorage.getItem("user"))._id;
 
 
   useEffect(() => {
+    dispatch(getUserProfile(userId));
   }, [dispatch]);
 
   
@@ -33,6 +38,9 @@ const UserProfile = () => {
       {error && (
         <Alert message="Error" description={error} type="error" showIcon />
       )}
+      <Box sx={{
+        my:2
+      }}>
         <Grid container spacing={2} row justifyContent={"center"}>
           <Grid item xs={12} md={4} lg={3}>
             <Box
@@ -75,6 +83,7 @@ const UserProfile = () => {
             >
               <Tab label="Dashboard" />
               <Tab label="Orders" />
+              <Tab label="Reviews" />
             </Tabs>
             <Box sx={{ p: 2, boxShadow: 2, borderRadius: "10px", mt: 2 }}>
               {tabIndex === 0 && (
@@ -84,7 +93,9 @@ const UserProfile = () => {
                 </Typography>
               )}
               {tabIndex === 1 && (
+                <OrderStatus/>
               )}
+              {tabIndex === 2 && <UserReviews userId={data.user._id}/>}
             </Box>
           </Grid>
         </Grid>

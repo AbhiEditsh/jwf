@@ -35,13 +35,13 @@ img {
   overflow: hidden;
   position: relative;
 }
-  transform: scale(1.1);
-  transition: all 0.3s ease-in;
-
 .box_image .hover_image {
-  position: absolute;
-  top: 2%;
-  right: 2%;
+	position: absolute;
+	top: 80%;
+	left: 50%;
+	width: 100%;
+	transform: translate(-50%,-50%);
+	text-align: center;
 }
 .box_image:hover .hover_image svg {
   background-color: #000;
@@ -49,11 +49,11 @@ img {
 }
 
 .box_image .hover_image svg {
-  font-size: 35px;
-  background-color: #d2b955;
-  color: #fff;
-  padding: 10px;
-  border-radius: 50%;
+	font-size: 32px;
+	background-color: #d2b955;
+	color: #fff;
+	padding: 5px;
+	border-radius: 50%;
 }
 .full-section {
   background-image: url("https://i.postimg.cc/QM4wPCvv/vogue-beautiful-woman-posing-black-dress.jpg");
@@ -143,4 +143,8 @@ img {
 }
 input:focus-visible{
   outline: none;
+}
+
+.blur-content {
+  filter: blur(5px);
 }

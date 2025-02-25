@@ -27,8 +27,10 @@ import {
   GetAddToCart,
   GetWishlist,
   LoginData,
+  searchProducts,
 } from "../redux/actions/productActions";
 import { Favorite, ShoppingCart } from "@mui/icons-material";
+import { useCart } from "../Context/CartContext";
 
 const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
   backgroundColor: backgroundColor || theme.palette.background.paper,
@@ -57,6 +59,7 @@ const Header = () => {
       dispatch(GetAddToCart(user._id));
       dispatch(GetWishlist(user._id));
     }
+  }, [dispatch, user?._id,]);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -98,6 +101,7 @@ const Header = () => {
   const handleSearch = async (query) => {
     setSearchQuery(query);
     if (query) {
+      dispatch(searchProducts(query));
     }
   };
 
@@ -249,6 +253,7 @@ const Header = () => {
             >
               <Autocomplete
                 freeSolo
+                options={searchResults || []}
                 getOptionLabel={(option) => option.name || ""}
                 onInputChange={(event, newValue) => handleSearch(newValue)}
                 onChange={handleProductSelect}
@@ -277,8 +282,9 @@ const Header = () => {
                     }}
                   >
                     <div>
+                      {option?.ProductImage ? (
                         <img
-                          alt={`Product 1`}
+                          src={option?.ProductImage}
                           alt={`Product`}
                           style={{
                             width: "40px",
@@ -309,11 +315,13 @@ const Header = () => {
               }}
             >
               <IconButton component={Link} to="/wishlist" color="inherit">
+                <Badge color="secondary" badgeContent={wishlistItems || 0}>
                   <Favorite />
                 </Badge>
               </IconButton>
 
               <IconButton component={Link} to="/cart" color="inherit">
+                <Badge badgeContent={totalItems || 0} color="secondary">
                   <ShoppingCart />
                 </Badge>
               </IconButton>
@@ -338,6 +346,7 @@ const Header = () => {
                     onClick={() => {
                       handleProfileMenuClose();
                       if (item.onClick) {
+                        item.onClick();
                       } else {
                         navigate(item.to);
                       }

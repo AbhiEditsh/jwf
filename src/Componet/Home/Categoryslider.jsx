@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 function CategorySlider() {
   const dispatch = useDispatch();
 
-  // Fetch products from Redux state
   const productList = useSelector((state) => state.productList);
   const { products, loading, error } = productList;
   
@@ -19,7 +18,6 @@ function CategorySlider() {
     dispatch(getProducts());
   }, [dispatch]);
 
-  // Extract unique categories
   const uniqueCategoryProducts = products?.reduce((acc, product) => {
     if (!acc.some((item) => item.category?.name === product.category?.name)) {
       acc.push(product);

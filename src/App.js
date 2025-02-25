@@ -5,6 +5,8 @@ import Layout from "./Global/Layout";
 import Cart from "./Pages/Cart";
 import Wishlist from "./Pages/Wishlist";
 import PrivateRoute from "./Componet/auth/PrivateRoute";
+import Checkout from "./Componet/auth/UserProfile/Checkout";
+import OrderDetails from "./Componet/auth/UserProfile/Order/OrderDetails";
 
 const Home = lazy(() => import("./Pages/Home"));
 const Contact = lazy(() => import("./Pages/Conatact"));
@@ -52,11 +54,13 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/collection" element={<Collection />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/faq" element={<FAQs />} />
           <Route path="/about" element={<About />} />
           <Route path="/customize-jewelry" element={<CustomizeJewellery />} />
           <Route path="/certification" element={<Certification />} />
           <Route path="/product/:productId" element={<ProductDetails />} />
+          <Route path="/orders/:id" element={<OrderDetails/>} />
           <Route path="/category/:category" element={<CategoryPage />} />
           <Route path="/lab-vs-natural" element={<LabVsNatural />} />
           <Route path="/the-4-cs-of-diamonds" element={<Thediamonds />} />

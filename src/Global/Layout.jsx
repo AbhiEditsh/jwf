@@ -62,10 +62,13 @@ const Layout = ({ children }) => {
   };
 
   return (
+    <Box>
       <Header />
+      <main style={{ minHeight: "calc(100vh - 200px)",marginBottom:'100px'}}>{children}</main>
       <Footer />
       <ScrollToTop onClick={scrollToTop} />
       <WhatsAppButton />
+    </Box>
   );
 };
 
