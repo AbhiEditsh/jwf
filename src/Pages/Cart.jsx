@@ -119,7 +119,6 @@ const Cart = () => {
                               }}
                             />
                           </Box>
-                          <Box>₹{calculateTotalPrice().toFixed(2)}</Box>
                         </Box>
                         <Box
                           sx={{
