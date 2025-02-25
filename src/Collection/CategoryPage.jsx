@@ -30,6 +30,9 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from "react-share";
+import MuiCard from "../Global/Cart/MuiCard";
+import male from "../../src/assets/image/male.png";
+import female from "../../src/assets/image/female.png";
 
 function CategoryPage() {
   const { productId, category } = useParams();
@@ -112,8 +115,6 @@ function CategoryPage() {
     setFilteredProducts(sorted);
   };
 
-  
-
   // Pagination
   const itemsPerPage = 9;
   const paginatedProducts = filteredProducts.slice(
@@ -175,7 +176,34 @@ function CategoryPage() {
                       checked={selectedGenders.includes(gender)}
                       onChange={() => handleGenderChange(gender)}
                     />
-                    <label htmlFor={gender}>{gender}</label>
+                    <label htmlFor={gender}>
+                      <span>
+                        {" "}
+                        {gender === "male" ? (
+                          <img
+                            src={male}
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                            }}
+                            alt="male"
+                          />
+                        ) : gender === "female" ? (
+                          <img
+                            src={female}
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                            }}
+                            alt="female"
+                          />
+                        ) : (
+                          <span>No gender specified</span>
+                        )}
+                      </span>
+
+                      {gender}
+                    </label>
                   </div>
                 ))}
               </div>
@@ -254,83 +282,10 @@ function CategoryPage() {
                               md={4}
                               lg={4}
                               key={product.id}
+                              data-aos="zoon-left"
+                              data-aos-duration="2000"
                             >
-                              <Box
-                                padding={2}
-                                borderRadius={2}
-                                sx={{
-                                  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-                                }}
-                              >
-                                <div className="box_image">
-                                  <div>
-                                    {product.ProductImage ? (
-                                      <img
-                                        src={product.ProductImage}
-                                        alt={`Product 1`}
-                                        style={{
-                                          borderRadius: "8px",
-                                          margin: "auto",
-                                        }}
-                                      />
-                                    ) : (
-                                      <p>No image available</p>
-                                    )}
-                                  </div>
-                                  <div className="hover_image">
-                                    <RemoveRedEyeIcon
-                                      sx={{
-                                        color: theme.palette.black.main,
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => handleOpenModal(product)}
-                                    />
-                                  </div>
-                                </div>
-                                <Link to={`/product/${product._id}`}>
-                                  <Typography
-                                    variant="h6"
-                                    sx={{
-                                      color: theme.palette.primary.main,
-                                      textAlign: "center",
-                                    }}
-                                  >
-                                    {product.name}
-                                  </Typography>
-                                  <Typography
-                                    sx={{
-                                      color: theme.palette.grey.main,
-                                      textAlign: "center",
-                                      fontSize: "14px",
-                                      display: "-webkit-box",
-                                      WebkitLineClamp: 2,
-                                      mb: 1,
-                                      WebkitBoxOrient: "vertical",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                    }}
-                                  >
-                                    {product.description}
-                                  </Typography>
-                                </Link>
-                                <Typography
-                                  sx={{
-                                    color: theme.palette.grey.main,
-                                    textAlign: "center",
-                                    fontSize: "14px",
-                                  }}
-                                >
-                                  <span
-                                    style={{
-                                      color: theme.palette.primary.main,
-                                      marginRight: "5px",
-                                    }}
-                                  >
-                                    &#x20B9;
-                                  </span>
-                                  {product.price}
-                                </Typography>
-                              </Box>
+                              <MuiCard product={product} />
                             </Grid>
                           </>
                         ))

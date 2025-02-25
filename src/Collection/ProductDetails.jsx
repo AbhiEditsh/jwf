@@ -63,8 +63,6 @@ function ProductDetails() {
   const { products: relatedProducts, loading: relatedLoading } = useSelector(
     (state) => state.relatedProducts
   );
-  const [muiModal, setMuiOpenModal] = useState(false);
-
   const productUrl = `${window.location.origin}/product/${productId}`;
   useEffect(() => {
     dispatch(getProductDetails(productId));
@@ -79,8 +77,6 @@ function ProductDetails() {
       const demo = wishlist.wishlist.items.some(
         (item) => item.productId === product._id && item.liked
       );
-      console.log(demo);
-
       setIsWishlisted(demo);
     }
   }, [wishlist.wishlist, product]);
