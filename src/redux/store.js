@@ -30,7 +30,6 @@ import {
   userOrdersReducer,
   orderReducer,
   cartsReducer,
-  getUserorderReducer,
 } from "./reducers/productReducer";
 
 const rootReducer = combineReducers({

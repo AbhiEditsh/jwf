@@ -16,6 +16,8 @@ import {
   Alert,
   InputLabel,
   Select,
+  Checkbox,
+  Slider,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { getProductsByCategory } from "../redux/actions/productActions";
@@ -31,13 +33,11 @@ import {
   WhatsappIcon,
 } from "react-share";
 import MuiCard from "../Global/Cart/MuiCard";
-import male from "../../src/assets/image/male.png";
-import female from "../../src/assets/image/female.png";
-
 function CategoryPage() {
   const { productId, category } = useParams();
   const dispatch = useDispatch();
   const [selectedGenders, setSelectedGenders] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const productUrl = `${window.location.origin}/product/${productId}`;
   const [sortKey, setSortKey] = useState("");
@@ -78,7 +78,10 @@ function CategoryPage() {
     if (genders.length > 0) {
       filtered = filtered.filter((product) => genders.includes(product.gender));
     }
-
+      filtered = filtered.filter(
+        (product) => product.price >= priceRange[0] && product.price <= priceRange[1]
+      );
+      return 
     setFilteredProducts(filtered);
   };
 
@@ -115,7 +118,12 @@ function CategoryPage() {
     setFilteredProducts(sorted);
   };
 
-  // Pagination
+  
+  const handlePriceChange = (event, newValue) => {
+    setPriceRange(newValue);
+  };
+
+  // PAGINATION
   const itemsPerPage = 9;
   const paginatedProducts = filteredProducts.slice(
     (page - 1) * itemsPerPage,
@@ -157,53 +165,61 @@ function CategoryPage() {
         </Typography>
         <Grid container spacing={3} sx={{}}>
           <Grid item xs={12} sm={4} md={3}>
-            <Box
-              sx={{
-                padding: "16px",
-                border: `1px solid ${theme.palette.lightgrey.main}`,
-                borderRadius: "8px",
-              }}
-            >
-              <Typography variant="h6" sx={{ marginBottom: 2 }}>
+            <Box padding={2}>
+              <Typography
+                variant="h6"
+                sx={{
+                  border: `1px solid ${theme.palette.lightgrey.main}`,
+                  borderRadius: "10",
+                  p: 1,
+                  my: 2,
+                }}
+              >
+                Price
+              </Typography>
+              <Box
+                sx={{
+                  pt: 4,
+                }}
+              >
+                <Slider
+                  value={priceRange}
+                  aria-label="Always visible"
+                  onChange={handlePriceChange}
+                  step={10}
+                  min={0}
+                  max={1000}
+                  valueLabelDisplay="on"
+                  sx={{
+                    "& .MuiSlider-valueLabel": {
+                      backgroundColor: theme.palette.primary.main,
+                      color: theme.palette.white.main,
+                      fontSize: "10px",
+                    },
+                    fontSize: "14px",
+                  }}
+                />
+              </Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  border: `1px solid ${theme.palette.lightgrey.main}`,
+                  borderRadius: "10",
+                  p: 1,
+                  my: 2,
+                }}
+              >
                 Gender
               </Typography>
               <div>
                 {genders.map((gender) => (
                   <div key={gender}>
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       id={gender}
                       checked={selectedGenders.includes(gender)}
                       onChange={() => handleGenderChange(gender)}
                     />
-                    <label htmlFor={gender}>
-                      <span>
-                        {" "}
-                        {gender === "male" ? (
-                          <img
-                            src={male}
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                            }}
-                            alt="male"
-                          />
-                        ) : gender === "female" ? (
-                          <img
-                            src={female}
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                            }}
-                            alt="female"
-                          />
-                        ) : (
-                          <span>No gender specified</span>
-                        )}
-                      </span>
-
-                      {gender}
-                    </label>
+                    <label htmlFor={gender}>{gender}</label>
                   </div>
                 ))}
               </div>
@@ -279,11 +295,9 @@ function CategoryPage() {
                               item
                               xs={12}
                               sm={6}
-                              md={4}
+                              md={6}
                               lg={4}
                               key={product.id}
-                              data-aos="zoon-left"
-                              data-aos-duration="2000"
                             >
                               <MuiCard product={product} />
                             </Grid>

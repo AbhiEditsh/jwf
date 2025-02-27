@@ -13,6 +13,8 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Checkbox,
+  Slider,
 } from "@mui/material";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
@@ -32,8 +34,6 @@ import {
   WhatsappIcon,
 } from "react-share";
 import MuiCard from "../Global/Cart/MuiCard";
-import male from "../../src/assets/image/male.png";
-import female from "../../src/assets/image/female.png";
 
 function Product() {
   const { productId } = useParams();
@@ -44,13 +44,14 @@ function Product() {
   const productUrl = `${window.location.origin}/product/${productId}`;
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedGenders, setSelectedGenders] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [view, setView] = useState("grid");
   const [page, setPage] = useState(1);
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const [instock, setInStock] = useState([]);
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
@@ -59,13 +60,9 @@ function Product() {
     setFilteredProducts(products);
   }, [products]);
 
-  useEffect(
-    () => {
-      filterProducts(selectedCategories, selectedGenders);
-    },
-    // eslint-disable-next-line
-    [products, selectedCategories, selectedGenders, sortKey]
-  );
+  useEffect(() => {
+    filterProducts(selectedCategories, selectedGenders, priceRange, instock);
+  }, [selectedCategories, selectedGenders, priceRange, instock]);
 
   const handleCategoryChange = (category) => {
     let updatedCategories = [...selectedCategories];
@@ -75,9 +72,12 @@ function Product() {
       updatedCategories.push(category);
     }
     setSelectedCategories(updatedCategories);
-    filterProducts(updatedCategories, selectedGenders);
+    filterProducts(updatedCategories, selectedGenders, instock);
   };
 
+  const handlePriceChange = (event, newValue) => {
+    setPriceRange(newValue);
+  };
   const handleGenderChange = (gender) => {
     let updatedGenders = [...selectedGenders];
     if (updatedGenders.includes(gender)) {
@@ -89,15 +89,28 @@ function Product() {
     filterProducts(selectedCategories, updatedGenders);
   };
 
-  const filterProducts = (categories, genders) => {
+  const handleStockChange = (available) => {
+    setInStock((prevStock) => {
+      const updatedStock = prevStock.includes(available)
+        ? prevStock.filter((item) => item !== available)
+        : [...prevStock, available];
+
+      return updatedStock;
+    });
+  };
+  const filterProducts = (categories, genders, priceRange, available) => {
     let filtered = products.filter((product) => {
       const matchesCategory =
         categories.length === 0 ||
         categories.includes(product.category?.name || "Not available");
       const matchesGender =
         genders.length === 0 || genders.includes(product.gender);
+      const matchesPrice =
+        product.price >= priceRange[0] && product.price <= priceRange[1];
+      const matchesStock =
+        available.length === 0 || available.includes(product.Available);
 
-      return matchesCategory && matchesGender;
+      return matchesCategory && matchesGender && matchesPrice && matchesStock;
     });
     if (sortKey) {
       filtered = filtered.sort((a, b) => {
@@ -111,6 +124,7 @@ function Product() {
     setFilteredProducts(filtered);
     setPage(1);
   };
+
   const categories = [
     ...new Set(
       products.map((product) =>
@@ -119,6 +133,7 @@ function Product() {
     ),
   ];
   const genders = [...new Set(products.map((product) => product.gender))];
+  const Available = [...new Set(products.map((product) => product.Available))];
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -137,6 +152,7 @@ function Product() {
   const handleClearFilters = () => {
     setSelectedCategories([]);
     setSelectedGenders([]);
+    setInStock([]);
     setFilteredProducts(products);
     setPage(1);
   };
@@ -149,6 +165,7 @@ function Product() {
     setOpenModal(false);
     setSelectedProduct(null);
   };
+
   const handleSort = (key) => {
     const sorted = [...filteredProducts].sort((a, b) => {
       if (key === "priceLowToHigh") return a.price - b.price;
@@ -169,8 +186,28 @@ function Product() {
         onClose={toggleDrawer}
         sx={{ display: { xs: "block", sm: "block", md: "none" } }}
       >
-        <Box width={250} padding={2} border={1}>
+        <Box width={250} padding={2}>
           <Box>
+            <Typography
+              variant="h6"
+              sx={{
+                border: `1px solid ${theme.palette.lightgrey.main}`,
+                borderRadius: "4",
+                p: 1,
+                my: 2,
+              }}
+            >
+              Price
+            </Typography>
+            <Slider
+              value={priceRange}
+              aria-label="Always visible"
+              onChange={handlePriceChange}
+              step={10}
+              min={0}
+              max={1000}
+              valueLabelDisplay="on"
+            />
             <Typography
               variant="h6"
               sx={{
@@ -182,8 +219,7 @@ function Product() {
             <div>
               {categories.map((category) => (
                 <div key={category}>
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     id={category}
                     checked={selectedCategories.includes(category)}
                     onChange={() => handleCategoryChange(category)}
@@ -192,48 +228,51 @@ function Product() {
                 </div>
               ))}
             </div>
-            <Typography variant="h6">Gender</Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                border: `1px solid ${theme.palette.lightgrey.main}`,
+                borderRadius: "4",
+                p: 1,
+                my: 2,
+              }}
+            >
+              Gender
+            </Typography>
             <div>
               {genders.map((gender) => (
                 <div key={gender}>
-                  c
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     id={gender}
                     checked={selectedGenders.includes(gender)}
                     onChange={() => handleGenderChange(gender)}
                   />
-                  <label htmlFor={gender}>
-                    <span>
-                      {" "}
-                      {gender === "male" ? (
-                        <img
-                          src={male}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                          }}
-                          alt="male"
-                        />
-                      ) : gender === "female" ? (
-                        <img
-                          src={female}
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                          }}
-                          alt="female"
-                        />
-                      ) : (
-                        <span>No gender specified</span>
-                      )}
-                    </span>
-
-                    {gender}
-                  </label>
+                  <label htmlFor={gender}>{gender}</label>
                 </div>
               ))}
             </div>
+            <Typography
+              variant="h6"
+              sx={{
+                border: `1px solid ${theme.palette.lightgrey.main}`,
+                borderRadius: "4",
+                p: 1,
+                my: 2,
+              }}
+            >
+              Availability
+            </Typography>
+            {Available.map((available) => (
+              <div key={available}>
+                <Checkbox
+                  type="checkbox"
+                  id={available}
+                  checked={instock.includes(available)}
+                  onChange={() => handleStockChange(available)}
+                />
+                <label htmlFor={available}>{available}</label>
+              </div>
+            ))}
             <Box marginTop={2}>
               <Button
                 variant="contained"
@@ -329,12 +368,46 @@ function Product() {
                     my: 2,
                   }}
                 >
+                  Price
+                </Typography>
+                <Box
+                  sx={{
+                    pt: 4,
+                  }}
+                >
+                  <Slider
+                    value={priceRange}
+                    aria-label="Always visible"
+                    onChange={handlePriceChange}
+                    step={10}
+                    min={0}
+                    max={1000}
+                    valueLabelDisplay="on"
+                    sx={{
+                      "& .MuiSlider-valueLabel": {
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.white.main,
+                        fontSize: "10px",
+                      },
+                      fontSize: "14px",
+                    }}
+                  />
+                </Box>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    border: `1px solid ${theme.palette.lightgrey.main}`,
+                    borderRadius: "10",
+                    p: 1,
+                    my: 2,
+                  }}
+                >
                   Categories
                 </Typography>
                 <div>
                   {categories.map((category) => (
                     <div key={category}>
-                      <input
+                      <Checkbox
                         type="checkbox"
                         id={category}
                         checked={selectedCategories.includes(category)}
@@ -358,7 +431,7 @@ function Product() {
                 <div>
                   {genders.map((gender) => (
                     <div key={gender}>
-                      <input
+                      <Checkbox
                         type="checkbox"
                         id={gender}
                         checked={selectedGenders.includes(gender)}
@@ -368,6 +441,29 @@ function Product() {
                     </div>
                   ))}
                 </div>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    border: `1px solid ${theme.palette.lightgrey.main}`,
+                    borderRadius: "4",
+                    p: 1,
+                    my: 2,
+                  }}
+                >
+                  Availability
+                </Typography>
+                {Available.map((available) => (
+                  <div key={available}>
+                    <Checkbox
+                      type="checkbox"
+                      id={available}
+                      checked={instock.includes(available)}
+                      onChange={() => handleStockChange(available)}
+                    />
+                    <label htmlFor={available}>{available}</label>
+                  </div>
+                ))}
+
                 <Button
                   variant="contained"
                   color="primary"
@@ -382,7 +478,15 @@ function Product() {
 
             <Grid item xs={12} sm={9}>
               <Container>
-                <Grid container spacing={3}>
+                <Grid
+                  container
+                  spacing={3}
+                  sx={{
+                    justifyContent: "center",
+                    width: "100%",
+                    marginLeft: 0,
+                  }}
+                >
                   {view === "grid" ? (
                     paginatedProducts.length > 0 ? (
                       paginatedProducts.map((product) => (
@@ -393,8 +497,11 @@ function Product() {
                           md={6}
                           lg={4}
                           key={product.id}
-                          data-aos="zoon-left"
-                          data-aos-duration="2000"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            paddingLeft: 0,
+                          }}
                         >
                           <MuiCard product={product} />
                         </Grid>

@@ -1,9 +1,18 @@
 import React from "react";
-import { Modal, Box, Typography, Button } from "@mui/material";
+import { Modal, Box, Typography } from "@mui/material";
 import loginLogo from "../../assets/image/loginlogo.png";
 import { SecondaryButton } from "../Button/MuiButton";
+import { useNavigate } from "react-router-dom";
 
 const MuiModal = ({ open, onClose, message, onConfirm }) => {
+  const navigate = useNavigate();
+
+  const handleConfirm = () => {
+    onConfirm();
+    navigate("/login");
+  };
+
+  
   return (
     <Modal
       open={open}
@@ -35,7 +44,7 @@ const MuiModal = ({ open, onClose, message, onConfirm }) => {
         <Typography variant="h6" component="h2" gutterBottom>
           {message}
         </Typography>
-        <SecondaryButton onClick={onConfirm}  text={"Ok"} />
+        <SecondaryButton onClick={handleConfirm} text={"Ok"} />
       </Box>
     </Modal>
   );

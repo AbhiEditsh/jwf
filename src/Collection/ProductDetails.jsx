@@ -85,13 +85,14 @@ function ProductDetails() {
     setOpenModal(false);
     setSelectedProduct(null);
   };
+  //Inquiry model
   const handleInquiryOpen = () => {
     setOpenInquiryModal(true);
   };
   const handleInquiryClose = () => {
     setOpenInquiryModal(false);
   };
-
+  //add to cart
   const handleIncrement = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
@@ -211,22 +212,21 @@ function ProductDetails() {
             <Box sx={{ textAlign: "center" }}>
               <Box
                 sx={{
-                  width: "100%",
-                  height: "600px",
+                  width: {
+                    xs: " 100%",
+                    md: " 100%",
+                  },
+                  height: {
+                    xs: "400px",
+                    md: "600px",
+                  },
                 }}
               >
                 <Link to={`/product/${product._id}`}>
                   <img
                     src={product.ProductImage}
                     alt={`Product`}
-                    style={{
-                      width: "100%",
-
-                      height: "100%",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                      margin: "auto",
-                    }}
+                    className="ProductDetails_image"
                   />
                 </Link>
               </Box>
@@ -246,6 +246,7 @@ function ProductDetails() {
               </Typography>
 
               <Divider sx={{ my: 1 }} />
+              <Typography gutterBottom>{product.description}</Typography>
               <Box>
                 <Typography variant="body1" gutterBottom>
                   <b style={{ marginRight: "5px" }}>Category:</b>
@@ -260,9 +261,7 @@ function ProductDetails() {
                     {product.category ? product.category.name : "Not available"}
                   </Link>
                 </Typography>
-                <Typography variant="body1" gutterBottom>
-                  {product.description}
-                </Typography>
+
                 <Typography variant="body1" gutterBottom>
                   {product.oldPrice && <span>&#8377; {product.price}</span>}
                   <span

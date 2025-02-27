@@ -295,7 +295,7 @@ export const addWishList = (userId, productId) => async (dispatch) => {
   try {
     dispatch({ type: "WISHLIST_REQUEST" });
     const { data } = await api.post(`/wishlist/add`, { userId, productId });
-    
+
     dispatch({
       type: "WISHLIST_SUCCESS",
       payload: data,
@@ -307,14 +307,14 @@ export const addWishList = (userId, productId) => async (dispatch) => {
     });
   }
 };
-// GET WISH LIST 
+// GET WISH LIST
 export const GetWishlist = (userId) => async (dispatch) => {
   try {
     dispatch({ type: "WISH_LIST_REQUEST" });
     const { data } = await api.get(`/wishlist`, { params: { userId } });
     dispatch({
       type: "WISH_LIST_SUCCESS",
-      payload:data
+      payload: data,
     });
   } catch (error) {
     dispatch({
@@ -466,7 +466,6 @@ export const createOrder = (orderData) => async (dispatch) => {
       payload: data,
     });
 
-    dispatch(clearCart());
     return { payload: data };
   } catch (error) {
     dispatch({
@@ -488,7 +487,6 @@ export const processPayment = (amount) => async (dispatch) => {
       type: "PROCESS_PAYMENT_SUCCESS",
       payload: data,
     });
-
     return data;
   } catch (error) {
     dispatch({
@@ -508,6 +506,8 @@ export const verifyPayment = (paymentData) => async (dispatch) => {
       type: "VERIFY_PAYMENT_SUCCESS",
       payload: data,
     });
+    dispatch(clearCart());
+
     return { payload: data };
   } catch (error) {
     dispatch({

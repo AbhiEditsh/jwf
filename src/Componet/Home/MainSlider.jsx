@@ -1,17 +1,10 @@
-import React  from "react";
-
+import React from "react";
+import heroImage from "../../assets/image/Hero.webp";
 const MainSlider = () => {
-
-
-
   return (
-      <div>
-        <img
-          src="https://i.postimg.cc/T37k9h4p/Untitled-design-1.jpg"
-          alt="Jewelry Banner"
-        />
-      </div>
-     
+    <div className="hero_Image">
+      <img src={heroImage} alt="Jewelry Banner"  />
+    </div>
   );
 };
 

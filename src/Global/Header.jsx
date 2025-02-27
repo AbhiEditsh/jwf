@@ -32,8 +32,8 @@ import {
 import { Favorite, ShoppingCart } from "@mui/icons-material";
 import { useCart } from "../Context/CartContext";
 
-const StyledAppBar = styled(AppBar)(({ theme, backgroundColor }) => ({
-  backgroundColor: backgroundColor || theme.palette.background.paper,
+const StyledAppBar = styled(AppBar)(() => ({
+  backgroundColor: "transparent",
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
   margin: 0,
   transition: "background-color 0.3s ease-in-out",

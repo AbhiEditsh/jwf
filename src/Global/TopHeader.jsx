@@ -48,7 +48,9 @@ const TopHeader = () => {
       row
       spacing={1}
       sx={{
-        display: "flex-start",
+        display:{
+          lg: "flex-start",
+        },
         alignItems: "center",
         background: theme.palette.lightgrey.main,
         paddingBottom:{

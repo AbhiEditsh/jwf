@@ -14,6 +14,7 @@ import {
 import { Stack, styled } from "@mui/system";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import theme from "../../theme/theme";
 import { useCart } from "../../Context/CartContext";
@@ -22,10 +23,12 @@ import MuiModal from "../Modal/MuiModal";
 import { showToast } from "../Message/MuiMessage";
 import { ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
+import ProductModel from "../../Collection/ProductModel";
 
 const ProductCard = styled(Card)(() => ({
   position: "relative",
   maxWidth: 250,
+  width: 250, // This sets a fixed width
   borderRadius: "20px",
   transition: "transform 0.3s ease-in-out",
   "&:hover": {
@@ -51,7 +54,9 @@ const MuiCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [load, setLoad] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [openProductModal, setopenProductModal] = useState(false);
   const { user } = useAuth();
   const userId = user ? user.user._id : null;
   const {
@@ -61,6 +66,16 @@ const MuiCard = ({ product }) => {
     wishlist,
   } = useCart();
 
+  //quick view modal
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    setopenProductModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setopenProductModal(false);
+    setSelectedProduct(null);
+  };
   useEffect(() => {
     if (wishlist?.wishlist?.items && product) {
       const demo = wishlist.wishlist.items.some(
@@ -71,7 +86,7 @@ const MuiCard = ({ product }) => {
       setIsWishlisted(demo);
     }
   }, [wishlist.wishlist, product]);
-
+  //add to cart
   const handleAddToCart = () => {
     if (!userId) {
       setOpenModal(true);
@@ -82,7 +97,7 @@ const MuiCard = ({ product }) => {
     addProductToCart(userId, product._id, 1);
     showToast.success("Added to Cart");
   };
-
+  //Add to wishlist
   const handleAddToWishlist = async () => {
     if (!userId) return setOpenModal(true);
     setLoad(true);
@@ -222,19 +237,43 @@ const MuiCard = ({ product }) => {
               </Stack>
             </Box>
             <Box>
+              <Tooltip title="Quick View" arrow>
+                <IconButton
+                  onClick={() => handleOpenModal(product)}
+                  aria-label="Quick View"
+                  sx={{
+                    padding: 0,
+                  }}
+                >
+                  <RemoveRedEyeIcon
+                    sx={{
+                      color: theme.palette.white.main,
+                      border: `1px solid ${theme.palette.white.main}`,
+                      borderRadius: "50%",
+                      padding: "2px",
+                      fontSize: "30px",
+                      marginLeft: "6px",
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Add to shopping cart" arrow>
                 <IconButton
                   color="secondary"
                   onClick={handleAddToCart}
                   aria-label="Add to Cart"
+                  sx={{
+                    padding: 0,
+                  }}
                 >
                   <ShoppingBasketIcon
                     sx={{
                       color: theme.palette.white.main,
                       border: `1px solid ${theme.palette.white.main}`,
-                      padding: "6px",
                       borderRadius: "50%",
-                      fontSize: "32px",
+                      padding: "2px",
+                      fontSize: "30px",
+                      marginLeft: "6px",
                     }}
                   />
                 </IconButton>
@@ -252,9 +291,10 @@ const MuiCard = ({ product }) => {
                       sx={{
                         color: "#ff0000",
                         border: `1px solid ${theme.palette.white.main}`,
-                        padding: "6px",
                         borderRadius: "50%",
+                        padding: "6px",
                         fontSize: "30px",
+                        marginLeft: "2px",
                       }}
                     />
                   ) : (
@@ -265,6 +305,7 @@ const MuiCard = ({ product }) => {
                         padding: "6px",
                         borderRadius: "50%",
                         fontSize: "30px",
+                        marginLeft: "2px",
                       }}
                     />
                   )}
@@ -282,6 +323,14 @@ const MuiCard = ({ product }) => {
         message="Please log in First🔐"
         onConfirm={() => setOpenModal(false)}
       />
+
+      {openProductModal && selectedProduct && (
+        <ProductModel
+          product={selectedProduct}
+          open={openProductModal}
+          onClose={handleCloseModal}
+        />
+      )}
     </Box>
   );
 };
