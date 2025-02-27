@@ -46,7 +46,7 @@ const ForgotPassword = () => {
     if (data) {
       toast.success(data);
       formik.resetForm();
-      navigate("/reset-password");
+      navigate("/reset-password");  
     } else if (error) {
       toast.error(error);
     }
