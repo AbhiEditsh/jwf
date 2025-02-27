@@ -35,7 +35,7 @@ const Cart = () => {
   const { cart, addProductToCart, removeProductFromCart } = useCart();
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width:767px)");
-  const userId = user.user?._id;
+  const userId = user ? user.user._id : null;
 
   useEffect(() => {
     if (userId) {

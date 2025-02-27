@@ -157,8 +157,9 @@ export const ForgotData = (userData) => async (dispatch) => {
 
     dispatch({
       type: "FORGOT_SUCCESS",
-      payload: data.message,
+      payload: data,
     });
+    return { payload: data };
   } catch (error) {
     dispatch({
       type: "FORGOT_FAIL",

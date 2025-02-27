@@ -70,9 +70,10 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    dispatch(LoginData(user._id));
+    // dispatch(LoginData(user._id));
     localStorage.clear();
     handleProfileMenuClose();
+    window.location.reload()
     navigate("/login");
   };
   const [backgroundColor, setBackgroundColor] = useState(

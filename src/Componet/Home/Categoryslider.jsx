@@ -56,7 +56,6 @@ function CategorySlider() {
         <Box
           sx={{
             textAlign: "center",
-            mb: 4,
           }}
         >
           <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>

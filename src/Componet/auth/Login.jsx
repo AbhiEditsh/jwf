@@ -34,7 +34,7 @@ const Login = () => {
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {
       dispatch(LoginData(values));
       resetForm();
     },
@@ -45,128 +45,132 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("user", JSON.stringify(data.user));
-      toast.success(data.message);
+      
       navigate("/home");
+      toast.success(data.message || "Login successful!");  
       formik.resetForm();
     } else if (error) {
       toast.error(error);
     }
     // eslint-disable-next-line
   }, [error, data]);
+  
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 5, p: 3, boxShadow: 3, borderRadius: 2 }}>
-        <ToastContainer position="top-center" />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={logo}
-            alt="logo"
-            style={{
-              width: "100%",
-              maxWidth: "100px",
-              height: "100px",
-              margin: "0 auto",
-              textAlign: "center",
-            }}
-          />
-        </Box>
-        <Typography variant="h5" align="center" gutterBottom>
-          Login
-        </Typography>
-        <form onSubmit={formik.handleSubmit}>
-          {/* Email Field */}
-          <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            variant="outlined"
-            margin="normal"
-            size="small"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-
-          {/* Password Field */}
-          <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            variant="outlined"
-            size="small"
-            margin="normal"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-          />
-
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            variant="outlined"
-            color="primary"
+    <>
+     <ToastContainer position="top-center" autoClose={3000} />
+      <Container maxWidth="sm">
+        <Box sx={{ mt: 5, p: 3, boxShadow: 3, borderRadius: 2 }}>
+          <Box
             sx={{
-              mt: 2,
-              maxWidth: "120px",
-              width: "100%",
-              margin: "10px auto",
-              display: "block",
-              borderRadius: "50px",
-            }}
-            disabled={formik.isSubmitting}
-          >
-            {formik.isSubmitting ? <CircularProgress size={24} /> : "Login"}
-          </Button>
-
-          <Typography
-            sx={{
-              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
-            Don't have account?
-            <Link
-              to="/register"
+            <img
+              src={logo}
+              alt="logo"
               style={{
-                color: theme.palette.primary.main,
-                margin: "0 10px",
+                width: "100%",
+                maxWidth: "100px",
+                height: "100px",
+                margin: "0 auto",
+                textAlign: "center",
               }}
-            >
-              Register Here.....
-            </Link>
+            />
+          </Box>
+          <Typography variant="h5" align="center" gutterBottom>
+            Login
           </Typography>
+          <form onSubmit={formik.handleSubmit}>
+            {/* Email Field */}
+            <TextField
+              fullWidth
+              label="Email"
+              name="email"
+              variant="outlined"
+              margin="normal"
+              size="small"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+            />
 
-          <Box sx={{ mt: 2, p: 1, boxShadow: 1, borderRadius: 2 }}>
+            {/* Password Field */}
+            <TextField
+              fullWidth
+              label="Password"
+              name="password"
+              type="password"
+              variant="outlined"
+              size="small"
+              margin="normal"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+            />
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              variant="outlined"
+              color="primary"
+              sx={{
+                mt: 2,
+                maxWidth: "120px",
+                width: "100%",
+                margin: "10px auto",
+                display: "block",
+                borderRadius: "50px",
+              }}
+              disabled={formik.isSubmitting}
+            >
+              {formik.isSubmitting ? <CircularProgress size={24} /> : "Login"}
+            </Button>
+
             <Typography
               sx={{
                 textAlign: "center",
               }}
             >
-              Forgot your password
+              Don't have account?
               <Link
-                to="/forgot-password"
+                to="/register"
                 style={{
                   color: theme.palette.primary.main,
                   margin: "0 10px",
                 }}
               >
-                Reset It
+                Register
               </Link>
             </Typography>
-          </Box>
-        </form>
-      </Box>
-    </Container>
+
+            <Box sx={{ mt: 2, p: 1, boxShadow: 1, borderRadius: 2 }}>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                }}
+              >
+                Forgot your password
+                <Link
+                  to="/forgot-password"
+                  style={{
+                    color: theme.palette.primary.main,
+                    margin: "0 10px",
+                  }}
+                >
+                  Reset It
+                </Link>
+              </Typography>
+            </Box>
+          </form>
+        </Box>
+      </Container>
+    </>
   );
 };
 

@@ -15,6 +15,8 @@ import {
   Select,
   Checkbox,
   Slider,
+  Tooltip,
+  CircularProgress,
 } from "@mui/material";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ListIcon from "@mui/icons-material/List";
@@ -33,9 +35,24 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from "react-share";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import MuiCard from "../Global/Cart/MuiCard";
+import { useAuth } from "../Context/authContext";
+import { useCart } from "../Context/CartContext";
+import MuiModal from "../Global/Modal/MuiModal";
+import { showToast } from "../Global/Message/MuiMessage";
 
 function Product() {
+  const { user } = useAuth();
+  const userId = user ? user.user._id : null;
+  const {
+    addProductToCart,
+    removeProductFromWishlist,
+    addProductToWishlist,
+    wishlist,
+  } = useCart();
   const { productId } = useParams();
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
@@ -52,6 +69,8 @@ function Product() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [instock, setInStock] = useState([]);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [load, setLoad] = useState(false);
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
@@ -64,6 +83,15 @@ function Product() {
     filterProducts(selectedCategories, selectedGenders, priceRange, instock);
   }, [selectedCategories, selectedGenders, priceRange, instock]);
 
+  useEffect(() => {
+    if (wishlist?.wishlist?.items && products) {
+      const demo = wishlist.wishlist.items.some(
+        (item) => item.productId === products._id && item.liked
+      );
+      setIsWishlisted(demo);
+    }
+  }, [wishlist.wishlist, products]);
+  //FILTER
   const handleCategoryChange = (category) => {
     let updatedCategories = [...selectedCategories];
     if (updatedCategories.includes(category)) {
@@ -74,7 +102,6 @@ function Product() {
     setSelectedCategories(updatedCategories);
     filterProducts(updatedCategories, selectedGenders, instock);
   };
-
   const handlePriceChange = (event, newValue) => {
     setPriceRange(newValue);
   };
@@ -88,7 +115,6 @@ function Product() {
     setSelectedGenders(updatedGenders);
     filterProducts(selectedCategories, updatedGenders);
   };
-
   const handleStockChange = (available) => {
     setInStock((prevStock) => {
       const updatedStock = prevStock.includes(available)
@@ -98,29 +124,46 @@ function Product() {
       return updatedStock;
     });
   };
-  const filterProducts = (categories, genders, priceRange, available) => {
-    let filtered = products.filter((product) => {
-      const matchesCategory =
-        categories.length === 0 ||
-        categories.includes(product.category?.name || "Not available");
-      const matchesGender =
-        genders.length === 0 || genders.includes(product.gender);
-      const matchesPrice =
-        product.price >= priceRange[0] && product.price <= priceRange[1];
-      const matchesStock =
-        available.length === 0 || available.includes(product.Available);
-
-      return matchesCategory && matchesGender && matchesPrice && matchesStock;
-    });
+  const filterProducts = () => {
+    let filtered = [...products];
+  
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((product) =>
+        selectedCategories.includes(product.category?.name || "Not available")
+      );
+    }
+  
+    if (selectedGenders.length > 0) {
+      filtered = filtered.filter((product) =>
+        selectedGenders.includes(product.gender)
+      );
+    }
+  
+    filtered = filtered.filter(
+      (product) => product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
+  
+    if (instock.length > 0) {
+      filtered = filtered.filter((product) => instock.includes(product.Available));
+    }
+  
     if (sortKey) {
-      filtered = filtered.sort((a, b) => {
-        if (sortKey === "priceLowToHigh") return a.price - b.price;
-        if (sortKey === "priceHighToLow") return b.price - a.price;
-        if (sortKey === "nameAZ") return a.name.localeCompare(b.name);
-        if (sortKey === "nameZA") return b.name.localeCompare(a.name);
-        return 0;
+      filtered.sort((a, b) => {
+        switch (sortKey) {
+          case "priceLowToHigh":
+            return a.price - b.price;
+          case "priceHighToLow":
+            return b.price - a.price;
+          case "nameAZ":
+            return a.name.localeCompare(b.name);
+          case "nameZA":
+            return b.name.localeCompare(a.name);
+          default:
+            return 0;
+        }
       });
     }
+  
     setFilteredProducts(filtered);
     setPage(1);
   };
@@ -177,7 +220,37 @@ function Product() {
     setSortKey(key);
     setFilteredProducts(sorted);
   };
+  //ADD TO CART
+  const handleAddToCart = (productId) => {
+    if (!userId) {
+      setOpenModal(true);
+      return;
+    }
+    addProductToCart(userId, productId, 1);
+    showToast.success("Added to Cart");
+  };
+  //WISHLIST
+  const handleAddToWishlist = async (productId) => {
+    if (!userId) return setOpenModal(true);
 
+    setLoad(true);
+    try {
+      if (isWishlisted) {
+        await removeProductFromWishlist(userId, productId);
+        showToast.success("Removed from Wishlist");
+      } else {
+        await addProductToWishlist(userId, productId);
+        showToast.success("Added to Wishlist");
+      }
+
+      setIsWishlisted(!isWishlisted);
+    } catch (error) {
+      console.error("Error handling wishlist toggle:", error.message);
+      showToast.error("Failed to update Wishlist");
+    } finally {
+      setLoad(false);
+    }
+  };
   return (
     <div>
       <Drawer
@@ -519,27 +592,24 @@ function Product() {
                         paginatedProducts.map((product) => (
                           <Box key={product._id}>
                             <Grid spacing={2} row container>
-                              <Grid item xs={12} sm={6} md={6} lg={3}>
+                              <Grid item xs={12} sm={6} md={6} lg={4}>
                                 <Box
                                   sx={{
                                     mb: 2,
+                                    display: "flex",
+                                    justifyContent: "center",
                                   }}
                                 >
                                   <div className="box_image">
-                                    <Box
-                                      sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                      }}
-                                    >
+                                    <Box>
                                       {product.ProductImage ? (
                                         <img
                                           src={product.ProductImage}
                                           alt={`Product 1`}
                                           style={{
-                                            width: "200px",
-                                            height: "200px",
-                                            borderRadius: "8px",
+                                            width: "220px",
+                                            height: "250px",
+                                            borderRadius: "25px",
                                             margin: "auto",
                                           }}
                                         />
@@ -547,21 +617,113 @@ function Product() {
                                         <p>No image available</p>
                                       )}
                                       <div className="hover_image">
-                                        <RemoveRedEyeIcon
-                                          sx={{
-                                            color: theme.palette.black.main,
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() =>
-                                            handleOpenModal(product)
-                                          }
-                                        />
+                                        <Box>
+                                          <Box sx={{ py: 0.5 }}>
+                                            <Tooltip title="Quick View" arrow>
+                                              <IconButton
+                                                onClick={() =>
+                                                  handleOpenModal(product)
+                                                }
+                                                aria-label="Quick View"
+                                                sx={{
+                                                  padding: 0,
+                                                }}
+                                              >
+                                                <RemoveRedEyeIcon
+                                                  sx={{
+                                                    color:
+                                                      theme.palette.white.main,
+                                                    border: `1px solid ${theme.palette.white.main}`,
+                                                    borderRadius: "50%",
+                                                    padding: "2px",
+                                                    fontSize: "30px",
+                                                    marginLeft: "6px",
+                                                  }}
+                                                />
+                                              </IconButton>
+                                            </Tooltip>
+                                          </Box>
+                                          <Box sx={{ py: 0.5 }}>
+                                            <Tooltip
+                                              title="Add to shopping cart"
+                                              arrow
+                                            >
+                                              <IconButton
+                                                color="secondary"
+                                                onClick={() =>
+                                                  handleAddToCart(product._id)
+                                                }
+                                                aria-label="Add to Cart"
+                                                sx={{
+                                                  padding: 0,
+                                                }}
+                                              >
+                                                <ShoppingBasketIcon
+                                                  sx={{
+                                                    color:
+                                                      theme.palette.white.main,
+                                                    border: `1px solid ${theme.palette.white.main}`,
+                                                    borderRadius: "50%",
+                                                    padding: "2px",
+                                                    fontSize: "30px",
+                                                    marginLeft: "6px",
+                                                  }}
+                                                />
+                                              </IconButton>
+                                            </Tooltip>
+                                          </Box>
+                                          <Box sx={{ py: 0.5 }}>
+                                            <Tooltip
+                                              title="Add to wishlist"
+                                              arrow
+                                            >
+                                              <IconButton
+                                                color="secondary"
+                                                onClick={() =>
+                                                  handleAddToWishlist(
+                                                    product._id
+                                                  )
+                                                }
+                                                aria-label="Add to wishlist"
+                                              >
+                                                {load ? (
+                                                  <CircularProgress
+                                                    size={24}
+                                                    sx={{ color: "white" }}
+                                                  />
+                                                ) : isWishlisted ? (
+                                                  <FavoriteIcon
+                                                    sx={{
+                                                      color: "#ff0000",
+                                                      border: `1px solid ${theme.palette.white.main}`,
+                                                      borderRadius: "50%",
+                                                      padding: "6px",
+                                                      fontSize: "30px",
+                                                      marginLeft: "2px",
+                                                    }}
+                                                  />
+                                                ) : (
+                                                  <FavoriteBorderIcon
+                                                    sx={{
+                                                      color: "#ddd",
+                                                      border: `1px solid ${theme.palette.white.main}`,
+                                                      padding: "6px",
+                                                      borderRadius: "50%",
+                                                      fontSize: "30px",
+                                                      marginLeft: "2px",
+                                                    }}
+                                                  />
+                                                )}
+                                              </IconButton>
+                                            </Tooltip>
+                                          </Box>
+                                        </Box>
                                       </div>
                                     </Box>
                                   </div>
                                 </Box>
                               </Grid>
-                              <Grid item xs={12} sm={6} md={6} lg={9}>
+                              <Grid item xs={12} sm={6} md={6} lg={8}>
                                 <Link
                                   to={`/product/${product._id}`}
                                   style={{ width: "100%" }}
@@ -674,8 +836,15 @@ function Product() {
           </Grid>
         </Container>
       </Box>
+      {/*  LOGIN MODAL  */}
+      <MuiModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        message="Please log in First🔐"
+        onConfirm={() => setOpenModal(false)}
+      />
 
-      {/* Modal */}
+      {/* QUICK VIEW MODAL */}
       {openModal && selectedProduct && (
         <ProductModel
           product={selectedProduct}

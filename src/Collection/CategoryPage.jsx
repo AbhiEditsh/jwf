@@ -18,6 +18,7 @@ import {
   Select,
   Checkbox,
   Slider,
+  Tooltip,
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { getProductsByCategory } from "../redux/actions/productActions";
@@ -32,8 +33,23 @@ import {
   TwitterIcon,
   WhatsappIcon,
 } from "react-share";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import MuiCard from "../Global/Cart/MuiCard";
+import { useAuth } from "../Context/authContext";
+import { useCart } from "../Context/CartContext";
+import { showToast } from "../Global/Message/MuiMessage";
+
 function CategoryPage() {
+  const { user } = useAuth();
+  const userId = user ? user.user._id : null;
+  const {
+    addProductToCart,
+    removeProductFromWishlist,
+    addProductToWishlist,
+    wishlist,
+  } = useCart();
   const { productId, category } = useParams();
   const dispatch = useDispatch();
   const [selectedGenders, setSelectedGenders] = useState([]);
@@ -47,7 +63,9 @@ function CategoryPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const productsByCategory = useSelector((state) => state.productsByCategory);
   const { loading, products, error } = productsByCategory;
-
+  const [instock, setInStock] = useState([]);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [load, setLoad] = useState(false);
   useEffect(() => {
     dispatch(getProductsByCategory(category));
   }, [dispatch, category]);
@@ -57,33 +75,56 @@ function CategoryPage() {
       setFilteredProducts(products);
     }
   }, [products]);
-
+  useEffect(() => {
+    if (wishlist?.wishlist?.items && products) {
+      const demo = wishlist.wishlist.items.some(
+        (item) => item.productId === products._id && item.liked
+      );
+      setIsWishlisted(demo);
+    }
+  }, [wishlist.wishlist, products]);
   const categories = [
     ...new Set(products.map((product) => product.category.name)),
   ];
 
   const handleGenderChange = (gender) => {
-    let updatedGenders = [...selectedGenders];
-    if (updatedGenders.includes(gender)) {
-      updatedGenders = updatedGenders.filter((item) => item !== gender);
-    } else {
-      updatedGenders.push(gender);
-    }
-    setSelectedGenders(updatedGenders);
-    filterProducts(updatedGenders);
+    setSelectedGenders((prevGenders) =>
+      prevGenders.includes(gender)
+        ? prevGenders.filter((item) => item !== gender)
+        : [...prevGenders, gender]
+    );
   };
 
-  const filterProducts = (genders) => {
-    let filtered = products;
-    if (genders.length > 0) {
-      filtered = filtered.filter((product) => genders.includes(product.gender));
-    }
-      filtered = filtered.filter(
-        (product) => product.price >= priceRange[0] && product.price <= priceRange[1]
-      );
-      return 
-    setFilteredProducts(filtered);
+  const handleStockChange = (available) => {
+    setInStock((prevStock) =>
+      prevStock.includes(available)
+        ? prevStock.filter((item) => item !== available)
+        : [...prevStock, available]
+    );
   };
+
+  useEffect(() => {
+    let filtered = products;
+
+    if (selectedGenders.length > 0) {
+      filtered = filtered.filter((product) =>
+        selectedGenders.includes(product.gender)
+      );
+    }
+
+    filtered = filtered.filter(
+      (product) =>
+        product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
+
+    if (instock.length > 0) {
+      filtered = filtered.filter((product) =>
+        instock.includes(product.Available)
+      );
+    }
+
+    setFilteredProducts(filtered);
+  }, [selectedGenders, priceRange, instock, products]);
 
   const handleOpenModal = (product) => {
     setSelectedProduct(products);
@@ -96,6 +137,7 @@ function CategoryPage() {
   };
 
   const genders = [...new Set(products.map((product) => product.gender))];
+  const Available = [...new Set(products.map((product) => product.Available))];
 
   const handleClearFilters = () => {
     setSelectedGenders([]);
@@ -118,7 +160,6 @@ function CategoryPage() {
     setFilteredProducts(sorted);
   };
 
-  
   const handlePriceChange = (event, newValue) => {
     setPriceRange(newValue);
   };
@@ -129,6 +170,37 @@ function CategoryPage() {
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
+  //ADD TO CART
+  const handleAddToCart = (productId) => {
+    if (!userId) {
+      setOpenModal(true);
+      return;
+    }
+    addProductToCart(userId, productId, 1);
+    showToast.success("Added to Cart");
+  };
+  //WISHLIST
+  const handleAddToWishlist = async (productId) => {
+    if (!userId) return setOpenModal(true);
+
+    setLoad(true);
+    try {
+      if (isWishlisted) {
+        await removeProductFromWishlist(userId, productId);
+        showToast.success("Removed from Wishlist");
+      } else {
+        await addProductToWishlist(userId, productId);
+        showToast.success("Added to Wishlist");
+      }
+
+      setIsWishlisted(!isWishlisted);
+    } catch (error) {
+      console.error("Error handling wishlist toggle:", error.message);
+      showToast.error("Failed to update Wishlist");
+    } finally {
+      setLoad(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -163,7 +235,7 @@ function CategoryPage() {
         >
           {categories}
         </Typography>
-        <Grid container spacing={3} sx={{}}>
+        <Grid container spacing={3} row>
           <Grid item xs={12} sm={4} md={3}>
             <Box padding={2}>
               <Typography
@@ -220,6 +292,30 @@ function CategoryPage() {
                       onChange={() => handleGenderChange(gender)}
                     />
                     <label htmlFor={gender}>{gender}</label>
+                  </div>
+                ))}
+              </div>
+              <Typography
+                variant="h6"
+                sx={{
+                  border: `1px solid ${theme.palette.lightgrey.main}`,
+                  borderRadius: "10",
+                  p: 1,
+                  my: 2,
+                }}
+              >
+                Availability
+              </Typography>
+              <div>
+                {Available.map((available) => (
+                  <div key={available}>
+                    <Checkbox
+                      type="checkbox"
+                      id={available}
+                      checked={instock.includes(available)}
+                      onChange={() => handleStockChange(available)}
+                    />
+                    <label htmlFor={available}>{available}</label>
                   </div>
                 ))}
               </div>
@@ -321,7 +417,7 @@ function CategoryPage() {
                                   xs={12}
                                   sm={6}
                                   md={6}
-                                  lg={3}
+                                  lg={4}
                                   data-aos="fade-right"
                                   data-aos-duration="2000"
                                 >
@@ -337,8 +433,8 @@ function CategoryPage() {
                                             src={product.ProductImage}
                                             alt={`Product 1`}
                                             style={{
-                                              width: "200px",
-                                              height: "200px",
+                                              width: "220px",
+                                              height: "250px",
                                               borderRadius: "8px",
                                               margin: "auto",
                                             }}
@@ -348,15 +444,107 @@ function CategoryPage() {
                                         )}
                                       </div>
                                       <div className="hover_image">
-                                        <RemoveRedEyeIcon
-                                          sx={{
-                                            color: theme.palette.black.main,
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() =>
-                                            handleOpenModal(product)
-                                          }
-                                        />
+                                        <Box>
+                                          <Box sx={{ py: 0.5 }}>
+                                            <Tooltip title="Quick View" arrow>
+                                              <IconButton
+                                                onClick={() =>
+                                                  handleOpenModal(product)
+                                                }
+                                                aria-label="Quick View"
+                                                sx={{
+                                                  padding: 0,
+                                                }}
+                                              >
+                                                <RemoveRedEyeIcon
+                                                  sx={{
+                                                    color:
+                                                      theme.palette.white.main,
+                                                    border: `1px solid ${theme.palette.white.main}`,
+                                                    borderRadius: "50%",
+                                                    padding: "2px",
+                                                    fontSize: "30px",
+                                                    marginLeft: "6px",
+                                                  }}
+                                                />
+                                              </IconButton>
+                                            </Tooltip>
+                                          </Box>
+                                          <Box sx={{ py: 0.5 }}>
+                                            <Tooltip
+                                              title="Add to shopping cart"
+                                              arrow
+                                            >
+                                              <IconButton
+                                                color="secondary"
+                                                onClick={() =>
+                                                  handleAddToCart(product._id)
+                                                }
+                                                aria-label="Add to Cart"
+                                                sx={{
+                                                  padding: 0,
+                                                }}
+                                              >
+                                                <ShoppingBasketIcon
+                                                  sx={{
+                                                    color:
+                                                      theme.palette.white.main,
+                                                    border: `1px solid ${theme.palette.white.main}`,
+                                                    borderRadius: "50%",
+                                                    padding: "2px",
+                                                    fontSize: "30px",
+                                                    marginLeft: "6px",
+                                                  }}
+                                                />
+                                              </IconButton>
+                                            </Tooltip>
+                                          </Box>
+                                          <Box sx={{ py: 0.5 }}>
+                                            <Tooltip
+                                              title="Add to wishlist"
+                                              arrow
+                                            >
+                                              <IconButton
+                                                color="secondary"
+                                                onClick={() =>
+                                                  handleAddToWishlist(
+                                                    product._id
+                                                  )
+                                                }
+                                                aria-label="Add to wishlist"
+                                              >
+                                                {load ? (
+                                                  <CircularProgress
+                                                    size={24}
+                                                    sx={{ color: "white" }}
+                                                  />
+                                                ) : isWishlisted ? (
+                                                  <FavoriteIcon
+                                                    sx={{
+                                                      color: "#ff0000",
+                                                      border: `1px solid ${theme.palette.white.main}`,
+                                                      borderRadius: "50%",
+                                                      padding: "6px",
+                                                      fontSize: "30px",
+                                                      marginLeft: "2px",
+                                                    }}
+                                                  />
+                                                ) : (
+                                                  <FavoriteBorderIcon
+                                                    sx={{
+                                                      color: "#ddd",
+                                                      border: `1px solid ${theme.palette.white.main}`,
+                                                      padding: "6px",
+                                                      borderRadius: "50%",
+                                                      fontSize: "30px",
+                                                      marginLeft: "2px",
+                                                    }}
+                                                  />
+                                                )}
+                                              </IconButton>
+                                            </Tooltip>
+                                          </Box>
+                                        </Box>
                                       </div>
                                     </div>
                                   </Box>
@@ -366,7 +554,7 @@ function CategoryPage() {
                                   xs={12}
                                   sm={6}
                                   md={6}
-                                  lg={9}
+                                  lg={8}
                                   data-aos="fade-left"
                                   data-aos-duration="2000"
                                 >

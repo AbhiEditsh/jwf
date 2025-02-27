@@ -161,7 +161,7 @@ const Register = () => {
                 margin: "0 10px",
               }}
             >
-              Login Here...
+              Login
             </Link>
           </Typography>
 

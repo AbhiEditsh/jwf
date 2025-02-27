@@ -141,7 +141,6 @@ export const ProductinquiryReducer = (
       return state;
   }
 };
-
 // Register
 const RegisterInitialState = {
   loading: false,

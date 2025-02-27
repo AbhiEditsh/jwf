@@ -13,9 +13,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { ResetData } from "../../redux/actions/productActions";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const { data, error } = useSelector(
     (state) =>
       state.resetPassword || {
@@ -46,6 +48,7 @@ const ResetPassword = () => {
   useEffect(() => {
     if (data) {
       toast.success(data.message);
+      navigate("/login")
     } else if (error) {
       toast.error(error.message);
     }

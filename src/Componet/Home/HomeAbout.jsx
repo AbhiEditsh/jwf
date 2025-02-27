@@ -25,7 +25,6 @@ function HomeAbout() {
               data-aos-duration="2000"
             >
               <Box>
-                <div className="box_image">
                   <img
                     src="https://i.postimg.cc/13mB9xx3/modal-ring.webp"
                     alt="about-image"
@@ -34,7 +33,6 @@ function HomeAbout() {
                       borderBottomRightRadius: "50%",
                     }}
                   />
-                </div>
               </Box>
             </Grid>
             <Grid item xs={12} md={6} lg={6}

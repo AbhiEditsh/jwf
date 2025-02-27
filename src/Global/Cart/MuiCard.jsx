@@ -316,7 +316,7 @@ const MuiCard = ({ product }) => {
         </HoverOverlay>
       </ProductCard>
 
-      {/*  Login Modal  */}
+      {/*  LOGIN MODAL  */}
       <MuiModal
         open={openModal}
         onClose={() => setOpenModal(false)}
@@ -324,6 +324,7 @@ const MuiCard = ({ product }) => {
         onConfirm={() => setOpenModal(false)}
       />
 
+      {/* QUICK VIEW MODAL */}
       {openProductModal && selectedProduct && (
         <ProductModel
           product={selectedProduct}

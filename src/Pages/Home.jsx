@@ -12,9 +12,9 @@ function Home() {
       <MainSlider />
       <Categoryslider />
       <HomeAbout />
-      <FullSection/>
+      <FullSection />
       <JwelleryGrid />
-      <ClientTestimonial/>
+      <ClientTestimonial />
     </div>
   );
 }
