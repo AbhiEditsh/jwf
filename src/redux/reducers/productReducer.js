@@ -574,7 +574,11 @@ const OrderCreateInitialState = {
   error: null,
   paymentData: null,
 };
+<<<<<<< HEAD
 //CLEAR CART
+=======
+
+>>>>>>> Product-check
 const ClearCartinitialState = {
   cart: {
     items: [],
@@ -594,6 +598,7 @@ export const cartsReducer = (state = ClearCartinitialState, action) => {
           totalPrice: 0,
         },
       };
+<<<<<<< HEAD
     case "ADD_TO_CART":
       return {
         ...state,
@@ -618,12 +623,17 @@ export const cartsReducer = (state = ClearCartinitialState, action) => {
           ),
         },
       };
+=======
+>>>>>>> Product-check
     default:
       return state;
   }
 };
 
+<<<<<<< HEAD
 //CREATE ORDER
+=======
+>>>>>>> Product-check
 export const orderReducer = (state = OrderCreateInitialState, action) => {
   switch (action.type) {
     case "CREATE_ORDER_REQUEST":
@@ -638,11 +648,15 @@ export const orderReducer = (state = OrderCreateInitialState, action) => {
       return { ...state, loading: false, paymentData: action.payload };
 
     case "VERIFY_PAYMENT_SUCCESS":
+<<<<<<< HEAD
       return {
         ...state,
         loading: false,
         order: { ...state.order, ...action.payload },
       };
+=======
+      return { ...state, loading: false, order: { ...state.order, ...action.payload } };
+>>>>>>> Product-check
 
     case "CREATE_ORDER_FAIL":
     case "PROCESS_PAYMENT_FAIL":
@@ -653,3 +667,29 @@ export const orderReducer = (state = OrderCreateInitialState, action) => {
       return state;
   }
 };
+<<<<<<< HEAD
+=======
+
+// const GetOrderinitialState = {
+//   orders: [],
+//   loading: false,
+//   error: null,
+//   success: false,
+// };
+
+// export const getUserorderReducer = (state = GetOrderinitialState, action) => {
+//   switch (action.type) {
+//     case "GET_ORDERS_REQUEST":
+//       return { ...state, loading: true };
+
+//     case "GET_ORDERS_SUCCESS":
+//       return { ...state, loading: false, orders: action.payload };
+
+//     case "GET_ORDERS_FAIL":
+//       return { ...state, loading: false, error: action.payload };
+
+//     default:
+//       return state;
+//   }
+// };
+>>>>>>> Product-check

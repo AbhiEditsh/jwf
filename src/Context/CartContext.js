@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { createContext, useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,12 +10,18 @@ import {
   addWishList,
   removeWishlist,
 } from "../redux/actions/productActions";
+=======
+import { createContext, useContext, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, GetAddToCart, removeFromCart } from "../redux/actions/productActions";
+>>>>>>> Product-check
 import { useAuth } from "./authContext";
 
 // Create Context
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+<<<<<<< HEAD
   const { user } = useAuth();
   const userId = user ? user.user._id : null;
 
@@ -101,6 +108,30 @@ export const CartProvider = ({ children }) => {
         removeProductFromWishlist,
       }}
     >
+=======
+  const { user } = useAuth(); 
+  const userId = user ? user.id : null;
+
+  const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.cartList);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(GetAddToCart(userId));
+    }
+  }, [dispatch, userId]);
+
+  const addProductToCart = (productId, quantity) => {
+    dispatch(addToCart(userId, productId, quantity));
+  };
+
+  const removeProductFromCart = (productId) => {
+    dispatch(removeFromCart(userId, productId));
+  };
+
+  return (
+    <CartContext.Provider value={{ cart, addProductToCart, removeProductFromCart }}>
+>>>>>>> Product-check
       {children}
     </CartContext.Provider>
   );

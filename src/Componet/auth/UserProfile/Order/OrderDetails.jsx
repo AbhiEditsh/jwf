@@ -31,6 +31,10 @@ const OrderDetails = () => {
   const navigate = useNavigate();
   const order = location.state?.order;
 
+<<<<<<< HEAD
+=======
+  console.log(order);
+>>>>>>> Product-check
 
   return (
     <Container sx={{ mt: 4, mb: 4 }}>

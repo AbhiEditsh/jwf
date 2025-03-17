@@ -13,6 +13,10 @@ import {
   TableCell,
   TableBody,
   Box,
+<<<<<<< HEAD
+=======
+  Card,
+>>>>>>> Product-check
   CardContent,
   useMediaQuery,
   useTheme,
@@ -21,6 +25,10 @@ import {
 import OutboundIcon from "@mui/icons-material/Outbound";
 import { getUserOrders } from "../../../../redux/actions/productActions";
 
+<<<<<<< HEAD
+=======
+// Function to get chip color based on order status
+>>>>>>> Product-check
 const getStatusChipColor = (status) => {
   switch (status) {
     case "Pending":
