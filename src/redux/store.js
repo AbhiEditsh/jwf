@@ -70,10 +70,7 @@ const rootReducer = combineReducers({
   //Order
   order: orderReducer,
   carts: cartsReducer,
-<<<<<<< HEAD
-=======
   // userOrder: getUserorderReducer,
->>>>>>> Product-check
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk));

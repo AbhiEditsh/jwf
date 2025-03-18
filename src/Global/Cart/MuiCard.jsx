@@ -60,6 +60,9 @@ const MuiCard = ({ product }) => {
     addProductToWishlist,
     wishlist,
   } = useCart();
+  
+  console.log(wishlist);
+  
 
   useEffect(() => {
     if (wishlist?.wishlist?.items && product) {

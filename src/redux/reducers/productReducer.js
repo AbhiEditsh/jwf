@@ -574,11 +574,6 @@ const OrderCreateInitialState = {
   error: null,
   paymentData: null,
 };
-<<<<<<< HEAD
-//CLEAR CART
-=======
-
->>>>>>> Product-check
 const ClearCartinitialState = {
   cart: {
     items: [],
@@ -598,42 +593,11 @@ export const cartsReducer = (state = ClearCartinitialState, action) => {
           totalPrice: 0,
         },
       };
-<<<<<<< HEAD
-    case "ADD_TO_CART":
-      return {
-        ...state,
-        cart: {
-          ...state.cart,
-          items: action.payload.items,
-          totalItems: action.payload.items.reduce(
-            (acc, item) => acc + item.quantity,
-            0
-          ),
-        },
-      };
-    case "REMOVE_FROM_CART":
-      return {
-        ...state,
-        cart: {
-          ...state.cart,
-          items: action.payload.items,
-          totalItems: action.payload.items.reduce(
-            (acc, item) => acc + item.quantity,
-            0
-          ),
-        },
-      };
-=======
->>>>>>> Product-check
     default:
       return state;
   }
 };
 
-<<<<<<< HEAD
-//CREATE ORDER
-=======
->>>>>>> Product-check
 export const orderReducer = (state = OrderCreateInitialState, action) => {
   switch (action.type) {
     case "CREATE_ORDER_REQUEST":
@@ -648,15 +612,7 @@ export const orderReducer = (state = OrderCreateInitialState, action) => {
       return { ...state, loading: false, paymentData: action.payload };
 
     case "VERIFY_PAYMENT_SUCCESS":
-<<<<<<< HEAD
-      return {
-        ...state,
-        loading: false,
-        order: { ...state.order, ...action.payload },
-      };
-=======
       return { ...state, loading: false, order: { ...state.order, ...action.payload } };
->>>>>>> Product-check
 
     case "CREATE_ORDER_FAIL":
     case "PROCESS_PAYMENT_FAIL":
@@ -667,8 +623,6 @@ export const orderReducer = (state = OrderCreateInitialState, action) => {
       return state;
   }
 };
-<<<<<<< HEAD
-=======
 
 // const GetOrderinitialState = {
 //   orders: [],
@@ -692,4 +646,3 @@ export const orderReducer = (state = OrderCreateInitialState, action) => {
 //       return state;
 //   }
 // };
->>>>>>> Product-check
