@@ -94,7 +94,6 @@ const Checkout = () => {
               console.log("🟢 Verification Response:", verifyRes);
               if (verifyRes.payload?.success) {
                 alert("✅ Payment verified successfully!");
-                clearCartHandler();
               } else {
                 alert("❌ Payment verification failed!");
               }
@@ -130,10 +129,12 @@ const Checkout = () => {
     try {
       const orderResponse = await dispatch(createOrder(orderData));
       if (values.paymentMethod === "COD") {
+        clearCartHandler();
         navigate("/profile");
       } else if (values.paymentMethod === "Razorpay") {
         const orderId = orderResponse.payload?.newOrder?._id;
         await handleRazorpayPayment(orderData.amount, orderId);
+        clearCartHandler();
       }
     } catch (error) {
       console.error("Order creation error:", error);
@@ -169,7 +170,8 @@ const Checkout = () => {
   };
 
   return (
-    <Container>
+    <div>
+       <Container>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Formik
@@ -336,7 +338,8 @@ const Checkout = () => {
         </Grid>
       </Grid>
     </Container>
-  );
-};
+    </div>
+  )
+}
 
-export default Checkout;
+export default Checkout
